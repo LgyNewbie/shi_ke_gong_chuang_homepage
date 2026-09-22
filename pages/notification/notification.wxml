@@ -1,0 +1,102 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view class="title">
+    消息通知
+  </view>
+
+  <view
+    wx:if="{{unreadCount > 0}}"
+    class="read-all"
+    bindtap="readAll"
+  >
+    全部已读
+  </view>
+
+</view>
+
+
+<!-- 未读数量 -->
+<view
+  wx:if="{{unreadCount > 0}}"
+  class="notice-summary"
+>
+  你有 {{unreadCount}} 条未读消息
+</view>
+
+
+<!-- 通知列表 -->
+<view class="notification-list">
+
+  <view
+    wx:for="{{notifications}}"
+    wx:key="id"
+    class="notification-item {{item.read ? 'read' : 'unread'}}"
+    data-id="{{item.id}}"
+    data-type="{{item.type}}"
+    data-message-id="{{item.messageId}}"
+    bindtap="openNotification"
+  >
+
+    <!-- 左侧图标 -->
+    <view class="notification-icon {{item.iconClass}}">
+      {{item.icon}}
+    </view>
+
+
+    <!-- 中间内容 -->
+    <view class="notification-main">
+
+      <view class="notification-top">
+
+        <view class="notification-title">
+          {{item.title}}
+        </view>
+
+        <view class="notification-time">
+          {{item.time}}
+        </view>
+
+      </view>
+
+      <view class="notification-content">
+        {{item.content}}
+      </view>
+
+    </view>
+
+
+    <!-- 未读点 -->
+    <view
+      wx:if="{{!item.read}}"
+      class="unread-dot"
+    ></view>
+
+  </view>
+
+</view>
+
+
+<!-- 空状态 -->
+<view
+  wx:if="{{notifications.length === 0}}"
+  class="empty"
+>
+
+  <view class="empty-icon">
+    🔔
+  </view>
+
+  <view class="empty-title">
+    暂时没有消息
+  </view>
+
+  <view class="empty-text">
+    有新的回复和订单动态会显示在这里
+  </view>
+
+</view>
+
+</view>

@@ -152,9 +152,8 @@ Page({
   },
 
   openNotifications() {
-    wx.showToast({
-      title: '暂无新通知',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/notification/notification'
     })
   },
 

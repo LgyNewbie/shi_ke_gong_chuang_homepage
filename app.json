@@ -18,6 +18,7 @@
     "pages/notice/notice",
     "pages/my-message/my-message",
     "pages/my-favorite/my-favorite",
+    "pages/notification/notification",
     "pages/notice-detail/notice-detail",
     "pages/menu/menu"
     
