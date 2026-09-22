@@ -3,7 +3,10 @@
 <!-- 顶部导航 -->
 <view class="header">
 
-  <view class="back-btn" bindtap="goBack">
+  <view
+    class="back-btn"
+    bindtap="goBack"
+  >
     ‹
   </view>
 
@@ -19,7 +22,10 @@
 
 
 <!-- 留言主体 -->
-<view wx:if="{{post}}" class="post-card">
+<view
+  wx:if="{{post}}"
+  class="post-card"
+>
 
   <!-- 用户信息 -->
   <view class="user-row">
@@ -33,7 +39,10 @@
         mode="aspectFill"
       ></image>
 
-      <view wx:else class="default-avatar">
+      <view
+        wx:else
+        class="default-avatar"
+      >
         食
       </view>
 
@@ -62,13 +71,13 @@
   </view>
 
 
-  <!-- 正文 -->
+  <!-- 留言正文 -->
   <view class="post-text">
     {{post.text || post.content}}
   </view>
 
 
-  <!-- 图片 -->
+  <!-- 多张图片 -->
   <view
     wx:if="{{post.images && post.images.length > 0}}"
     class="image-grid"
@@ -88,6 +97,7 @@
   </view>
 
 
+  <!-- 单张图片兼容 -->
   <image
     wx:if="{{(!post.images || post.images.length === 0) && post.image}}"
     class="post-image single-image"
@@ -98,7 +108,7 @@
   ></image>
 
 
-  <!-- 点赞评论 -->
+  <!-- 点赞、评论、分享 -->
   <view class="post-actions">
 
     <view
@@ -128,7 +138,7 @@
 </view>
 
 
-<!-- 状态 -->
+<!-- 处理状态 -->
 <view
   wx:if="{{post && post.statusName}}"
   class="status-card"
@@ -189,7 +199,7 @@
   </view>
 
 
-  <!-- 无评论 -->
+  <!-- 没有评论 -->
   <view
     wx:if="{{comments.length === 0}}"
     class="empty-comment"
@@ -198,7 +208,7 @@
   </view>
 
 
-  <!-- 评论 -->
+  <!-- 评论列表 -->
   <view
     wx:for="{{comments}}"
     wx:key="id"
@@ -224,19 +234,22 @@
       </view>
 
 
+      <!-- 回复对象 -->
       <view
-        wx:if="{{item.replyTo}}"
+        wx:if="{{item.replyToName || item.replyTo}}"
         class="reply-label"
       >
-        回复 {{item.replyTo}}
+        回复 {{item.replyToName || item.replyTo}}
       </view>
 
 
+      <!-- 评论内容 -->
       <view class="comment-text">
         {{item.text || item.content}}
       </view>
 
 
+      <!-- 回复按钮 -->
       <view
         class="reply-btn"
         data-index="{{index}}"
@@ -252,13 +265,15 @@
 </view>
 
 
-<!-- 回复提示 -->
+<!-- 当前回复对象提示 -->
 <view
   wx:if="{{replyHint}}"
   class="reply-hint"
 >
 
-  <text>{{replyHint}}</text>
+  <text>
+    {{replyHint}}
+  </text>
 
   <text
     class="cancel-reply"
@@ -289,7 +304,7 @@
 </view>
 
 
-<!-- 底部输入栏 -->
+<!-- 底部评论输入 -->
 <view class="comment-bar">
 
   <input
@@ -301,7 +316,6 @@
     bindconfirm="submitComment"
   />
 
-
   <view
     class="bar-btn"
     catchtap="toggleEmoji"
@@ -309,11 +323,9 @@
     😊
   </view>
 
-
   <view class="bar-btn">
     🖼️
   </view>
-
 
   <view
     class="send-btn"

@@ -190,20 +190,26 @@ emojiList: [
   // 回复评论
   // =========================
   replyToComment(e) {
-    const index =
-      e.currentTarget.dataset.index
-
-    const comment =
-      this.data.comments[index]
-
+    const index = e.currentTarget.dataset.index
+  
+    const comment = this.data.comments[index]
+  
     if (!comment) {
       return
     }
-
+  
+    const name =
+      comment.name ||
+      comment.userName ||
+      '食客'
+  
     this.setData({
-      replyingTo: comment,
-      replyHint:
-        `回复 ${comment.name || '食客'}`
+      replyingTo: {
+        id: comment.id,
+        name: name
+      },
+  
+      replyHint: `回复 ${name}`
     })
   },
 
@@ -234,9 +240,9 @@ emojiList: [
   // 发送评论
   // =========================
   submitComment() {
-    const text =
-      (this.data.commentText || '').trim()
-
+    const text = (this.data.commentText || '').trim()
+  
+    // 没有输入内容
     if (!text) {
       wx.showToast({
         title: '请输入评论内容',
@@ -244,63 +250,86 @@ emojiList: [
       })
       return
     }
-
+  
+    // 当前没有留言
     if (!this.data.post) {
+      wx.showToast({
+        title: '留言数据不存在',
+        icon: 'none'
+      })
       return
     }
-
-    const postId =
-      this.data.post.id
-
+  
+    // 当前留言 ID
+    const postId = this.data.post.id
+  
+    if (!postId) {
+      wx.showToast({
+        title: '留言ID不存在',
+        icon: 'none'
+      })
+      return
+    }
+  
+    // 创建评论
     const newComment = {
       id: `comment_${Date.now()}`,
-
+  
       name: '食客',
       userName: '食客',
-
+  
       avatar: '',
-
+  
       text: text,
-
+  
       time: '刚刚',
-
+  
+      // 回复的评论ID
+      replyToId: this.data.replyingTo
+        ? this.data.replyingTo.id
+        : '',
+  
+      // 回复对象名称
+      replyToName: this.data.replyingTo
+        ? this.data.replyingTo.name
+        : '',
+  
+      // 兼容旧数据
       replyTo: this.data.replyingTo
-        ? (
-            this.data.replyingTo.name ||
-            this.data.replyingTo.userName ||
-            '食客'
-          )
+        ? this.data.replyingTo.name
         : ''
     }
-
-    const updatedPost =
-      updateMessage(
-        postId,
-        oldPost => {
-          const oldComments =
-            Array.isArray(oldPost.commentList)
-              ? oldPost.commentList
-              : []
-
-          const newComments = [
-            ...oldComments,
-            newComment
-          ]
-
-          return {
-            ...oldPost,
-
-            commentList: newComments,
-
-            commentsCount:
-              newComments.length,
-
-            comments:
-              newComments.length
-          }
+  
+    // 更新统一留言数据
+    const updatedPost = updateMessage(
+      postId,
+      oldPost => {
+  
+        const oldComments =
+          Array.isArray(oldPost.commentList)
+            ? oldPost.commentList
+            : []
+  
+        const newComments = [
+          ...oldComments,
+          newComment
+        ]
+  
+        return {
+          ...oldPost,
+  
+          commentList: newComments,
+  
+          commentsCount:
+            newComments.length,
+  
+          comments:
+            newComments.length
         }
-      )
-
+      }
+    )
+  
+    // 更新失败
     if (!updatedPost) {
       wx.showToast({
         title: '评论失败',
@@ -308,20 +337,23 @@ emojiList: [
       })
       return
     }
-
+  
+    // 更新页面
     this.setData({
       post: updatedPost,
-
+  
       comments:
         updatedPost.commentList || [],
-
+  
       commentText: '',
-
+  
       replyingTo: null,
-
-      replyHint: ''
+  
+      replyHint: '',
+  
+      showEmoji: false
     })
-
+  
     wx.showToast({
       title: '评论成功',
       icon: 'success'

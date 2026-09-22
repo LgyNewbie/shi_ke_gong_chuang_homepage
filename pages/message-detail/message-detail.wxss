@@ -465,10 +465,17 @@ page {
 }
 
 .reply-label {
+  display: inline-block;
+
   margin-top: 7rpx;
+  padding: 5rpx 10rpx;
+
+  border-radius: 8rpx;
+
+  background: #EEF7F3;
+  color: #1F6A57;
 
   font-size: 21rpx;
-  color: #1F6A57;
 }
 
 .comment-text {
