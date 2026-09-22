@@ -1,0 +1,138 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+  <view class="back" bindtap="goBack">‹</view>
+
+  <view class="title">
+    食客留言
+  </view>
+
+  <view class="publish" bindtap="writeMessage">
+    ＋ 写留言
+  </view>
+</view>
+
+<!-- 分类 -->
+<view class="tabs">
+  <view
+    class="tab {{currentTab === 'hot' ? 'active' : ''}}"
+    data-tab="hot"
+    bindtap="switchTab"
+  >
+    热门
+  </view>
+
+  <view
+    class="tab {{currentTab === 'like' ? 'active' : ''}}"
+    data-tab="like"
+    bindtap="switchTab"
+  >
+    点赞最多
+  </view>
+
+  <view
+    class="tab {{currentTab === 'comment' ? 'active' : ''}}"
+    data-tab="comment"
+    bindtap="switchTab"
+  >
+    评论最多
+  </view>
+</view>
+
+<!-- 留言列表 -->
+<view class="message-list">
+
+  <view
+    wx:for="{{messages}}"
+    wx:key="id"
+    class="message-card"
+    bindtap="openDetail"
+    data-id="{{item.id}}"
+  >
+
+    <!-- 用户信息 -->
+    <view class="user-row">
+
+      <image
+        class="avatar"
+        src="{{item.avatar}}"
+        mode="aspectFill"
+      />
+
+      <view class="user-info">
+        <view class="name-row">
+          <text class="name">{{item.name}}</text>
+          <text class="level">Lv.{{item.level}}</text>
+        </view>
+
+        <text class="time">{{item.time}}</text>
+      </view>
+
+      <text class="tag">{{item.tag}}</text>
+
+    </view>
+
+    <!-- 留言内容 -->
+    <view class="message-text">
+      {{item.text}}
+    </view>
+
+    <!-- 图片 -->
+    <view wx:if="{{item.image}}" class="image-box">
+      <image
+        class="message-image"
+        src="{{item.image}}"
+        mode="aspectFill"
+      />
+    </view>
+
+    <!-- 互动 -->
+    <view class="actions">
+
+      <view class="action">
+        <text class="heart">♥</text>
+        <text>{{item.likes}}</text>
+      </view>
+
+      <view class="action">
+        <text>💬</text>
+        <text>{{item.comments}}</text>
+      </view>
+
+      <view class="action more-action">
+        ···
+      </view>
+
+    </view>
+
+    <!-- 商家回复 -->
+    <view wx:if="{{item.reply}}" class="merchant-reply">
+
+      <view class="reply-title">
+        <text class="merchant-icon">店</text>
+        <text class="merchant-name">餐厅官方</text>
+        <text class="official">官方</text>
+      </view>
+
+      <text class="reply-text">
+        {{item.reply}}
+      </text>
+
+      <text class="reply-time">
+        {{item.replyTime}}
+      </text>
+
+    </view>
+
+  </view>
+
+</view>
+
+<!-- 底部写留言按钮 -->
+<view class="bottom-write" bindtap="writeMessage">
+  <text>✎</text>
+  <text>写留言</text>
+</view>
+
+</view>

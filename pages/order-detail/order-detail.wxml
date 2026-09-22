@@ -1,0 +1,444 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view
+    class="back"
+    bindtap="goBack"
+  >
+    ‹
+  </view>
+
+  <text class="title">
+    订单详情
+  </text>
+
+</view>
+
+
+<!-- 订单当前状态 -->
+<view
+  class="status-card {{order.status === 'cancelled' ? 'cancelled-status' : ''}}"
+>
+
+  <view class="status-icon">
+    {{statusIcon}}
+  </view>
+
+  <view class="status-info">
+
+    <text class="status-title">
+      {{order.statusName}}
+    </text>
+
+    <text class="status-desc">
+      {{statusDescription}}
+    </text>
+
+  </view>
+
+</view>
+
+
+<!-- 订单进度 -->
+<view class="card timeline-card">
+
+  <view class="card-title">
+    订单进度
+  </view>
+
+  <!-- 正常订单时间线 -->
+  <view
+    wx:if="{{order.status !== 'cancelled'}}"
+    class="timeline"
+  >
+
+    <view
+      wx:for="{{timeline}}"
+      wx:key="id"
+      class="timeline-item {{item.active ? 'active' : ''}} {{item.current ? 'current' : ''}}"
+    >
+
+      <view class="timeline-left">
+
+        <view class="timeline-dot">
+          {{item.active ? '✓' : ''}}
+        </view>
+
+        <view
+          wx:if="{{!item.last}}"
+          class="timeline-line {{item.active ? 'line-active' : ''}}"
+        >
+        </view>
+
+      </view>
+
+      <view class="timeline-content">
+
+        <text class="timeline-name">
+          {{item.name}}
+        </text>
+
+        <text
+          wx:if="{{item.time}}"
+          class="timeline-time"
+        >
+          {{item.time}}
+        </text>
+
+      </view>
+
+    </view>
+
+  </view>
+
+
+  <!-- 已取消订单 -->
+  <view
+    wx:if="{{order.status === 'cancelled'}}"
+    class="cancel-timeline"
+  >
+
+    <view class="cancel-step">
+
+      <view class="timeline-left">
+
+        <view class="timeline-dot active-dot">
+          ✓
+        </view>
+
+        <view class="timeline-line line-active">
+        </view>
+
+      </view>
+
+      <view class="timeline-content">
+
+        <text class="timeline-name">
+          已下单
+        </text>
+
+        <text class="timeline-time">
+          {{order.createTime}}
+        </text>
+
+      </view>
+
+    </view>
+
+
+    <view class="cancel-step">
+
+      <view class="timeline-left">
+
+        <view class="timeline-dot cancel-dot">
+          ×
+        </view>
+
+      </view>
+
+      <view class="timeline-content">
+
+        <text class="timeline-name cancel-name">
+          已取消
+        </text>
+
+        <text class="timeline-time">
+          {{order.cancelTime}}
+        </text>
+
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 商品 -->
+<view class="card">
+
+  <view class="card-title">
+    商品明细
+  </view>
+
+  <view
+    wx:for="{{order.items}}"
+    wx:key="id"
+    class="food-row"
+  >
+
+    <image
+      class="food-image"
+      src="{{item.image}}"
+      mode="aspectFill"
+    />
+
+    <view class="food-info">
+
+      <text class="food-name">
+        {{item.name}}
+      </text>
+
+      <text class="food-desc">
+        {{item.desc}}
+      </text>
+
+    </view>
+
+    <view class="food-right">
+
+      <text class="food-count">
+        ×{{item.count}}
+      </text>
+
+      <text class="food-price">
+        ¥{{item.price * item.count}}
+      </text>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 配送信息 -->
+<view class="card">
+
+  <view class="card-title">
+    配送信息
+  </view>
+
+
+  <!-- 配送 -->
+  <view
+    wx:if="{{order.deliveryType === 'delivery'}}"
+    class="info-row"
+  >
+
+    <view class="info-icon">
+      📍
+    </view>
+
+    <view class="info-content">
+
+      <view class="contact-row">
+
+        <text class="contact-name">
+          {{order.address.name}}
+        </text>
+
+        <text class="contact-phone">
+          {{order.address.phone}}
+        </text>
+
+      </view>
+
+      <text class="address">
+        {{order.address.detail}}
+      </text>
+
+    </view>
+
+  </view>
+
+
+  <!-- 自取 -->
+  <view
+    wx:if="{{order.deliveryType === 'pickup'}}"
+    class="info-row"
+  >
+
+    <view class="info-icon">
+      🏪
+    </view>
+
+    <view class="info-content">
+
+      <text class="pickup-title">
+        到店自取
+      </text>
+
+      <text class="pickup-desc">
+        请到餐厅前台报订单号取餐
+      </text>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 备注 -->
+<view
+  wx:if="{{order.remark}}"
+  class="card"
+>
+
+  <view class="card-title">
+    订单备注
+  </view>
+
+  <view class="remark">
+    {{order.remark}}
+  </view>
+
+</view>
+
+
+<!-- 金额 -->
+<view class="card price-card">
+
+  <view class="price-row">
+
+    <text>
+      商品小计
+    </text>
+
+    <text>
+      ¥{{order.total}}
+    </text>
+
+  </view>
+
+  <view class="price-row">
+
+    <text>
+      配送费
+    </text>
+
+    <text>
+      免配送费
+    </text>
+
+  </view>
+
+  <view class="price-line">
+  </view>
+
+  <view class="price-row total-row">
+
+    <text>
+      {{order.status === 'cancelled' ? '订单金额' : '应付金额'}}
+    </text>
+
+    <text class="total-price">
+      ¥{{order.total}}
+    </text>
+
+  </view>
+
+</view>
+
+
+<!-- 订单信息 -->
+<view class="card order-info-card">
+
+  <view class="card-title">
+    订单信息
+  </view>
+
+  <view class="simple-row">
+
+    <text>
+      订单编号
+    </text>
+
+    <text>
+      {{order.id}}
+    </text>
+
+  </view>
+
+  <view class="simple-row">
+
+    <text>
+      下单时间
+    </text>
+
+    <text>
+      {{order.createTime}}
+    </text>
+
+  </view>
+
+  <view class="simple-row">
+
+    <text>
+      配送方式
+    </text>
+
+    <text>
+      {{order.deliveryType === 'delivery' ? '配送到家' : '到店自取'}}
+    </text>
+
+  </view>
+
+  <!-- 取消时间 -->
+  <view
+    wx:if="{{order.status === 'cancelled'}}"
+    class="simple-row"
+  >
+
+    <text>
+      取消时间
+    </text>
+
+    <text>
+      {{order.cancelTime}}
+    </text>
+
+  </view>
+
+</view>
+
+
+<!-- 底部操作 -->
+<view class="bottom-bar">
+
+  <!-- 待付款 -->
+  <button
+    wx:if="{{order.status === 'pending'}}"
+    class="bottom-btn primary"
+    bindtap="payOrder"
+  >
+    去付款
+  </button>
+
+
+  <!-- 已完成 -->
+  <button
+    wx:if="{{order.status === 'completed'}}"
+    class="bottom-btn primary"
+    bindtap="reorder"
+  >
+    再来一单
+  </button>
+
+
+  <!-- 联系餐厅 -->
+  <button
+    wx:if="{{order.status !== 'cancelled'}}"
+    class="bottom-btn"
+    bindtap="contactRestaurant"
+  >
+    联系餐厅
+  </button>
+
+
+  <!-- 已取消 -->
+  <button
+    wx:if="{{order.status === 'cancelled'}}"
+    class="bottom-btn primary"
+    bindtap="goBackToOrders"
+  >
+    返回订单
+  </button>
+
+</view>
+
+</view>

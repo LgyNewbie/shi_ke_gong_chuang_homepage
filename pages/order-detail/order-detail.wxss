@@ -1,0 +1,499 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 150rpx;
+}
+
+
+/* 顶部 */
+.header {
+  height: 115rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.back {
+  position: absolute;
+  left: 28rpx;
+
+  font-size: 58rpx;
+  color: #173C34;
+}
+
+.title {
+  color: #173C34;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+
+/* 状态 */
+.status-card {
+  margin: 0 24rpx;
+
+  padding: 28rpx;
+
+  display: flex;
+  align-items: center;
+
+  border-radius: 28rpx;
+
+  background: #1F6A57;
+
+  box-shadow: 0 10rpx 30rpx rgba(31,106,87,.18);
+}
+
+.status-icon {
+  width: 76rpx;
+  height: 76rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.16);
+
+  color: white;
+
+  font-size: 37rpx;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+
+  margin-left: 20rpx;
+}
+
+.status-title {
+  color: white;
+
+  font-size: 31rpx;
+  font-weight: bold;
+}
+
+.status-desc {
+  margin-top: 7rpx;
+
+  color: rgba(255,255,255,.75);
+
+  font-size: 21rpx;
+}
+
+
+/* 卡片 */
+.card {
+  margin: 20rpx 24rpx 0;
+
+  padding: 26rpx;
+
+  border-radius: 28rpx;
+
+  background: white;
+
+  box-shadow: 0 8rpx 25rpx rgba(31,70,60,.04);
+}
+
+.card-title {
+  color: #24483F;
+
+  font-size: 27rpx;
+  font-weight: bold;
+}
+
+
+/* 时间线 */
+.timeline {
+  margin-top: 28rpx;
+}
+
+.timeline-item {
+  display: flex;
+  min-height: 82rpx;
+}
+
+.timeline-left {
+  width: 50rpx;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-dot {
+  width: 36rpx;
+  height: 36rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #E3E9E6;
+  color: white;
+
+  font-size: 17rpx;
+}
+
+.timeline-item.active .timeline-dot {
+  background: #1F6A57;
+}
+
+.timeline-item.current .timeline-dot {
+  width: 42rpx;
+  height: 42rpx;
+
+  box-shadow: 0 0 0 7rpx #E5F1EC;
+}
+
+.timeline-line {
+  width: 3rpx;
+  flex: 1;
+
+  margin: 6rpx 0;
+
+  background: #E6EBE8;
+}
+
+.timeline-line.line-active {
+  background: #1F6A57;
+}
+
+.timeline-content {
+  padding-left: 14rpx;
+  padding-bottom: 18rpx;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-name {
+  color: #415B52;
+  font-size: 23rpx;
+}
+
+.timeline-item.current .timeline-name {
+  color: #1F6A57;
+  font-weight: bold;
+}
+
+.timeline-time {
+  margin-top: 5rpx;
+
+  color: #9AA6A1;
+  font-size: 18rpx;
+}
+
+
+/* 商品 */
+.food-row {
+  display: flex;
+  align-items: center;
+
+  margin-top: 22rpx;
+  padding-bottom: 18rpx;
+
+  border-bottom: 1rpx solid #EDF0EE;
+}
+
+.food-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.food-image {
+  width: 110rpx;
+  height: 110rpx;
+
+  border-radius: 18rpx;
+}
+
+.food-info {
+  flex: 1;
+
+  margin-left: 16rpx;
+
+  min-width: 0;
+}
+
+.food-name {
+  display: block;
+
+  color: #304B42;
+
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.food-desc {
+  display: block;
+
+  margin-top: 6rpx;
+
+  color: #96A29D;
+
+  font-size: 18rpx;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.food-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  margin-left: 12rpx;
+}
+
+.food-count {
+  color: #8A9892;
+  font-size: 19rpx;
+}
+
+.food-price {
+  margin-top: 6rpx;
+
+  color: #DF6A43;
+
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+
+/* 配送 */
+.info-row {
+  display: flex;
+  align-items: center;
+
+  margin-top: 20rpx;
+}
+
+.info-icon {
+  width: 64rpx;
+  height: 64rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #EAF3EE;
+
+  font-size: 29rpx;
+}
+
+.info-content {
+  flex: 1;
+
+  margin-left: 16rpx;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+}
+
+.contact-name {
+  color: #2C4A40;
+
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+.contact-phone {
+  margin-left: 14rpx;
+
+  color: #788983;
+
+  font-size: 20rpx;
+}
+
+.address {
+  display: block;
+
+  margin-top: 6rpx;
+
+  color: #788983;
+
+  font-size: 20rpx;
+
+  line-height: 1.5;
+}
+
+.pickup-title {
+  display: block;
+
+  color: #2C4A40;
+
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+.pickup-desc {
+  display: block;
+
+  margin-top: 6rpx;
+
+  color: #788983;
+
+  font-size: 20rpx;
+}
+
+
+/* 备注 */
+.remark {
+  margin-top: 18rpx;
+
+  padding: 18rpx;
+
+  border-radius: 18rpx;
+
+  background: #F4F6F5;
+
+  color: #52685F;
+
+  font-size: 22rpx;
+
+  line-height: 1.7;
+}
+
+
+/* 金额 */
+.price-card {
+  padding-bottom: 24rpx;
+}
+
+.price-row {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 17rpx;
+
+  color: #687A74;
+
+  font-size: 21rpx;
+}
+
+.price-line {
+  height: 1rpx;
+
+  margin: 6rpx 0 20rpx;
+
+  background: #EDF0EE;
+}
+
+.total-row {
+  margin-bottom: 0;
+}
+
+.total-row text:first-child {
+  color: #304B42;
+
+  font-size: 27rpx;
+  font-weight: bold;
+}
+
+.total-price {
+  color: #DF6A43;
+
+  font-size: 37rpx;
+  font-weight: bold;
+}
+
+
+/* 订单信息 */
+.order-info-card {
+  padding-bottom: 18rpx;
+}
+
+.simple-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 15rpx 0;
+
+  color: #72817C;
+
+  font-size: 20rpx;
+
+  border-bottom: 1rpx solid #EDF0EE;
+}
+
+.simple-row:last-child {
+  border-bottom: none;
+}
+
+
+/* 底部 */
+.bottom-bar {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 20;
+
+  height: 110rpx;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 14rpx;
+
+  padding: 0 24rpx;
+
+  background: rgba(255,255,255,.97);
+
+  box-shadow: 0 -10rpx 28rpx rgba(31,70,60,.08);
+}
+
+.bottom-btn {
+  min-width: 190rpx;
+
+  height: 70rpx;
+
+  margin: 0;
+
+  padding: 0 24rpx;
+
+  line-height: 70rpx;
+
+  border-radius: 38rpx;
+
+  background: #EEF2F0;
+
+  color: #50665D;
+
+  font-size: 22rpx;
+}
+
+.bottom-btn.primary {
+  background: #1F6A57;
+  color: white;
+}
+
+button::after {
+  border: none;
+}
+
+.cancelled-status {
+  background: #7F8884;
+}

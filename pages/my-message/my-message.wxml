@@ -1,0 +1,122 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+  <view class="title">我的留言</view>
+  <view class="subtitle">看看你参与餐厅共创留下的足迹</view>
+</view>
+
+<!-- 统计 -->
+<view class="summary-card">
+  <view class="summary-item">
+    <view class="summary-number">{{messages.length}}</view>
+    <view class="summary-label">全部留言</view>
+  </view>
+
+  <view class="summary-line"></view>
+
+  <view class="summary-item">
+    <view class="summary-number">{{likeCount}}</view>
+    <view class="summary-label">获得点赞</view>
+  </view>
+
+  <view class="summary-line"></view>
+
+  <view class="summary-item">
+    <view class="summary-number">{{replyCount}}</view>
+    <view class="summary-label">收到回复</view>
+  </view>
+</view>
+
+<!-- 留言列表 -->
+<view class="message-list">
+
+  <view
+    wx:for="{{messages}}"
+    wx:key="id"
+    class="message-card"
+    data-id="{{item.id}}"
+    bindtap="openDetail"
+  >
+
+    <!-- 用户信息 -->
+    <view class="message-user">
+      <view class="avatar">
+        {{item.userName ? item.userName.substring(0, 1) : '食'}}
+      </view>
+
+      <view class="user-info">
+        <view class="user-name">
+          {{item.userName || '食客'}}
+        </view>
+
+        <view class="message-time">
+          {{item.time || item.createTime || ''}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 分类 -->
+    <view class="message-tag">
+      {{item.category || '其他'}}
+    </view>
+
+    <!-- 内容 -->
+    <view class="message-content">
+      {{item.text || item.content}}
+    </view>
+
+    <!-- 图片 -->
+    <view
+      wx:if="{{item.images && item.images.length > 0}}"
+      class="image-row"
+    >
+      <image
+        wx:for="{{item.images}}"
+        wx:for-item="img"
+        wx:key="*this"
+        class="message-image"
+        src="{{img}}"
+        mode="aspectFill"
+      />
+    </view>
+
+    <!-- 状态 -->
+    <view class="status-row">
+
+      <view class="status {{item.status === 'accepted' ? 'status-green' : ''}}">
+        {{item.statusName || '已发布'}}
+      </view>
+
+      <view class="message-actions">
+        <text>👍 {{item.likes || 0}}</text>
+        <text>💬 {{item.commentsCount || 0}}</text>
+        <text class="arrow">›</text>
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+<!-- 空状态 -->
+<view wx:if="{{messages.length === 0}}" class="empty">
+
+  <view class="empty-icon">💬</view>
+
+  <view class="empty-title">
+    还没有发布过留言
+  </view>
+
+  <view class="empty-text">
+    去告诉餐厅你的想法吧
+  </view>
+
+  <button class="write-btn" bindtap="writeMessage">
+    ＋ 写留言
+  </button>
+
+</view>
+
+</view>

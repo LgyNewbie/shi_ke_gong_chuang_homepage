@@ -1,0 +1,431 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 150rpx;
+}
+
+
+/* 顶部 */
+.header {
+  height: 120rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.back {
+  position: absolute;
+  left: 28rpx;
+
+  font-size: 58rpx;
+  color: #173C34;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #173C34;
+}
+
+
+/* 卡片 */
+.card {
+  margin: 20rpx 24rpx 0;
+  padding: 26rpx;
+
+  background: white;
+  border-radius: 28rpx;
+
+  box-shadow: 0 8rpx 24rpx rgba(31, 70, 60, .04);
+}
+
+.card-title {
+  color: #24483F;
+  font-size: 27rpx;
+  font-weight: bold;
+}
+
+
+/* 配送方式 */
+.delivery-tabs {
+  display: flex;
+  gap: 18rpx;
+
+  margin-top: 20rpx;
+}
+
+.delivery-tab {
+  flex: 1;
+
+  height: 96rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8rpx;
+
+  border-radius: 22rpx;
+
+  background: #F1F4F2;
+  color: #6D7E78;
+
+  font-size: 23rpx;
+}
+
+.delivery-tab.active {
+  background: #E6F1EB;
+  color: #1F6A57;
+
+  font-weight: bold;
+
+  border: 2rpx solid #1F6A57;
+}
+
+.delivery-icon {
+  font-size: 32rpx;
+}
+
+
+/* 地址 */
+.address-card {
+  display: flex;
+  align-items: center;
+}
+
+.address-icon {
+  width: 60rpx;
+  height: 60rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #EAF3EE;
+
+  font-size: 28rpx;
+}
+
+.address-info {
+  flex: 1;
+  min-width: 0;
+
+  margin-left: 16rpx;
+}
+
+.address-top {
+  display: flex;
+  align-items: center;
+}
+
+.contact-name {
+  color: #24483F;
+
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+.contact-phone {
+  margin-left: 14rpx;
+
+  color: #788982;
+
+  font-size: 21rpx;
+}
+
+.address-text {
+  display: block;
+
+  margin-top: 7rpx;
+
+  color: #71827C;
+
+  font-size: 21rpx;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.address-arrow {
+  margin-left: 12rpx;
+
+  color: #95A39E;
+
+  font-size: 38rpx;
+}
+
+
+/* 自取 */
+.pickup-card {
+  display: flex;
+  align-items: center;
+}
+
+.pickup-icon {
+  width: 62rpx;
+  height: 62rpx;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%;
+
+  background: #EEF3EF;
+
+  font-size: 28rpx;
+}
+
+.pickup-info {
+  margin-left: 16rpx;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.pickup-title {
+  color: #24483F;
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+.pickup-text {
+  margin-top: 6rpx;
+
+  color: #788982;
+  font-size: 20rpx;
+}
+
+.pickup-time {
+  margin-top: 6rpx;
+
+  color: #1F6A57;
+  font-size: 20rpx;
+}
+
+
+/* 商品 */
+.food-item {
+  display: flex;
+  align-items: center;
+
+  margin-top: 22rpx;
+  padding-bottom: 20rpx;
+
+  border-bottom: 1rpx solid #EDF0EE;
+}
+
+.food-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.food-image {
+  width: 120rpx;
+  height: 120rpx;
+
+  border-radius: 18rpx;
+}
+
+.food-info {
+  flex: 1;
+
+  margin-left: 16rpx;
+
+  min-width: 0;
+}
+
+.food-name {
+  display: block;
+
+  color: #2D4940;
+
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+.food-desc {
+  display: block;
+
+  margin-top: 7rpx;
+
+  color: #8C9994;
+
+  font-size: 19rpx;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.food-right {
+  margin-left: 12rpx;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.food-count {
+  color: #8B9893;
+
+  font-size: 19rpx;
+}
+
+.food-price {
+  margin-top: 8rpx;
+
+  color: #DF6A43;
+
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+
+/* 备注 */
+.remark {
+  width: 100%;
+
+  min-height: 170rpx;
+
+  margin-top: 18rpx;
+
+  padding: 18rpx;
+
+  border-radius: 18rpx;
+
+  background: #F5F7F6;
+
+  color: #405950;
+
+  font-size: 23rpx;
+
+  line-height: 1.7;
+}
+
+.remark-count {
+  display: block;
+
+  margin-top: 7rpx;
+
+  text-align: right;
+
+  color: #A0ACA7;
+
+  font-size: 18rpx;
+}
+
+
+/* 价格 */
+.price-row {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 18rpx;
+
+  color: #657770;
+
+  font-size: 22rpx;
+}
+
+.price-line {
+  height: 1rpx;
+
+  margin: 5rpx 0 20rpx;
+
+  background: #EDF0EE;
+}
+
+.final-row {
+  margin-bottom: 0;
+}
+
+.final-row > text:first-child {
+  color: #314C43;
+
+  font-size: 27rpx;
+  font-weight: bold;
+}
+
+.final-price {
+  color: #DF6A43;
+
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+
+/* 底部 */
+.bottom-bar {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 20;
+
+  height: 110rpx;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24rpx;
+
+  background: rgba(255,255,255,.97);
+
+  box-shadow: 0 -10rpx 28rpx rgba(31,70,60,.08);
+}
+
+.bottom-total {
+  display: flex;
+  align-items: baseline;
+
+  color: #647770;
+
+  font-size: 21rpx;
+}
+
+.bottom-price {
+  margin-left: 9rpx;
+
+  color: #DF6A43;
+
+  font-size: 37rpx;
+  font-weight: bold;
+}
+
+.submit-btn {
+  width: 240rpx;
+  height: 76rpx;
+
+  margin: 0;
+
+  line-height: 76rpx;
+
+  border-radius: 40rpx;
+
+  background: #1F6A57;
+
+  color: white;
+
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+button::after {
+  border: none;
+}

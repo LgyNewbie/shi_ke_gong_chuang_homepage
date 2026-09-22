@@ -1,0 +1,454 @@
+const {
+  getMessageById,
+  updateMessage
+} = require('../../utils/message.js')
+
+Page({
+  data: {
+    messageId: '',
+    post: null,
+    comments: [],
+    commentText: '',
+    replyingTo: null,
+    replyHint: '',
+    showEmoji: false,
+
+emojiList: [
+  '😀', '😂', '😊', '😍',
+  '😘', '😋', '🤩', '🥰',
+  '👍', '❤️', '👏', '🎉',
+  '🤣', '😎', '🥹', '😭',
+  '😡', '😱', '🤔', '🙌',
+  '✨', '🔥', '🍜', '🍚',
+  '🍗', '🥳', '💯', '❤️'
+],
+  },
+
+  // =========================
+  // 页面加载
+  // =========================
+  onLoad(options) {
+    const id = options.id || ''
+
+    this.setData({
+      messageId: id
+    })
+
+    this.loadMessage(id)
+  },
+
+  // =========================
+  // 每次重新进入页面
+  // =========================
+  onShow() {
+    if (!this.data.messageId) {
+      return
+    }
+
+    this.loadMessage(this.data.messageId)
+
+    const merchantUpdate =
+      wx.getStorageSync('merchantUpdate')
+
+    if (
+      merchantUpdate &&
+      String(merchantUpdate.id) === String(this.data.messageId)
+    ) {
+      this.applyMerchantUpdate(merchantUpdate)
+
+      wx.removeStorageSync('merchantUpdate')
+    }
+  },
+
+  // =========================
+  // 返回上一页
+  // =========================
+  goBack() {
+    wx.navigateBack({
+      delta: 1
+    })
+  },
+
+  // =========================
+  // 加载留言
+  // =========================
+  loadMessage(id) {
+    const post = getMessageById(id)
+
+    if (!post) {
+      wx.showToast({
+        title: '留言不存在',
+        icon: 'none'
+      })
+
+      setTimeout(() => {
+        wx.navigateBack({
+          delta: 1
+        })
+      }, 1000)
+
+      return
+    }
+
+    const likedMessages =
+      wx.getStorageSync('likedMessages') || []
+
+    const liked =
+      likedMessages.includes(String(id))
+
+    const comments =
+      Array.isArray(post.commentList)
+        ? post.commentList
+        : []
+
+    this.setData({
+      post: {
+        ...post,
+        liked
+      },
+
+      comments
+    })
+  },
+
+  // =========================
+  // 点赞 / 取消点赞
+  // =========================
+  toggleLike() {
+    if (!this.data.post) {
+      return
+    }
+
+    const id = this.data.post.id
+
+    let likedMessages =
+      wx.getStorageSync('likedMessages') || []
+
+    const index =
+      likedMessages.indexOf(String(id))
+
+    let liked = false
+
+    let likes =
+      Number(this.data.post.likes || 0)
+
+    if (index !== -1) {
+      // 取消点赞
+      likedMessages.splice(index, 1)
+
+      likes = Math.max(
+        0,
+        likes - 1
+      )
+
+      liked = false
+    } else {
+      // 点赞
+      likedMessages.push(String(id))
+
+      likes += 1
+
+      liked = true
+    }
+
+    wx.setStorageSync(
+      'likedMessages',
+      likedMessages
+    )
+
+    const updatedPost =
+      updateMessage(
+        id,
+        oldPost => ({
+          ...oldPost,
+          likes
+        })
+      )
+
+    if (!updatedPost) {
+      return
+    }
+
+    this.setData({
+      post: {
+        ...updatedPost,
+        liked
+      }
+    })
+  },
+
+  // =========================
+  // 输入评论
+  // =========================
+  inputComment(e) {
+    this.setData({
+      commentText: e.detail.value
+    })
+  },
+
+  // =========================
+  // 回复评论
+  // =========================
+  replyToComment(e) {
+    const index =
+      e.currentTarget.dataset.index
+
+    const comment =
+      this.data.comments[index]
+
+    if (!comment) {
+      return
+    }
+
+    this.setData({
+      replyingTo: comment,
+      replyHint:
+        `回复 ${comment.name || '食客'}`
+    })
+  },
+
+  // =========================
+  // 回复商家
+  // =========================
+  replyToMerchant() {
+    this.setData({
+      replyingTo: {
+        name: '餐厅'
+      },
+
+      replyHint: '回复餐厅'
+    })
+  },
+
+  // =========================
+  // 取消回复
+  // =========================
+  cancelReply() {
+    this.setData({
+      replyingTo: null,
+      replyHint: ''
+    })
+  },
+
+  // =========================
+  // 发送评论
+  // =========================
+  submitComment() {
+    const text =
+      (this.data.commentText || '').trim()
+
+    if (!text) {
+      wx.showToast({
+        title: '请输入评论内容',
+        icon: 'none'
+      })
+      return
+    }
+
+    if (!this.data.post) {
+      return
+    }
+
+    const postId =
+      this.data.post.id
+
+    const newComment = {
+      id: `comment_${Date.now()}`,
+
+      name: '食客',
+      userName: '食客',
+
+      avatar: '',
+
+      text: text,
+
+      time: '刚刚',
+
+      replyTo: this.data.replyingTo
+        ? (
+            this.data.replyingTo.name ||
+            this.data.replyingTo.userName ||
+            '食客'
+          )
+        : ''
+    }
+
+    const updatedPost =
+      updateMessage(
+        postId,
+        oldPost => {
+          const oldComments =
+            Array.isArray(oldPost.commentList)
+              ? oldPost.commentList
+              : []
+
+          const newComments = [
+            ...oldComments,
+            newComment
+          ]
+
+          return {
+            ...oldPost,
+
+            commentList: newComments,
+
+            commentsCount:
+              newComments.length,
+
+            comments:
+              newComments.length
+          }
+        }
+      )
+
+    if (!updatedPost) {
+      wx.showToast({
+        title: '评论失败',
+        icon: 'none'
+      })
+      return
+    }
+
+    this.setData({
+      post: updatedPost,
+
+      comments:
+        updatedPost.commentList || [],
+
+      commentText: '',
+
+      replyingTo: null,
+
+      replyHint: ''
+    })
+
+    wx.showToast({
+      title: '评论成功',
+      icon: 'success'
+    })
+  },
+
+  // =========================
+  // 商家处理结果
+  // =========================
+  applyMerchantUpdate(update) {
+    if (!this.data.post) {
+      return
+    }
+
+    const id =
+      this.data.post.id
+
+    const updatedPost =
+      updateMessage(
+        id,
+        oldPost => ({
+          ...oldPost,
+
+          reply:
+            update.reply ||
+            oldPost.reply ||
+            null,
+
+          replyTime:
+            update.replyTime ||
+            oldPost.replyTime ||
+            '',
+
+          replyType:
+            update.replyType ||
+            oldPost.replyType ||
+            '',
+
+          status:
+            update.status ||
+            oldPost.status ||
+            '',
+
+          statusName:
+            update.statusName ||
+            oldPost.statusName ||
+            ''
+        })
+      )
+
+    if (!updatedPost) {
+      return
+    }
+
+    this.setData({
+      post: updatedPost
+    })
+  },
+
+  // =========================
+  // 商家处理
+  // =========================
+  openMerchantProcess() {
+    if (!this.data.post) {
+      return
+    }
+
+    wx.navigateTo({
+      url:
+        `/pages/merchant-message/merchant-message?id=${this.data.post.id}`
+    })
+  },
+
+  // =========================
+  // 图片预览
+  // =========================
+  previewImage(e) {
+    const current =
+      e.currentTarget.dataset.src
+
+    if (!current) {
+      return
+    }
+
+    const images =
+      this.data.post &&
+      this.data.post.images &&
+      this.data.post.images.length
+        ? this.data.post.images
+        : [current]
+
+    wx.previewImage({
+      current: current,
+      urls: images
+    })
+  },
+
+  // =========================
+  // 清空输入
+  // =========================
+  clearComment() {
+    this.setData({
+      commentText: ''
+    })
+  },
+
+  // =========================
+// 打开 / 关闭 Emoji
+// =========================
+toggleEmoji() {
+  this.setData({
+    showEmoji: !this.data.showEmoji
+  })
+},
+
+// =========================
+// 选择 Emoji
+// =========================
+selectEmoji(e) {
+  const emoji = e.currentTarget.dataset.emoji
+
+  const text =
+    (this.data.commentText || '') + emoji
+
+  this.setData({
+    commentText: text
+  })
+},
+
+})

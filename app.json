@@ -1,0 +1,72 @@
+{
+  "pages": [
+    
+    "pages/index/index",
+    "pages/community/community",
+    "pages/message-create/message-create",
+    "pages/merchant-message/merchant-message",
+    "pages/message-detail/message-detail",
+    "pages/order-detail/order-detail",
+    "pages/order/order",
+    "pages/checkout/checkout",
+    "pages/cart/cart",
+    "pages/mine/mine",
+    "pages/my-poll/my-poll",
+    "pages/poll/poll",
+    "pages/address/address",
+    "pages/address-edit/address-edit",
+    "pages/notice/notice",
+    "pages/my-message/my-message",
+    "pages/my-favorite/my-favorite",
+    "pages/notice-detail/notice-detail",
+    "pages/menu/menu"
+    
+    
+    
+  ],
+  "window": {
+    "navigationBarTitleText": "食客共创",
+    "navigationBarBackgroundColor": "#F7F5EF",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F7F5EF"
+  },
+
+  "tabBar": {
+    "color": "#81908A",
+    "selectedColor": "#1F6A57",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+  
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tabbar/home_normal.png",
+        "selectedIconPath": "images/tabbar/home_active.png"
+      },
+  
+      {
+        "pagePath": "pages/menu/menu",
+        "text": "点餐",
+        "iconPath": "images/tabbar/menu_normal.png",
+        "selectedIconPath": "images/tabbar/menu_active.png"
+      },
+  
+      {
+        "pagePath": "pages/order/order",
+        "text": "订单",
+        "iconPath": "images/tabbar/order_normal.png",
+        "selectedIconPath": "images/tabbar/order_active.png"
+      },
+  
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tabbar/mine_normal.png",
+        "selectedIconPath": "images/tabbar/mine_active.png"
+      }
+    ]
+  },
+
+  "sitemapLocation": "sitemap.json"
+}

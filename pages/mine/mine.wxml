@@ -1,0 +1,306 @@
+<view class="page">
+
+<!-- 用户信息 -->
+<view class="user-card">
+
+  <view class="user-avatar">
+    食
+  </view>
+
+  <view class="user-info">
+    <view class="user-name">
+      {{userName}}
+    </view>
+
+    <view class="user-level">
+      食客会员
+    </view>
+  </view>
+
+  <view class="user-arrow">
+    ›
+  </view>
+
+</view>
+
+
+<!-- 数据统计 -->
+<view class="stats-card">
+
+  <view class="stat-item">
+    <view class="stat-number">
+      {{messageCount}}
+    </view>
+    <view class="stat-label">
+      我的留言
+    </view>
+  </view>
+
+  <view class="stat-line"></view>
+
+  <view class="stat-item">
+    <view class="stat-number">
+      {{voteCount}}
+    </view>
+    <view class="stat-label">
+      我的投票
+    </view>
+  </view>
+
+  <!-- 我的收藏 -->
+<view
+  class="function-item"
+  bindtap="openFavorites"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      ♡
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        我的收藏
+      </view>
+
+      <view class="function-desc">
+        查看收藏的菜品
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
+
+
+
+  <view class="stat-line"></view>
+
+  <view class="stat-item">
+    <view class="stat-number">
+      {{favoriteCount}}
+    </view>
+    <view class="stat-label">
+      收藏
+    </view>
+  </view>
+
+</view>
+
+
+<!-- 我的共创 -->
+<view class="section">
+
+  <view class="section-title">
+    <text>我的共创</text>
+  </view>
+
+  <view class="function-card">
+
+    <!-- 我的留言 -->
+    <view
+      class="function-item"
+      bindtap="openMyMessage"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon message-icon">
+          💬
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            我的留言
+          </view>
+
+          <view class="function-desc">
+            查看我发布过的留言
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <!-- 我的投票 -->
+    <view
+      class="function-item"
+      bindtap="openPoll"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon poll-icon">
+          🗳️
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            我的投票
+          </view>
+
+          <view class="function-desc">
+            查看参与过的投票
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 常用功能 -->
+<view class="section">
+
+  <view class="section-title">
+    <text>常用功能</text>
+  </view>
+
+  <view class="function-card">
+
+    <!-- 地址 -->
+    <view
+      class="function-item"
+      bindtap="manageAddress"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          📍
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            收货地址
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <!-- 我的订单 -->
+    <view
+      class="function-item"
+      bindtap="openOrders"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          📦
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            我的订单
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <!-- 设置 -->
+    <view
+      class="function-item"
+      bindtap="openSettings"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          ⚙️
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            设置
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <!-- 关于 -->
+    <view
+      class="function-item"
+      bindtap="aboutUs"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          ℹ️
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            关于食客共创
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+</view>

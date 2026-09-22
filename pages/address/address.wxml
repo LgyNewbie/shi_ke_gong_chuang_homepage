@@ -1,0 +1,149 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view
+    class="back"
+    bindtap="goBack"
+  >
+    ‹
+  </view>
+
+  <text class="title">
+    收货地址
+  </text>
+
+  <view
+    class="add-top"
+    bindtap="addAddress"
+  >
+    ＋
+  </view>
+
+</view>
+
+
+<!-- 地址列表 -->
+<view
+  wx:if="{{addresses.length > 0}}"
+  class="address-list"
+>
+
+  <view
+    wx:for="{{addresses}}"
+    wx:key="id"
+    class="address-card"
+  >
+
+    <view class="address-main">
+
+      <!-- 默认 -->
+      <view
+        wx:if="{{item.isDefault}}"
+        class="default-tag"
+      >
+        默认
+      </view>
+
+
+      <!-- 联系人 -->
+      <view class="contact-row">
+
+        <text class="name">
+          {{item.name}}
+        </text>
+
+        <text class="phone">
+          {{item.phone}}
+        </text>
+
+      </view>
+
+
+      <!-- 地址 -->
+      <text class="address-text">
+        {{item.detail}}
+      </text>
+
+    </view>
+
+
+    <!-- 操作 -->
+    <view class="address-actions">
+
+      <view
+        class="action"
+        data-id="{{item.id}}"
+        bindtap="setDefault"
+      >
+        {{item.isDefault ? '已是默认' : '设为默认'}}
+      </view>
+
+      <view
+        class="action"
+        data-id="{{item.id}}"
+        bindtap="editAddress"
+      >
+        编辑
+      </view>
+
+      <view
+        class="action delete-action"
+        data-id="{{item.id}}"
+        bindtap="deleteAddress"
+      >
+        删除
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 空状态 -->
+<view
+  wx:if="{{addresses.length === 0}}"
+  class="empty"
+>
+
+  <text class="empty-icon">
+    📍
+  </text>
+
+  <text class="empty-title">
+    还没有收货地址
+  </text>
+
+  <text class="empty-text">
+    添加一个地址，点餐下单更方便
+  </text>
+
+  <button
+    class="empty-btn"
+    bindtap="addAddress"
+  >
+    添加地址
+  </button>
+
+</view>
+
+
+<!-- 底部新增 -->
+<view
+  wx:if="{{addresses.length > 0}}"
+  class="bottom"
+>
+
+  <button
+    class="add-btn"
+    bindtap="addAddress"
+  >
+    ＋ 新增收货地址
+  </button>
+
+</view>
+
+</view>

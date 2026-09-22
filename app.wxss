@@ -1,0 +1,9 @@
+page {
+  box-sizing: border-box;
+  background: #F7F5EF;
+  color: #173C34;
+  font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+view, text, image, scroll-view {
+  box-sizing: border-box;
+}

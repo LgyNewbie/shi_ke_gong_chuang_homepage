@@ -1,0 +1,224 @@
+<view class="page">
+  <!-- 顶部品牌区 -->
+  <view class="hero">
+    <view class="brand-row">
+      <view class="logo">
+        <text class="logo-emoji">🍜</text>
+      </view>
+      <view class="brand-text">
+        <text class="brand-title">食客共创</text>
+        <text class="brand-subtitle">让每一位食客的声音都被听见！</text>
+      </view>
+      <view class="bell" bindtap="openNotifications">
+  🔔
+  <view class="dot"></view>
+</view>
+    </view>
+
+    <view class="hero-slogan">
+      <text>好吃的，不只是菜品</text>
+      <text>还有你的建议 ♥</text>
+    </view>
+    <image class="hero-food" src="/images/food1.jpg" mode="aspectFill"></image>
+  </view>
+
+
+ <!-- 留言板 -->
+<view class="section card">
+  <view class="section-head">
+    <view>
+      <view class="section-title">食客留言</view>
+      <view class="section-subtitle">看看大家都在聊什么～</view>
+    </view>
+
+    <view class="more" bindtap="openCommunity">
+      查看更多 ›
+    </view>
+  </view>
+
+  <!-- 留言分类 -->
+  <view class="tabs">
+    <view
+      class="tab {{messageTab === 'hot' ? 'active' : ''}}"
+      data-tab="hot"
+      bindtap="switchMessageTab"
+    >
+      热门
+    </view>
+
+    <view
+      class="tab {{messageTab === 'like' ? 'active' : ''}}"
+      data-tab="like"
+      bindtap="switchMessageTab"
+    >
+      点赞最多
+    </view>
+
+    <view
+      class="tab {{messageTab === 'comment' ? 'active' : ''}}"
+      data-tab="comment"
+      bindtap="switchMessageTab"
+    >
+      评论最多
+    </view>
+  </view>
+
+  <!-- 留言列表 -->
+  <view class="message-list">
+
+    <block wx:for="{{messages}}" wx:key="id">
+
+      <!-- 整张留言卡片都可以点击 -->
+      <view
+        class="message-item"
+        data-id="{{item.id}}"
+        bindtap="openMessageDetail"
+      >
+
+        <!-- 用户信息 -->
+        <image
+          wx:if="{{item.image}}"
+          class="avatar"
+          src="{{item.avatar}}"
+          mode="aspectFill"
+        ></image>
+
+        <view class="message-main">
+
+          <!-- 顶部 -->
+          <view class="message-top">
+
+            <view class="user-name">
+              {{item.name}}
+              <text class="level">Lv.{{item.level}}</text>
+            </view>
+
+            <text class="time">
+              {{item.time}}
+            </text>
+
+            <text class="tag">
+              {{item.tag}}
+            </text>
+
+          </view>
+
+          <!-- 留言内容 -->
+          <view class="message-text">
+            {{item.text}}
+          </view>
+
+          <!-- 留言图片 -->
+          <image
+            wx:if="{{item.image}}"
+            class="message-image"
+            src="{{item.image}}"
+            mode="aspectFill"
+          ></image>
+
+          <!-- 底部数据 -->
+          <view class="message-actions">
+
+            <view class="action-item">
+              ♥ <text>{{item.likes}}</text>
+            </view>
+
+            <view class="action-item">
+              ▢ <text>{{item.comments}}</text>
+            </view>
+
+            <view class="ellipsis">
+              ···
+            </view>
+
+          </view>
+
+        </view>
+
+      </view>
+
+    </block>
+
+  </view>
+</view>
+
+  <!-- 本周投票 -->
+  <view class="section card">
+    <view class="section-head">
+      <view>
+        <view class="section-title">本周投票</view>
+        <view class="section-subtitle">下周最想吃什么新品？</view>
+      </view>
+      <view class="more" bindtap="openPoll">查看全部 ›</view>
+    </view>
+
+    <view
+  class="poll-box"
+  bindtap="openPoll"
+>
+      <image class="poll-image" src="/images/food2.jpg" mode="aspectFill"></image>
+      <view class="poll-content">
+        <view class="poll-status">进行中</view>
+        <view wx:for="{{polls}}" wx:key="name" class="poll-row">
+          <text class="poll-name">{{item.name}}</text>
+          
+          <view class="poll-track">
+  <view class="poll-fill poll-{{item.percent}}"></view>
+</view>
+
+          <text class="poll-percent">{{item.percent}}%</text>
+          <text class="poll-count">({{item.count}}票)</text>
+        </view>
+        <button class="poll-btn" catchtap="openPoll">
+  立即投票
+</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 餐厅公告 -->
+  <view class="section card">
+    <view class="section-head">
+      <view>
+        <view class="section-title">餐厅公告</view>
+        <view class="section-subtitle">最新动态 · 不容错过</view>
+      </view>
+      <view class="more" bindtap="openNotice">更多 ›</view>
+    </view>
+
+    <view class="notice-list">
+      <view
+  wx:for="{{notices}}"
+  wx:key="id"
+  class="notice-row"
+  data-id="{{item.id}}"
+  bindtap="openNotice"
+>
+        <text class="notice-badge {{item.type}}">{{item.label}}</text>
+        <text class="notice-text">{{item.text}}</text>
+        <text class="notice-date">{{item.date}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 去点餐 -->
+  <view class="order-banner" bindtap="openMenu">
+    <view class="order-banner-left">
+      <view class="order-icon">🍱</view>
+      <view>
+        <view class="order-title">去点餐</view>
+        <view class="order-subtitle">美味从这里开始 ›</view>
+      </view>
+    </view>
+    <image src="/images/food3.jpg" mode="aspectFill"></image>
+  </view>
+
+  <!-- 写留言 -->
+  <view class="write-btn" bindtap="writeMessage">
+    <text class="write-icon">✎</text>
+    <text>写留言</text>
+  </view>
+
+  <!-- 临时四导航：等三个页面建好后再换成真正 tabBar -->
+  
+</view>

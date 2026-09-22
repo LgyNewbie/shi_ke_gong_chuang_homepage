@@ -1,0 +1,270 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 160rpx;
+}
+
+
+/* 顶部 */
+.header {
+  height: 110rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.back {
+  position: absolute;
+  left: 28rpx;
+
+  font-size: 58rpx;
+  color: #173C34;
+}
+
+.title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #173C34;
+}
+
+
+/* 留言 */
+.message-card {
+  margin: 0 24rpx;
+  padding: 28rpx;
+
+  border-radius: 28rpx;
+  background: white;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+}
+
+.user-info {
+  margin-left: 18rpx;
+}
+
+.name {
+  display: block;
+
+  font-size: 27rpx;
+  font-weight: bold;
+  color: #24483F;
+}
+
+.time {
+  display: block;
+
+  margin-top: 6rpx;
+
+  color: #9BA8A3;
+  font-size: 19rpx;
+}
+
+.tag {
+  margin-left: auto;
+
+  padding: 8rpx 14rpx;
+
+  border-radius: 18rpx;
+
+  background: #EFF7F3;
+  color: #1F6A57;
+
+  font-size: 18rpx;
+}
+
+.message-text {
+  margin-top: 20rpx;
+
+  font-size: 27rpx;
+  line-height: 1.7;
+
+  color: #324B43;
+}
+
+.message-image {
+  margin-top: 18rpx;
+
+  width: 100%;
+  height: 330rpx;
+
+  border-radius: 22rpx;
+}
+
+
+/* 卡片 */
+.card {
+  margin: 20rpx 24rpx 0;
+
+  padding: 26rpx;
+
+  background: white;
+  border-radius: 28rpx;
+}
+
+.card-title {
+  font-size: 27rpx;
+  font-weight: bold;
+  color: #24483F;
+}
+
+
+/* 状态 */
+.status-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 16rpx;
+
+  margin-top: 20rpx;
+}
+
+.status-item {
+  padding: 14rpx 24rpx;
+
+  border-radius: 24rpx;
+
+  background: #F0F4F2;
+  color: #687A74;
+
+  font-size: 22rpx;
+}
+
+.status-item.active {
+  background: #1F6A57;
+  color: white;
+}
+
+
+/* 回复类型 */
+.type-list {
+  display: flex;
+
+  gap: 18rpx;
+
+  margin-top: 20rpx;
+}
+
+.type-item {
+  flex: 1;
+
+  padding: 18rpx 10rpx;
+
+  border-radius: 22rpx;
+
+  text-align: center;
+
+  background: #F0F4F2;
+  color: #647770;
+
+  font-size: 22rpx;
+}
+
+.type-item.active {
+  background: #E2F0E9;
+  color: #1F6A57;
+  font-weight: bold;
+}
+
+
+/* 输入 */
+.textarea {
+  width: 100%;
+
+  min-height: 260rpx;
+
+  margin-top: 18rpx;
+
+  padding: 20rpx;
+
+  border-radius: 20rpx;
+
+  background: #F5F7F6;
+
+  color: #344B43;
+
+  font-size: 25rpx;
+
+  line-height: 1.7;
+}
+
+.word-count {
+  margin-top: 8rpx;
+
+  text-align: right;
+
+  color: #9BA8A3;
+
+  font-size: 18rpx;
+}
+
+
+/* 快捷回复 */
+.quick-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 14rpx;
+
+  margin-top: 18rpx;
+}
+
+.quick {
+  padding: 13rpx 20rpx;
+
+  border-radius: 22rpx;
+
+  background: #FFF5E8;
+
+  color: #A36D30;
+
+  font-size: 21rpx;
+}
+
+
+/* 底部 */
+.bottom {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 18rpx 24rpx 28rpx;
+
+  background: rgba(247,245,239,.96);
+}
+
+.send-btn {
+  height: 82rpx;
+
+  line-height: 82rpx;
+
+  border-radius: 44rpx;
+
+  background: #1F6A57;
+
+  color: white;
+
+  font-size: 27rpx;
+  font-weight: bold;
+}
+
+button::after {
+  border: none;
+}

@@ -1,0 +1,188 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部 */
+
+.header {
+  padding: 50rpx 32rpx 30rpx;
+  background: #F7F5EF;
+}
+
+.header-title {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #173C34;
+}
+
+.header-subtitle {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #7C8A84;
+}
+
+/* 分类 */
+
+.category-scroll {
+  width: 100%;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.category-list {
+  display: flex;
+  padding: 0 32rpx 24rpx;
+  gap: 20rpx;
+}
+
+.category {
+  flex-shrink: 0;
+  padding: 14rpx 30rpx;
+  border-radius: 40rpx;
+  background: #FFFFFF;
+  color: #6F7C76;
+  font-size: 26rpx;
+}
+
+.category.active {
+  background: #1F6A57;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* 公告列表 */
+
+.notice-list {
+  padding: 0 28rpx;
+}
+
+.notice-card {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 22rpx;
+  box-sizing: border-box;
+  box-shadow: 0 8rpx 24rpx rgba(31, 106, 87, 0.05);
+}
+
+.pinned-card {
+  border: 2rpx solid #DCEBE5;
+}
+
+/* 置顶 */
+
+.pinned-label {
+  position: absolute;
+  right: 24rpx;
+  top: 20rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 20rpx;
+  background: #EEF7F3;
+  color: #1F6A57;
+  font-size: 22rpx;
+}
+
+/* 顶部信息 */
+
+.notice-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notice-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7rpx 16rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.type-business {
+  background: #EEF5F2;
+  color: #1F6A57;
+}
+
+.type-event {
+  background: #FFF2E9;
+  color: #D46B3D;
+}
+
+.type-new {
+  background: #F3EDFF;
+  color: #7656B7;
+}
+
+.notice-date {
+  font-size: 22rpx;
+  color: #A0AAA5;
+}
+
+/* 标题 */
+
+.notice-title {
+  margin-top: 22rpx;
+  font-size: 32rpx;
+  line-height: 1.5;
+  font-weight: 700;
+  color: #173C34;
+}
+
+/* 摘要 */
+
+.notice-summary {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: #66746E;
+}
+
+/* 底部 */
+
+.notice-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 20rpx;
+  color: #1F6A57;
+  font-size: 24rpx;
+}
+
+.arrow {
+  margin-left: 8rpx;
+  font-size: 34rpx;
+  line-height: 20rpx;
+}
+
+/* 空状态 */
+
+.empty {
+  text-align: center;
+  padding-top: 160rpx;
+}
+
+.empty-icon {
+  font-size: 72rpx;
+}
+
+.empty-title {
+  margin-top: 22rpx;
+  font-size: 30rpx;
+  color: #173C34;
+  font-weight: 600;
+}
+
+.empty-text {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #9AA39F;
+}

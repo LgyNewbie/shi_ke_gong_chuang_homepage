@@ -1,0 +1,257 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 150rpx;
+}
+
+/* 顶部 */
+.header {
+  height: 110rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 28rpx;
+  background: #F7F5EF;
+  position: relative;
+}
+
+.back {
+  font-size: 58rpx;
+  color: #173C34;
+  width: 80rpx;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #173C34;
+}
+
+.publish {
+  margin-left: auto;
+  padding: 14rpx 22rpx;
+  border-radius: 28rpx;
+  background: #1F6A57;
+  color: white;
+  font-size: 22rpx;
+}
+
+/* 标签 */
+.tabs {
+  display: flex;
+  margin: 0 28rpx 20rpx;
+  gap: 18rpx;
+}
+
+.tab {
+  padding: 14rpx 32rpx;
+  border-radius: 30rpx;
+  color: #667C75;
+  background: #EEF3EF;
+  font-size: 23rpx;
+}
+
+.tab.active {
+  background: #1F6A57;
+  color: white;
+}
+
+/* 留言卡片 */
+.message-list {
+  padding: 0 24rpx;
+}
+
+.message-card {
+  background: white;
+  border-radius: 28rpx;
+  padding: 26rpx;
+  margin-bottom: 22rpx;
+  box-shadow: 0 8rpx 28rpx rgba(30, 70, 60, .05);
+}
+
+/* 用户信息 */
+.user-row {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+}
+
+.user-info {
+  margin-left: 18rpx;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  font-size: 27rpx;
+  font-weight: bold;
+  color: #24483F;
+}
+
+.level {
+  margin-left: 8rpx;
+  padding: 3rpx 9rpx;
+  border-radius: 16rpx;
+  background: #FFF5D8;
+  color: #D79B39;
+  font-size: 17rpx;
+}
+
+.time {
+  display: block;
+  margin-top: 6rpx;
+  color: #A0ADA8;
+  font-size: 19rpx;
+}
+
+.tag {
+  margin-left: auto;
+  padding: 7rpx 14rpx;
+  border-radius: 18rpx;
+  background: #EFF7F3;
+  color: #1F6A57;
+  font-size: 18rpx;
+}
+
+/* 内容 */
+.message-text {
+  margin-top: 22rpx;
+  font-size: 27rpx;
+  line-height: 1.7;
+  color: #2B433C;
+}
+
+.image-box {
+  margin-top: 18rpx;
+}
+
+.message-image {
+  width: 210rpx;
+  height: 150rpx;
+  border-radius: 18rpx;
+}
+
+/* 操作 */
+.actions {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  color: #70847D;
+  font-size: 22rpx;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  margin-right: 38rpx;
+}
+
+.action text:last-child {
+  margin-left: 7rpx;
+}
+
+.heart {
+  color: #E56D50;
+  font-size: 30rpx;
+}
+
+.more-action {
+  margin-left: auto;
+  letter-spacing: 5rpx;
+}
+
+/* 商家回复 */
+.merchant-reply {
+  margin-top: 22rpx;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  background: #F2F6F3;
+}
+
+.reply-title {
+  display: flex;
+  align-items: center;
+}
+
+.merchant-icon {
+  width: 38rpx;
+  height: 38rpx;
+  line-height: 38rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: #1F6A57;
+  color: white;
+  font-size: 19rpx;
+}
+
+.merchant-name {
+  margin-left: 9rpx;
+  font-size: 23rpx;
+  font-weight: bold;
+  color: #275247;
+}
+
+.official {
+  margin-left: 8rpx;
+  padding: 3rpx 9rpx;
+  border-radius: 14rpx;
+  background: #DCEDE5;
+  color: #1F6A57;
+  font-size: 17rpx;
+}
+
+.reply-text {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 23rpx;
+  line-height: 1.65;
+  color: #50665F;
+}
+
+.reply-time {
+  display: block;
+  margin-top: 8rpx;
+  color: #9AA7A2;
+  font-size: 18rpx;
+}
+
+/* 写留言 */
+.bottom-write {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 34rpx;
+
+  width: 300rpx;
+  height: 80rpx;
+
+  background: #1F6A57;
+  border-radius: 42rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  font-size: 26rpx;
+
+  box-shadow: 0 12rpx 30rpx rgba(31, 106, 87, .25);
+}
+
+.bottom-write text:first-child {
+  font-size: 34rpx;
+  margin-right: 10rpx;
+}

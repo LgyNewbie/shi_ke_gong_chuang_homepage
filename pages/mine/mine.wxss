@@ -1,0 +1,217 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 30rpx 28rpx 160rpx;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   用户信息
+========================= */
+
+.user-card {
+  display: flex;
+  align-items: center;
+
+  padding: 30rpx;
+
+  background: #FFFFFF;
+  border-radius: 26rpx;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 8rpx 24rpx rgba(31, 106, 87, 0.05);
+}
+
+.user-avatar {
+  width: 96rpx;
+  height: 96rpx;
+
+  border-radius: 50%;
+
+  background: #E7F1ED;
+  color: #1F6A57;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.user-info {
+  flex: 1;
+  margin-left: 22rpx;
+}
+
+.user-name {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #173C34;
+}
+
+.user-level {
+  display: inline-block;
+
+  margin-top: 8rpx;
+  padding: 6rpx 14rpx;
+
+  border-radius: 12rpx;
+
+  background: #EEF7F3;
+  color: #1F6A57;
+
+  font-size: 22rpx;
+}
+
+.user-arrow {
+  font-size: 42rpx;
+  color: #9AA5A0;
+}
+
+
+/* =========================
+   数据统计
+========================= */
+
+.stats-card {
+  margin-top: 22rpx;
+
+  padding: 28rpx 12rpx;
+
+  background: #FFFFFF;
+  border-radius: 24rpx;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #1F6A57;
+}
+
+.stat-label {
+  margin-top: 8rpx;
+
+  font-size: 23rpx;
+  color: #89958F;
+}
+
+.stat-line {
+  width: 2rpx;
+  height: 58rpx;
+
+  background: #E9EEEC;
+}
+
+
+/* =========================
+   区块
+========================= */
+
+.section {
+  margin-top: 28rpx;
+}
+
+.section-title {
+  margin: 0 6rpx 16rpx;
+
+  font-size: 29rpx;
+  font-weight: 700;
+
+  color: #173C34;
+}
+
+
+/* =========================
+   功能列表
+========================= */
+
+.function-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+
+  overflow: hidden;
+}
+
+.function-item {
+  min-height: 108rpx;
+
+  padding: 0 26rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+
+  border-bottom: 1rpx solid #F0F2F0;
+}
+
+.function-item:last-child {
+  border-bottom: none;
+}
+
+.function-left {
+  display: flex;
+  align-items: center;
+}
+
+.function-icon {
+  width: 68rpx;
+  height: 68rpx;
+
+  border-radius: 18rpx;
+
+  background: #F3F7F5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 31rpx;
+}
+
+.message-icon {
+  background: #EAF5F0;
+}
+
+.poll-icon {
+  background: #F2EDFB;
+}
+
+.function-text {
+  margin-left: 18rpx;
+}
+
+.function-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #173C34;
+}
+
+.function-desc {
+  margin-top: 6rpx;
+
+  font-size: 22rpx;
+  color: #98A29D;
+}
+
+.function-arrow {
+  font-size: 36rpx;
+  color: #A0AAA5;
+}

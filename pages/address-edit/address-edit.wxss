@@ -1,0 +1,142 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 150rpx;
+}
+
+.header {
+  height: 115rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.back {
+  position: absolute;
+
+  left: 28rpx;
+
+  color: #173C34;
+
+  font-size: 58rpx;
+}
+
+.title {
+  color: #173C34;
+
+  font-size: 35rpx;
+  font-weight: bold;
+}
+
+
+/* 表单 */
+.card {
+  margin: 0 24rpx;
+
+  padding: 10rpx 26rpx;
+
+  background: white;
+
+  border-radius: 28rpx;
+}
+
+.form-item {
+  min-height: 100rpx;
+
+  display: flex;
+
+  align-items: center;
+
+  border-bottom: 1rpx solid #EDF0EE;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 145rpx;
+
+  color: #3D574E;
+
+  font-size: 23rpx;
+}
+
+.input {
+  flex: 1;
+
+  color: #344E45;
+
+  font-size: 23rpx;
+}
+
+
+/* 默认 */
+.default-row {
+  min-height: 110rpx;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.default-title {
+  display: block;
+
+  color: #3D574E;
+
+  font-size: 23rpx;
+}
+
+.default-desc {
+  display: block;
+
+  margin-top: 7rpx;
+
+  color: #9AA6A1;
+
+  font-size: 18rpx;
+}
+
+
+/* 底部 */
+.bottom {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 18rpx 24rpx 28rpx;
+
+  background: rgba(247,245,239,.97);
+}
+
+.save-btn {
+  height: 82rpx;
+
+  line-height: 82rpx;
+
+  margin: 0;
+
+  border-radius: 44rpx;
+
+  background: #1F6A57;
+
+  color: white;
+
+  font-size: 27rpx;
+
+  font-weight: bold;
+}
+
+button::after {
+  border: none;
+}

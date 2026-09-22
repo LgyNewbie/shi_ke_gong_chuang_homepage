@@ -1,0 +1,94 @@
+<view class="page">
+
+<view class="header">
+  <view class="title">我的收藏</view>
+  <view class="subtitle">收藏喜欢的菜品，下次点餐更方便</view>
+</view>
+
+
+<!-- 收藏数量 -->
+<view class="count-card">
+  <text>已收藏</text>
+  <text class="count-number">{{favorites.length}}</text>
+  <text>道菜品</text>
+</view>
+
+
+<!-- 收藏列表 -->
+<view class="food-list">
+
+  <view
+    wx:for="{{favorites}}"
+    wx:key="id"
+    class="food-card"
+    data-id="{{item.id}}"
+    bindtap="openFood"
+  >
+
+    <image
+      class="food-image"
+      src="{{item.image}}"
+      mode="aspectFill"
+    ></image>
+
+    <view class="food-info">
+
+      <view class="food-name">
+        {{item.name}}
+      </view>
+
+      <view class="food-desc">
+        {{item.desc}}
+      </view>
+
+      <view class="food-bottom">
+
+        <view class="price">
+          ¥{{item.price}}
+        </view>
+
+        <view
+          class="favorite-btn"
+          data-id="{{item.id}}"
+          catchtap="removeFavorite"
+        >
+          ♥
+        </view>
+
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 空状态 -->
+<view
+  wx:if="{{favorites.length === 0}}"
+  class="empty"
+>
+
+  <view class="empty-icon">
+    ♡
+  </view>
+
+  <view class="empty-title">
+    还没有收藏菜品
+  </view>
+
+  <view class="empty-text">
+    去点餐页面看看有没有喜欢的菜吧
+  </view>
+
+  <button
+    class="go-menu-btn"
+    bindtap="goMenu"
+  >
+    去点餐
+  </button>
+
+</view>
+
+</view>

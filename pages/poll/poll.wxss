@@ -1,0 +1,354 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 50rpx;
+}
+
+
+/* 顶部 */
+.header {
+  height: 115rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.back {
+  position: absolute;
+  left: 28rpx;
+
+  color: #173C34;
+  font-size: 58rpx;
+}
+
+.title {
+  color: #173C34;
+
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.header-more {
+  position: absolute;
+  right: 30rpx;
+
+  color: #80908A;
+  font-size: 30rpx;
+
+  letter-spacing: 5rpx;
+}
+
+
+/* 投票主体 */
+.poll-card {
+  position: relative;
+
+  margin: 0 24rpx;
+
+  padding-bottom: 28rpx;
+
+  background: white;
+
+  border-radius: 30rpx;
+
+  overflow: hidden;
+
+  box-shadow: 0 8rpx 28rpx rgba(31,70,60,.05);
+}
+
+.poll-image {
+  width: 100%;
+  height: 280rpx;
+
+  display: block;
+}
+
+.poll-tag {
+  position: absolute;
+
+  top: 22rpx;
+  left: 22rpx;
+
+  padding: 8rpx 16rpx;
+
+  border-radius: 18rpx;
+
+  background: #1F6A57;
+  color: white;
+
+  font-size: 19rpx;
+}
+
+.poll-title {
+  margin: 24rpx 26rpx 0;
+
+  color: #213F36;
+
+  font-size: 33rpx;
+  font-weight: bold;
+}
+
+.poll-desc {
+  margin: 8rpx 26rpx 0;
+
+  color: #71817B;
+
+  font-size: 22rpx;
+
+  line-height: 1.6;
+}
+
+.poll-info {
+  margin: 18rpx 26rpx 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  color: #96A29D;
+
+  font-size: 19rpx;
+}
+
+
+/* 卡片 */
+.card {
+  margin: 20rpx 24rpx 0;
+
+  padding: 28rpx;
+
+  border-radius: 28rpx;
+
+  background: white;
+
+  box-shadow: 0 8rpx 25rpx rgba(31,70,60,.04);
+}
+
+.card-title {
+  color: #2D4A41;
+
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+
+/* 选项 */
+.options {
+  margin-top: 24rpx;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 16rpx;
+
+  padding: 22rpx;
+
+  border-radius: 22rpx;
+
+  border: 2rpx solid #EDF1EF;
+
+  background: #FAFBFA;
+}
+
+.option.selected {
+  border-color: #1F6A57;
+  background: #EFF6F2;
+}
+
+.radio {
+  width: 38rpx;
+  height: 38rpx;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  border: 3rpx solid #B6C3BE;
+}
+
+.option.selected .radio {
+  border-color: #1F6A57;
+}
+
+.radio-dot {
+  width: 20rpx;
+  height: 20rpx;
+
+  border-radius: 50%;
+
+  background: #1F6A57;
+}
+
+.option-info {
+  flex: 1;
+
+  margin-left: 18rpx;
+}
+
+.option-name {
+  display: block;
+
+  color: #324D44;
+
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+.option-desc {
+  display: block;
+
+  margin-top: 6rpx;
+
+  color: #92A09A;
+
+  font-size: 19rpx;
+}
+
+
+/* 投票按钮 */
+.vote-btn {
+  height: 82rpx;
+
+  margin-top: 28rpx;
+
+  line-height: 82rpx;
+
+  padding: 0;
+
+  border-radius: 42rpx;
+
+  background: #1F6A57;
+  color: white;
+
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+
+/* 结果 */
+.result-card {
+  padding-bottom: 30rpx;
+}
+
+.voted-tip {
+  color: #1F6A57;
+
+  font-size: 29rpx;
+  font-weight: bold;
+}
+
+.voted-desc {
+  margin-top: 8rpx;
+
+  color: #84928C;
+
+  font-size: 21rpx;
+}
+
+.result-list {
+  margin-top: 28rpx;
+}
+
+.result-item {
+  margin-bottom: 24rpx;
+}
+
+.result-top {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 9rpx;
+}
+
+.result-name {
+  color: #405A51;
+
+  font-size: 23rpx;
+}
+
+.result-number {
+  display: flex;
+  align-items: baseline;
+
+  color: #1F6A57;
+
+  font-size: 21rpx;
+  font-weight: bold;
+}
+
+.result-count {
+  margin-left: 7rpx;
+
+  color: #9CA9A4;
+
+  font-size: 18rpx;
+  font-weight: normal;
+}
+
+.total-votes {
+  margin-top: 10rpx;
+
+  text-align: center;
+
+  color: #9BA7A2;
+
+  font-size: 19rpx;
+}
+
+
+/* 底部说明 */
+.info-card {
+  margin: 20rpx 24rpx 0;
+
+  padding: 24rpx;
+
+  border-radius: 25rpx;
+
+  background: #EAF2ED;
+}
+
+.info-title {
+  color: #1F6A57;
+
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+.info-text {
+  margin-top: 9rpx;
+
+  color: #627770;
+
+  font-size: 20rpx;
+
+  line-height: 1.65;
+}
+
+
+/* 社区 */
+.community-link {
+  padding: 30rpx 0 40rpx;
+
+  text-align: center;
+
+  color: #1F6A57;
+
+  font-size: 21rpx;
+}
+
+button::after {
+  border: none;
+}

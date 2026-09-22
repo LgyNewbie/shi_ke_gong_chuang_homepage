@@ -1,0 +1,343 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 60rpx;
+}
+
+
+/* 顶部 */
+.header {
+  padding: 34rpx 28rpx 24rpx;
+
+  display: flex;
+  align-items: baseline;
+}
+
+.title {
+  color: #173C34;
+  font-size: 43rpx;
+  font-weight: bold;
+}
+
+.order-count {
+  margin-left: 14rpx;
+  color: #8A9792;
+  font-size: 20rpx;
+}
+
+
+/* tabs */
+.tabs-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.tabs {
+  display: flex;
+  gap: 14rpx;
+
+  padding: 0 26rpx 24rpx;
+}
+
+.tab {
+  flex-shrink: 0;
+
+  padding: 13rpx 28rpx;
+
+  border-radius: 28rpx;
+
+  background: #EEF3F0;
+  color: #6D7E78;
+
+  font-size: 22rpx;
+}
+
+.tab.active {
+  background: #1F6A57;
+  color: white;
+}
+
+
+/* 列表 */
+.order-list {
+  padding: 0 24rpx;
+}
+
+
+/* 订单卡 */
+.order-card {
+  margin-bottom: 20rpx;
+
+  padding: 24rpx;
+
+  border-radius: 28rpx;
+
+  background: white;
+
+  box-shadow: 0 8rpx 25rpx rgba(31, 70, 60, .05);
+}
+
+
+/* 订单顶部 */
+.order-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 18rpx;
+
+  border-bottom: 1rpx solid #EDF0EE;
+}
+
+.order-time {
+  color: #8B9893;
+  font-size: 19rpx;
+}
+
+.order-status {
+  padding: 7rpx 14rpx;
+  border-radius: 18rpx;
+
+  font-size: 19rpx;
+  font-weight: 600;
+}
+
+.order-status.pending {
+  background: #FFF2DF;
+  color: #D27B37;
+}
+
+.order-status.accepted {
+  background: #EAF3EE;
+  color: #3D7C65;
+}
+
+.order-status.cooking {
+  background: #E5F1EC;
+  color: #1F6A57;
+}
+
+.order-status.delivery {
+  background: #EAF1F7;
+  color: #4B7391;
+}
+
+.order-status.completed {
+  background: #F0F2F1;
+  color: #78847F;
+}
+
+
+/* 商品 */
+.items {
+  padding: 16rpx 0 6rpx;
+}
+
+.food-row {
+  display: flex;
+  align-items: center;
+
+  padding: 13rpx 0;
+}
+
+.food-image {
+  width: 96rpx;
+  height: 96rpx;
+
+  border-radius: 18rpx;
+}
+
+.food-info {
+  flex: 1;
+
+  margin-left: 14rpx;
+  min-width: 0;
+}
+
+.food-name {
+  display: block;
+
+  color: #2F4B42;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.food-desc {
+  display: block;
+
+  margin-top: 5rpx;
+
+  color: #97A29E;
+  font-size: 18rpx;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.food-right {
+  margin-left: 10rpx;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.food-price {
+  color: #495F57;
+  font-size: 22rpx;
+}
+
+.food-count {
+  margin-top: 5rpx;
+
+  color: #9AA6A1;
+  font-size: 18rpx;
+}
+
+
+/* 底部 */
+.order-footer {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  padding-top: 17rpx;
+
+  border-top: 1rpx solid #EDF0EE;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+
+  color: #87948F;
+  font-size: 18rpx;
+}
+
+.order-number {
+  margin-top: 6rpx;
+
+  color: #A0ABA7;
+
+  font-size: 17rpx;
+}
+
+.footer-right {
+  display: flex;
+  align-items: baseline;
+}
+
+.total-label {
+  color: #75847E;
+  font-size: 19rpx;
+}
+
+.total-price {
+  margin-left: 7rpx;
+
+  color: #DF6A43;
+
+  font-size: 31rpx;
+  font-weight: bold;
+}
+
+
+/* 操作按钮 */
+.order-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 14rpx;
+
+  margin-top: 19rpx;
+}
+
+.action-btn {
+  min-width: 150rpx;
+
+  height: 62rpx;
+
+  margin: 0;
+
+  line-height: 62rpx;
+
+  padding: 0 22rpx;
+
+  border-radius: 32rpx;
+
+  background: #F0F3F1;
+
+  color: #526861;
+
+  font-size: 20rpx;
+}
+
+.action-btn.primary {
+  background: #1F6A57;
+  color: white;
+}
+
+.cancel-btn {
+  background: #FFF2EF;
+  color: #C96F5A;
+}
+
+button::after {
+  border: none;
+}
+
+
+/* 空状态 */
+.empty {
+  padding-top: 170rpx;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-icon {
+  font-size: 82rpx;
+}
+
+.empty-title {
+  margin-top: 20rpx;
+
+  color: #3C574E;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.empty-text {
+  margin-top: 10rpx;
+
+  color: #929F9A;
+  font-size: 21rpx;
+}
+
+.go-menu {
+  width: 250rpx;
+  height: 76rpx;
+
+  margin-top: 30rpx;
+
+  line-height: 76rpx;
+
+  border-radius: 40rpx;
+
+  background: #1F6A57;
+  color: white;
+
+  font-size: 24rpx;
+}
+
+.order-status.cancelled {
+  background: #F1F2F1;
+  color: #8B9490;
+}

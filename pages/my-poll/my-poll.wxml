@@ -1,0 +1,226 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view
+    class="back"
+    bindtap="goBack"
+  >
+    ‹
+  </view>
+
+  <text class="title">
+    我的投票
+  </text>
+
+</view>
+
+
+<!-- 当前投票 -->
+<view
+  wx:if="{{currentPoll}}"
+  class="card current-card"
+>
+
+  <view class="card-head">
+
+    <view>
+      <text class="section-title">
+        正在进行
+      </text>
+
+      <text class="section-subtitle">
+        本周投票
+      </text>
+    </view>
+
+    <text class="status">
+      进行中
+    </text>
+
+  </view>
+
+
+  <view class="poll-title">
+    {{currentPoll.title}}
+  </view>
+
+  <view class="poll-description">
+    {{currentPoll.description}}
+  </view>
+
+
+  <!-- 用户选择 -->
+  <view class="my-choice">
+
+    <text class="choice-label">
+      我的选择
+    </text>
+
+    <text class="choice-name">
+      {{myChoice}}
+    </text>
+
+  </view>
+
+
+  <!-- 当前结果 -->
+  <view class="result-list">
+
+    <view
+      wx:for="{{currentPoll.options}}"
+      wx:key="id"
+      class="result-item"
+    >
+
+      <view class="result-top">
+
+        <text class="result-name">
+          {{item.name}}
+        </text>
+
+        <view class="result-number">
+
+          <text>
+            {{item.percent}}%
+          </text>
+
+          <text class="result-count">
+            {{item.votes}}票
+          </text>
+
+        </view>
+
+      </view>
+
+      <progress
+        percent="{{item.percent}}"
+        activeColor="#1F6A57"
+        backgroundColor="#E8EEEB"
+        stroke-width="10"
+        active
+      />
+
+    </view>
+
+  </view>
+
+
+  <view class="poll-footer">
+
+    <text>
+      共 {{currentPoll.totalVotes}} 人参与
+    </text>
+
+    <text>
+      截止 {{currentPoll.endDate}}
+    </text>
+
+  </view>
+
+</view>
+
+
+<!-- 历史投票 -->
+<view class="history-title">
+  历史投票
+</view>
+
+
+<view
+  wx:for="{{historyPolls}}"
+  wx:key="id"
+  class="card history-card"
+>
+
+  <view class="history-head">
+
+    <view>
+
+      <text class="history-poll-title">
+        {{item.title}}
+      </text>
+
+      <text class="history-date">
+        {{item.date}}
+      </text>
+
+    </view>
+
+    <text class="ended-tag">
+      已结束
+    </text>
+
+  </view>
+
+
+  <view class="history-choice">
+
+    <text>
+      我的选择
+    </text>
+
+    <text class="history-choice-name">
+      {{item.myChoice}}
+    </text>
+
+  </view>
+
+
+  <view class="history-result">
+
+    <text>
+      最终结果
+    </text>
+
+    <text class="history-result-name">
+      {{item.winner}}
+    </text>
+
+  </view>
+
+
+  <view class="history-summary">
+
+    <text>
+      {{item.totalVotes}} 人参与
+    </text>
+
+    <text>
+      {{item.resultPercent}}%
+    </text>
+
+  </view>
+
+</view>
+
+
+<!-- 空状态 -->
+<view
+  wx:if="{{!currentPoll && historyPolls.length === 0}}"
+  class="empty"
+>
+
+  <text class="empty-icon">
+    🗳️
+  </text>
+
+  <text class="empty-title">
+    还没有参与过投票
+  </text>
+
+  <text class="empty-text">
+    去参加本周投票，为餐厅新品出一份力吧
+  </text>
+
+  <button
+    class="go-poll"
+    bindtap="goPoll"
+  >
+    去投票
+  </button>
+
+</view>
+
+</view>

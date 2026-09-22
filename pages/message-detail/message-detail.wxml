@@ -1,0 +1,327 @@
+<view class="page">
+
+<!-- 顶部导航 -->
+<view class="header">
+
+  <view class="back-btn" bindtap="goBack">
+    ‹
+  </view>
+
+  <view class="header-title">
+    留言详情
+  </view>
+
+  <view class="header-more">
+    ···
+  </view>
+
+</view>
+
+
+<!-- 留言主体 -->
+<view wx:if="{{post}}" class="post-card">
+
+  <!-- 用户信息 -->
+  <view class="user-row">
+
+    <view class="avatar-box">
+
+      <image
+        wx:if="{{post.avatar}}"
+        class="avatar"
+        src="{{post.avatar}}"
+        mode="aspectFill"
+      ></image>
+
+      <view wx:else class="default-avatar">
+        食
+      </view>
+
+    </view>
+
+    <view class="user-info">
+
+      <view class="user-name">
+        {{post.name || post.userName || '食客'}}
+
+        <text class="level">
+          Lv.{{post.level || 1}}
+        </text>
+      </view>
+
+      <view class="post-time">
+        {{post.time || '刚刚'}}
+      </view>
+
+    </view>
+
+    <view class="tag">
+      {{post.tag || post.category || '其他'}}
+    </view>
+
+  </view>
+
+
+  <!-- 正文 -->
+  <view class="post-text">
+    {{post.text || post.content}}
+  </view>
+
+
+  <!-- 图片 -->
+  <view
+    wx:if="{{post.images && post.images.length > 0}}"
+    class="image-grid"
+  >
+
+    <image
+      wx:for="{{post.images}}"
+      wx:for-item="img"
+      wx:key="*this"
+      class="post-image"
+      src="{{img}}"
+      mode="aspectFill"
+      data-src="{{img}}"
+      catchtap="previewImage"
+    ></image>
+
+  </view>
+
+
+  <image
+    wx:if="{{(!post.images || post.images.length === 0) && post.image}}"
+    class="post-image single-image"
+    src="{{post.image}}"
+    mode="aspectFill"
+    data-src="{{post.image}}"
+    catchtap="previewImage"
+  ></image>
+
+
+  <!-- 点赞评论 -->
+  <view class="post-actions">
+
+    <view
+      class="action"
+      catchtap="toggleLike"
+    >
+      <text class="{{post.liked ? 'liked' : ''}}">
+        {{post.liked ? '♥' : '♡'}}
+      </text>
+
+      <text>
+        {{post.likes || 0}}
+      </text>
+    </view>
+
+    <view class="action">
+      <text>♧</text>
+      <text>{{post.commentsCount || 0}}</text>
+    </view>
+
+    <view class="share">
+      ↗ 分享
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 状态 -->
+<view
+  wx:if="{{post && post.statusName}}"
+  class="status-card"
+>
+
+  <view class="status-dot"></view>
+
+  <view class="status-name">
+    {{post.statusName}}
+  </view>
+
+</view>
+
+
+<!-- 商家回复 -->
+<view
+  wx:if="{{post && post.reply}}"
+  class="merchant-card"
+>
+
+  <view class="merchant-head">
+
+    <view class="merchant-avatar">
+      店
+    </view>
+
+    <view class="merchant-info">
+
+      <view class="merchant-name">
+        餐厅官方
+
+        <text class="official">
+          官方
+        </text>
+      </view>
+
+      <view class="merchant-time">
+        {{post.replyTime || '刚刚'}}
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="merchant-content">
+    {{post.reply.content || post.reply.text || post.reply}}
+  </view>
+
+</view>
+
+
+<!-- 评论区 -->
+<view class="comment-section">
+
+  <view class="comment-title">
+    最新评论
+    <text>（{{comments.length}}）</text>
+  </view>
+
+
+  <!-- 无评论 -->
+  <view
+    wx:if="{{comments.length === 0}}"
+    class="empty-comment"
+  >
+    暂时还没有评论，来说两句吧～
+  </view>
+
+
+  <!-- 评论 -->
+  <view
+    wx:for="{{comments}}"
+    wx:key="id"
+    class="comment-item"
+  >
+
+    <view class="comment-avatar">
+      {{item.name ? item.name.substring(0, 1) : '食'}}
+    </view>
+
+    <view class="comment-main">
+
+      <view class="comment-head">
+
+        <text class="comment-name">
+          {{item.name || item.userName || '食客'}}
+        </text>
+
+        <text class="comment-time">
+          {{item.time || '刚刚'}}
+        </text>
+
+      </view>
+
+
+      <view
+        wx:if="{{item.replyTo}}"
+        class="reply-label"
+      >
+        回复 {{item.replyTo}}
+      </view>
+
+
+      <view class="comment-text">
+        {{item.text || item.content}}
+      </view>
+
+
+      <view
+        class="reply-btn"
+        data-index="{{index}}"
+        catchtap="replyToComment"
+      >
+        回复
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 回复提示 -->
+<view
+  wx:if="{{replyHint}}"
+  class="reply-hint"
+>
+
+  <text>{{replyHint}}</text>
+
+  <text
+    class="cancel-reply"
+    catchtap="cancelReply"
+  >
+    取消
+  </text>
+
+</view>
+
+
+<!-- Emoji 面板 -->
+<view
+  wx:if="{{showEmoji}}"
+  class="emoji-panel"
+>
+
+  <view
+    wx:for="{{emojiList}}"
+    wx:key="*this"
+    class="emoji-item"
+    data-emoji="{{item}}"
+    catchtap="selectEmoji"
+  >
+    {{item}}
+  </view>
+
+</view>
+
+
+<!-- 底部输入栏 -->
+<view class="comment-bar">
+
+  <input
+    class="comment-input"
+    value="{{commentText}}"
+    placeholder="{{replyHint || '写下你的想法...'}}"
+    bindinput="inputComment"
+    confirm-type="send"
+    bindconfirm="submitComment"
+  />
+
+
+  <view
+    class="bar-btn"
+    catchtap="toggleEmoji"
+  >
+    😊
+  </view>
+
+
+  <view class="bar-btn">
+    🖼️
+  </view>
+
+
+  <view
+    class="send-btn"
+    catchtap="submitComment"
+  >
+    ➤
+  </view>
+
+</view>
+
+</view>

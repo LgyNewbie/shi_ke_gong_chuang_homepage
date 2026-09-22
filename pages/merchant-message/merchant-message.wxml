@@ -1,0 +1,180 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view class="back" bindtap="goBack">
+    ‹
+  </view>
+
+  <text class="title">
+    商家处理
+  </text>
+
+</view>
+
+
+<!-- 用户留言 -->
+<view class="message-card">
+
+  <view class="user-row">
+
+    <image
+      class="avatar"
+      src="/images/avatar1.jpg"
+      mode="aspectFill"
+    />
+
+    <view class="user-info">
+
+      <text class="name">
+        小柠檬
+      </text>
+
+      <text class="time">
+        2小时前
+      </text>
+
+    </view>
+
+    <text class="tag">
+      新品建议
+    </text>
+
+  </view>
+
+
+  <view class="message-text">
+    我觉得可以增加微辣版的宫保鸡丁，这样不太能吃辣的人也能吃～
+  </view>
+
+  <image
+    class="message-image"
+    src="/images/food1.jpg"
+    mode="aspectFill"
+  />
+
+</view>
+
+
+<!-- 处理状态 -->
+<view class="card">
+
+  <view class="card-title">
+    处理状态
+  </view>
+
+  <view class="status-list">
+
+    <view
+      wx:for="{{statuses}}"
+      wx:key="id"
+      class="status-item {{currentStatus === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="selectStatus"
+    >
+      <text>{{item.name}}</text>
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 回复方式 -->
+<view class="card">
+
+  <view class="card-title">
+    回复方式
+  </view>
+
+  <view class="type-list">
+
+    <view
+      wx:for="{{replyTypes}}"
+      wx:key="id"
+      class="type-item {{replyType === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="selectReplyType"
+    >
+      {{item.name}}
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 回复内容 -->
+<view class="card">
+
+  <view class="card-title">
+    回复内容
+  </view>
+
+  <textarea
+    class="textarea"
+    placeholder="{{placeholder}}"
+    maxlength="500"
+    value="{{replyContent}}"
+    bindinput="onReplyInput"
+  ></textarea>
+
+  <view class="word-count">
+    {{replyContent.length}} / 500
+  </view>
+
+</view>
+
+
+<!-- 快捷回复 -->
+<view class="card">
+
+  <view class="card-title">
+    快捷回复
+  </view>
+
+  <view class="quick-list">
+
+    <view
+      class="quick"
+      data-text="感谢你的建议！我们会认真评估。"
+      bindtap="useQuickReply"
+    >
+      感谢建议
+    </view>
+
+    <view
+      class="quick"
+      data-text="这个建议很不错，我们想进一步了解一下。"
+      bindtap="useQuickReply"
+    >
+      继续了解
+    </view>
+
+    <view
+      class="quick"
+      data-text="这个建议我们已经记录，后续会公布结果。"
+      bindtap="useQuickReply"
+    >
+      已记录
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 发布 -->
+<view class="bottom">
+
+  <button
+    class="send-btn"
+    bindtap="sendReply"
+  >
+    发布回复
+  </button>
+
+</view>
+
+</view>
