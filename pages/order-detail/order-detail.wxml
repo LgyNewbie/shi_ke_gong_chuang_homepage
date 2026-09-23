@@ -397,6 +397,17 @@
 </view>
 
 
+<view
+  wx:if="{{order && (order.status === 'accepted' || order.status === 'cooking' || order.status === 'delivery')}}"
+  class="advance-btn"
+  bindtap="advanceStatus"
+>
+  {{order.status === 'accepted' ? '开始制作' :
+    order.status === 'cooking' ? '开始配送' :
+    '完成订单'}}
+</view>
+
+
 <!-- 底部操作 -->
 <view class="bottom-bar">
 
