@@ -1,3 +1,7 @@
+const {
+  updateMessage
+} = require('./message.js')
+
 // ================================
 // 食客共创 - 多投票统一数据工具
 // ================================
@@ -212,10 +216,13 @@ const today =
   ).padStart(2, '0')}`
 
 
-const checkedPolls =
+  const checkedPolls =
   normalized.map(poll => {
 
-    // 只有进行中的投票需要检查
+    // =========================
+    // 不是进行中的投票
+    // =========================
+
     if (
       poll.status !== 'active'
     ) {
@@ -225,7 +232,10 @@ const checkedPolls =
     }
 
 
+    // =========================
     // 没有截止日期
+    // =========================
+
     if (
       !poll.endDate
     ) {
@@ -235,12 +245,15 @@ const checkedPolls =
     }
 
 
-    // 截止日期已经过去
+    // =========================
+    // 判断是否已经到期
+    // =========================
+
     if (
       poll.endDate < today
     ) {
 
-      return {
+      const endedPoll = {
 
         ...poll,
 
@@ -255,6 +268,41 @@ const checkedPolls =
           `${poll.endDate} 23:59:59`
 
       }
+
+
+      // =========================
+      // 同步来源留言
+      // =========================
+
+      if (
+        poll.sourceMessageId
+      ) {
+
+        updateMessage(
+
+          poll.sourceMessageId,
+
+          oldMessage => ({
+
+            ...oldMessage,
+
+            status:
+              'ended',
+
+            statusName:
+              '投票已结束',
+
+            pollId:
+              poll.id
+
+          })
+
+        )
+
+      }
+
+
+      return endedPoll
 
     }
 
