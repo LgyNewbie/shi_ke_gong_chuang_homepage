@@ -349,6 +349,38 @@
 
 </view>
 
+<!-- 商家投票管理 -->
+<view
+  class="function-item"
+  bindtap="openMerchantPoll"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      🗳️
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        投票管理
+      </view>
+
+      <view class="function-desc">
+        查看投票结果并处理建议
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
   <view class="function-arrow">
     ›
   </view>

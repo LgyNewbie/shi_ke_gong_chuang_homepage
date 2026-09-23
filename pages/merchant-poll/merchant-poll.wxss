@@ -1,0 +1,296 @@
+page {
+  background: #F5F6F4;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 30rpx 24rpx 70rpx;
+  box-sizing: border-box;
+}
+
+
+/* 顶部 */
+
+.header {
+  padding: 16rpx 6rpx 24rpx;
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #173C34;
+}
+
+.subtitle {
+  margin-top: 9rpx;
+  font-size: 23rpx;
+  color: #8B9791;
+}
+
+
+/* 投票 */
+
+.poll-card {
+  padding: 28rpx;
+
+  background: #FFFFFF;
+
+  border-radius: 24rpx;
+
+  box-sizing: border-box;
+}
+
+.poll-head {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.active-badge {
+  padding: 7rpx 15rpx;
+
+  border-radius: 12rpx;
+
+  background: #EAF5F0;
+
+  color: #1F6A57;
+
+  font-size: 21rpx;
+}
+
+.poll-time {
+  font-size: 20rpx;
+
+  color: #A0AAA5;
+}
+
+.poll-title {
+  margin-top: 20rpx;
+
+  font-size: 32rpx;
+  font-weight: 700;
+
+  line-height: 1.5;
+
+  color: #173C34;
+}
+
+
+/* 来源 */
+
+.source-box {
+  margin-top: 20rpx;
+
+  padding: 18rpx;
+
+  border-radius: 16rpx;
+
+  background: #F5F8F6;
+}
+
+.source-label {
+  font-size: 21rpx;
+
+  color: #1F6A57;
+}
+
+.source-text {
+  margin-top: 8rpx;
+
+  font-size: 25rpx;
+
+  line-height: 1.6;
+
+  color: #53645E;
+}
+
+.source-user {
+  margin-top: 7rpx;
+
+  font-size: 20rpx;
+
+  color: #96A19C;
+}
+
+
+/* 结果 */
+
+.result-title {
+  margin-top: 28rpx;
+
+  font-size: 28rpx;
+
+  font-weight: 700;
+
+  color: #173C34;
+}
+
+.result-row {
+  margin-top: 20rpx;
+}
+
+.result-top {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.option-name {
+  font-size: 25rpx;
+
+  color: #3F534C;
+}
+
+.option-count {
+  font-size: 21rpx;
+
+  color: #8A9690;
+}
+
+.progress-bg {
+  width: 100%;
+
+  height: 16rpx;
+
+  margin-top: 9rpx;
+
+  border-radius: 12rpx;
+
+  background: #E8EEEB;
+
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+
+  border-radius: 12rpx;
+
+  background: #1F6A57;
+}
+
+.total-votes {
+  margin-top: 22rpx;
+
+  text-align: center;
+
+  font-size: 22rpx;
+
+  color: #8A9690;
+}
+
+
+/* 处理 */
+
+.decision-area {
+  margin-top: 30rpx;
+
+  padding-top: 24rpx;
+
+  border-top: 1rpx solid #EFF1F0;
+}
+
+.decision-title {
+  text-align: center;
+
+  font-size: 23rpx;
+
+  color: #7D8983;
+}
+
+.decision-buttons {
+  display: flex;
+
+  gap: 16rpx;
+
+  margin-top: 20rpx;
+}
+
+.accept-btn,
+.reject-btn {
+  flex: 1;
+
+  height: 80rpx;
+
+  border-radius: 40rpx;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 25rpx;
+}
+
+.accept-btn {
+  background: #1F6A57;
+
+  color: #FFFFFF;
+}
+
+.reject-btn {
+  background: #F0F1F0;
+
+  color: #5F6B65;
+}
+
+
+/* 已处理 */
+
+.decision-result {
+  margin-top: 26rpx;
+
+  padding: 20rpx;
+
+  border-radius: 16rpx;
+
+  text-align: center;
+
+  font-size: 25rpx;
+}
+
+.accepted-result {
+  background: #EAF5F0;
+
+  color: #1F6A57;
+}
+
+.rejected-result {
+  background: #F1F2F1;
+
+  color: #7B8580;
+}
+
+
+/* 空状态 */
+
+.empty {
+  text-align: center;
+
+  padding-top: 190rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+}
+
+.empty-title {
+  margin-top: 20rpx;
+
+  font-size: 30rpx;
+
+  font-weight: 600;
+
+  color: #173C34;
+}
+
+.empty-text {
+  margin-top: 10rpx;
+
+  font-size: 23rpx;
+
+  color: #99A49F;
+}

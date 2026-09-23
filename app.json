@@ -23,6 +23,7 @@
     "pages/merchant-message-list/merchant-message-list",
     "pages/notice-detail/notice-detail",
     "pages/merchant-poll-create/merchant-poll-create",
+    "pages/merchant-poll/merchant-poll",
     "pages/menu/menu"
     
     

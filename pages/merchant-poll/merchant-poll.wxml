@@ -1,0 +1,177 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view class="title">
+    投票管理
+  </view>
+
+  <view class="subtitle">
+    查看投票结果并处理食客共创建议
+  </view>
+
+</view>
+
+
+<!-- 当前投票 -->
+<view
+  wx:if="{{poll}}"
+  class="poll-card"
+>
+
+  <view class="poll-head">
+
+    <view class="active-badge">
+      {{poll.status === 'active' ? '进行中' : '已结束'}}
+    </view>
+
+    <view class="poll-time">
+      {{poll.createTime}}
+    </view>
+
+  </view>
+
+
+  <view class="poll-title">
+    {{poll.title}}
+  </view>
+
+
+  <!-- 来源留言 -->
+  <view
+    wx:if="{{sourceMessage}}"
+    class="source-box"
+  >
+
+    <view class="source-label">
+      来源建议
+    </view>
+
+    <view class="source-text">
+      {{sourceMessage.text || sourceMessage.content}}
+    </view>
+
+    <view class="source-user">
+      {{sourceMessage.name || sourceMessage.userName || '食客'}}
+    </view>
+
+  </view>
+
+
+  <!-- 投票结果 -->
+  <view class="result-title">
+    当前投票结果
+  </view>
+
+
+  <view
+    wx:for="{{poll.options}}"
+    wx:key="id"
+    class="result-row"
+  >
+
+    <view class="result-top">
+
+      <text class="option-name">
+        {{item.name}}
+      </text>
+
+      <text class="option-count">
+        {{item.count}} 票 · {{item.percent}}%
+      </text>
+
+    </view>
+
+
+    <view class="progress-bg">
+
+      <view
+        class="progress-fill"
+        style="width: {{item.percent}}%;"
+      ></view>
+
+    </view>
+
+  </view>
+
+
+  <view class="total-votes">
+    共 {{poll.totalVotes || 0}} 人参与投票
+  </view>
+
+
+  <!-- 操作 -->
+  <view
+    wx:if="{{poll.status === 'active'}}"
+    class="decision-area"
+  >
+
+    <view class="decision-title">
+      投票结束后，请处理这条食客建议
+    </view>
+
+
+    <view class="decision-buttons">
+
+      <view
+        class="accept-btn"
+        catchtap="makeDecision"
+        data-result="accepted"
+      >
+        采纳建议
+      </view>
+
+      <view
+        class="reject-btn"
+        catchtap="makeDecision"
+        data-result="rejected"
+      >
+        暂不采纳
+      </view>
+
+    </view>
+
+  </view>
+
+
+  <!-- 已处理 -->
+  <view
+    wx:if="{{poll.status === 'accepted'}}"
+    class="decision-result accepted-result"
+  >
+    ✓ 这条建议已采纳
+  </view>
+
+
+  <view
+    wx:if="{{poll.status === 'rejected'}}"
+    class="decision-result rejected-result"
+  >
+    已结束：这条建议暂不采纳
+  </view>
+
+</view>
+
+
+<!-- 没有投票 -->
+<view
+  wx:if="{{!poll}}"
+  class="empty"
+>
+
+  <view class="empty-icon">
+    🗳️
+  </view>
+
+  <view class="empty-title">
+    当前没有投票
+  </view>
+
+  <view class="empty-text">
+    将食客建议转为投票后，会显示在这里
+  </view>
+
+</view>
+
+</view>

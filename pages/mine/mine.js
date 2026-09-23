@@ -120,6 +120,12 @@ Page({
     })
   },
 
+  openMerchantPoll() {
+    wx.navigateTo({
+      url: '/pages/merchant-poll/merchant-poll'
+    })
+  },
+
   // =========================
   // 关于
   // =========================
