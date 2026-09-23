@@ -143,63 +143,174 @@
 </view>
 
   <!-- 本周投票 -->
-  <view class="section card">
-    <view class="section-head">
-      <view>
-        <view class="section-title">本周投票</view>
-        <view class="section-subtitle">下周最想吃什么新品？</view>
-      </view>
-      <view class="more" bindtap="openPoll">查看全部 ›</view>
+  <!-- 本周投票 -->
+<view class="section card">
+
+<view class="section-head">
+
+  <view>
+    <view class="section-title">
+      本周投票
     </view>
 
-    <view
+    <view class="section-subtitle">
+      {{weeklyPoll.title || '本周暂无投票'}}
+    </view>
+  </view>
+
+  <view
+    class="more"
+    bindtap="openPoll"
+  >
+    查看全部 ›
+  </view>
+
+</view>
+
+
+<!-- 有投票 -->
+<view
+  wx:if="{{weeklyPoll}}"
   class="poll-box"
   bindtap="openPoll"
 >
-      <image class="poll-image" src="/images/food2.jpg" mode="aspectFill"></image>
-      <view class="poll-content">
-        <view class="poll-status">进行中</view>
-        <view wx:for="{{polls}}" wx:key="name" class="poll-row">
-          <text class="poll-name">{{item.name}}</text>
-          
-          <view class="poll-track">
-  <view class="poll-fill poll-{{item.percent}}"></view>
+
+  <image
+    class="poll-image"
+    src="/images/food2.jpg"
+    mode="aspectFill"
+  ></image>
+
+
+  <view class="poll-content">
+
+    <view class="poll-status">
+      {{weeklyPoll.status === 'active' ? '进行中' : '已结束'}}
+    </view>
+
+
+    <view
+      wx:for="{{polls}}"
+      wx:key="id"
+      class="poll-row"
+    >
+
+      <text class="poll-name">
+        {{item.name}}
+      </text>
+
+      <progress
+        class="poll-progress"
+        percent="{{item.percent}}"
+        stroke-width="4"
+        activeColor="#1F6A57"
+        backgroundColor="#E5EDEA"
+      ></progress>
+
+      <text class="poll-percent">
+        {{item.percent}}%
+      </text>
+
+      <text class="poll-count">
+        ({{item.count}}票)
+      </text>
+
+    </view>
+
+
+    <view class="poll-total">
+      共 {{weeklyPoll.totalVotes || 0}} 人参与
+    </view>
+
+
+    <button
+      class="poll-btn"
+      catchtap="openPoll"
+    >
+      {{weeklyPoll.status === 'active' ? '立即投票' : '查看结果'}}
+    </button>
+
+  </view>
+
 </view>
 
-          <text class="poll-percent">{{item.percent}}%</text>
-          <text class="poll-count">({{item.count}}票)</text>
-        </view>
-        <button class="poll-btn" catchtap="openPoll">
-  立即投票
-</button>
-      </view>
-    </view>
+
+<!-- 没有投票 -->
+<view
+  wx:else
+  class="poll-empty"
+>
+  <view class="poll-empty-icon">
+    🗳️
   </view>
+
+  <view class="poll-empty-text">
+    本周暂时没有进行中的投票
+  </view>
+
+  <button
+    class="poll-btn"
+    catchtap="openPoll"
+  >
+    查看投票
+  </button>
+</view>
+
+</view>
 
   <!-- 餐厅公告 -->
-  <view class="section card">
-    <view class="section-head">
-      <view>
-        <view class="section-title">餐厅公告</view>
-        <view class="section-subtitle">最新动态 · 不容错过</view>
+  <view class="section">
+
+<view class="section-header">
+  <view class="section-title">餐厅公告</view>
+
+  <view class="section-more" bindtap="openNotice">
+    查看全部 ›
+  </view>
+</view>
+
+<view class="notice-list">
+
+  <block wx:for="{{notices}}" wx:key="id">
+
+    <view
+      class="notice-item"
+      data-id="{{item.id}}"
+      bindtap="openNotice"
+    >
+
+      <view class="notice-info">
+
+        <view class="notice-title">
+          {{item.title}}
+        </view>
+
+        <view class="notice-content">
+          {{item.content}}
+        </view>
+
+        <view class="notice-time">
+          {{item.time}}
+        </view>
+
       </view>
-      <view class="more" bindtap="openNotice">更多 ›</view>
+
+      <view class="notice-arrow">›</view>
+
     </view>
 
-    <view class="notice-list">
-      <view
-  wx:for="{{notices}}"
-  wx:key="id"
-  class="notice-row"
-  data-id="{{item.id}}"
-  bindtap="openNotice"
->
-        <text class="notice-badge {{item.type}}">{{item.label}}</text>
-        <text class="notice-text">{{item.text}}</text>
-        <text class="notice-date">{{item.date}}</text>
-      </view>
-    </view>
+  </block>
+
+  <view
+    wx:if="{{notices.length === 0}}"
+    class="empty-notice"
+  >
+    暂无公告
   </view>
+
+</view>
+
+</view>
 
   <!-- 去点餐 -->
   <view class="order-banner" bindtap="openMenu">

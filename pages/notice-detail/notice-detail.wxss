@@ -1,113 +1,79 @@
-page {
+.page {
+  min-height: 100vh;
   background: #F7F5EF;
 }
 
-.page {
-  min-height: 100vh;
-  padding-bottom: 50rpx;
-}
-
-/* 顶部 */
-
-.detail-header {
-  padding: 44rpx 32rpx 34rpx;
-}
-
-.notice-top {
+.page-header {
+  height: 96rpx;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  position: relative;
+  padding: 0 32rpx;
+  background: #F7F5EF;
 }
 
-.notice-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8rpx 18rpx;
-  border-radius: 12rpx;
-  font-size: 22rpx;
-  font-weight: 600;
-}
-
-.type-business {
-  background: #EEF5F2;
-  color: #1F6A57;
-}
-
-.type-event {
-  background: #FFF2E9;
-  color: #D46B3D;
-}
-
-.type-new {
-  background: #F3EDFF;
-  color: #7656B7;
-}
-
-.notice-date {
-  font-size: 23rpx;
-  color: #9AA39F;
-}
-
-.title {
-  margin-top: 24rpx;
-  font-size: 42rpx;
-  line-height: 1.45;
-  font-weight: 700;
+.back-btn {
+  width: 64rpx;
+  font-size: 56rpx;
+  line-height: 1;
   color: #173C34;
 }
 
-/* 正文 */
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #173C34;
+}
 
-.content-card {
-  margin: 0 28rpx;
-  padding: 34rpx 30rpx;
+.detail-card {
+  margin: 24rpx 28rpx;
+  padding: 36rpx 32rpx;
   background: #FFFFFF;
-  border-radius: 24rpx;
+  border-radius: 26rpx;
   box-sizing: border-box;
 }
 
-.content-paragraph {
-  font-size: 29rpx;
-  line-height: 1.9;
-  color: #4F6059;
-  margin-bottom: 24rpx;
-}
-
-.content-paragraph:last-child {
-  margin-bottom: 0;
-}
-
-/* 底部 */
-
-.bottom-card {
-  margin: 24rpx 28rpx 0;
-  padding: 28rpx;
-  background: #EEF7F3;
-  border-radius: 24rpx;
-}
-
-.bottom-tip {
-  font-size: 24rpx;
-  line-height: 1.7;
-  color: #667C73;
-  margin-bottom: 22rpx;
-}
-
-button {
-  border: none;
-  border-radius: 50rpx;
-  font-size: 28rpx;
-}
-
-.community-btn {
-  background: #FFFFFF;
+.detail-type {
+  display: inline-block;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: #E7F2ED;
   color: #1F6A57;
-  border: 2rpx solid #B8D6CA;
-  margin-bottom: 18rpx;
+  font-size: 22rpx;
+  margin-bottom: 20rpx;
 }
 
-.menu-btn {
-  background: #1F6A57;
-  color: #FFFFFF;
+.detail-title {
+  font-size: 38rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #173C34;
+}
+
+.detail-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18rpx;
+  padding-bottom: 28rpx;
+  border-bottom: 1rpx solid #EEEEEA;
+  color: #999;
+  font-size: 23rpx;
+}
+
+.detail-content {
+  padding-top: 30rpx;
+  font-size: 28rpx;
+  line-height: 1.9;
+  color: #46534E;
+  white-space: pre-wrap;
+}
+
+.empty {
+  text-align: center;
+  padding-top: 180rpx;
+  color: #999;
+  font-size: 28rpx;
 }

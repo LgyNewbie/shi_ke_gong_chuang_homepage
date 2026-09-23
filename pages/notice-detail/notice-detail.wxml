@@ -1,52 +1,36 @@
 <view class="page">
 
-<!-- 顶部信息 -->
-<view class="detail-header">
+<view class="page-header">
+  <view class="back-btn" bindtap="goBack">‹</view>
+  <view class="page-title">公告详情</view>
+</view>
 
-  <view class="notice-top">
-    <view class="notice-tag {{notice.typeClass}}">
-      {{notice.type}}
-    </view>
+<view wx:if="{{notice}}" class="detail-card">
 
-    <view class="notice-date">
-      {{notice.date}}
-    </view>
+  <view class="detail-type">
+    {{notice.type}}
   </view>
 
-  <view class="title">
+  <view class="detail-title">
     {{notice.title}}
   </view>
 
-</view>
+  <view class="detail-meta">
+    <text>{{notice.author}}</text>
+    <text>{{notice.time}}</text>
+  </view>
 
-<!-- 正文 -->
-<view class="content-card">
-
-  <view
-    wx:for="{{notice.content}}"
-    wx:key="index"
-    class="content-paragraph"
-  >
-    {{item}}
+  <view class="detail-content">
+    {{notice.content}}
   </view>
 
 </view>
 
-<!-- 底部操作 -->
-<view class="bottom-card">
-
-  <view class="bottom-tip">
-    想了解更多餐厅动态，可以去看看食客留言和本周投票。
-  </view>
-
-  <button class="community-btn" bindtap="goCommunity">
-    看食客留言
-  </button>
-
-  <button class="menu-btn" bindtap="goMenu">
-    去点餐
-  </button>
-
+<view
+  wx:if="{{!notice}}"
+  class="empty"
+>
+  暂无公告内容
 </view>
 
 </view>

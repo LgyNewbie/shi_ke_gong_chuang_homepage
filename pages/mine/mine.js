@@ -126,6 +126,12 @@ Page({
     })
   },
 
+  openMerchantNotice() {
+    wx.navigateTo({
+      url: '/pages/merchant-notice/merchant-notice'
+    })
+  },
+
   // =========================
   // 关于
   // =========================
