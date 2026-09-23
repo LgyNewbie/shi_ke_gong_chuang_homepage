@@ -108,6 +108,12 @@ Page({
     })
   },
 
+  openMerchantOrder() {
+    wx.navigateTo({
+      url: '/pages/merchant-order/merchant-order'
+    })
+  },
+
 
   // =========================
   // 关于

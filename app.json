@@ -19,6 +19,7 @@
     "pages/my-message/my-message",
     "pages/my-favorite/my-favorite",
     "pages/notification/notification",
+    "pages/merchant-order/merchant-order",
     "pages/notice-detail/notice-detail",
     "pages/menu/menu"
     

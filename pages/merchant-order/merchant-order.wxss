@@ -1,0 +1,379 @@
+page {
+  background: #F5F6F4;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 60rpx;
+}
+
+
+/* =========================
+   顶部
+========================= */
+
+.header {
+  padding: 38rpx 28rpx 24rpx;
+
+  background: #FFFFFF;
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: 700;
+
+  color: #173C34;
+}
+
+.subtitle {
+  margin-top: 8rpx;
+
+  font-size: 23rpx;
+
+  color: #8B9791;
+}
+
+
+/* =========================
+   数据统计
+========================= */
+
+.stats {
+  display: flex;
+
+  padding: 22rpx;
+
+  gap: 14rpx;
+
+  background: #FFFFFF;
+}
+
+.stat-card {
+  flex: 1;
+
+  padding: 18rpx 8rpx;
+
+  border-radius: 18rpx;
+
+  background: #F3F7F5;
+
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 34rpx;
+  font-weight: 700;
+
+  color: #1F6A57;
+}
+
+.stat-label {
+  margin-top: 6rpx;
+
+  font-size: 21rpx;
+
+  color: #7E8C85;
+}
+
+
+/* =========================
+   分类
+========================= */
+
+.tabs-scroll {
+  width: 100%;
+
+  background: #FFFFFF;
+}
+
+.tabs {
+  display: flex;
+
+  padding: 0 24rpx 20rpx;
+
+  gap: 16rpx;
+}
+
+.tab {
+  flex-shrink: 0;
+
+  padding: 12rpx 22rpx;
+
+  border-radius: 30rpx;
+
+  background: #F3F5F3;
+
+  font-size: 23rpx;
+
+  color: #7D8983;
+}
+
+.tab.active {
+  background: #1F6A57;
+
+  color: #FFFFFF;
+}
+
+
+/* =========================
+   订单
+========================= */
+
+.order-list {
+  padding: 20rpx 20rpx 0;
+}
+
+.order-card {
+  margin-bottom: 18rpx;
+
+  padding: 24rpx;
+
+  background: #FFFFFF;
+
+  border-radius: 22rpx;
+
+  box-sizing: border-box;
+}
+
+.order-head {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-number {
+  font-size: 22rpx;
+
+  color: #7D8984;
+}
+
+.status {
+  padding: 7rpx 13rpx;
+
+  border-radius: 10rpx;
+
+  background: #EAF5F0;
+
+  color: #1F6A57;
+
+  font-size: 21rpx;
+}
+
+
+/* 配送 */
+
+.delivery-type {
+  margin-top: 14rpx;
+
+  font-size: 24rpx;
+
+  color: #53635C;
+}
+
+
+/* 地址 */
+
+.address-box {
+  margin-top: 14rpx;
+
+  padding: 16rpx;
+
+  border-radius: 14rpx;
+
+  background: #F7F8F7;
+}
+
+.address-name {
+  font-size: 25rpx;
+
+  font-weight: 600;
+
+  color: #173C34;
+}
+
+.address-name text {
+  margin-left: 14rpx;
+
+  font-weight: 400;
+
+  color: #718079;
+}
+
+.address-detail {
+  margin-top: 6rpx;
+
+  font-size: 23rpx;
+
+  color: #718079;
+}
+
+
+/* 商品 */
+
+.food-list {
+  margin-top: 18rpx;
+
+  padding-top: 14rpx;
+
+  border-top: 1rpx solid #F0F2F0;
+}
+
+.food-row {
+  display: flex;
+
+  align-items: center;
+
+  padding: 9rpx 0;
+
+  font-size: 24rpx;
+}
+
+.food-name {
+  flex: 1;
+
+  color: #43564F;
+}
+
+.food-count {
+  width: 100rpx;
+
+  text-align: center;
+
+  color: #8A9590;
+}
+
+.food-price {
+  width: 120rpx;
+
+  text-align: right;
+
+  color: #4B5D56;
+}
+
+
+/* 备注 */
+
+.remark {
+  margin-top: 14rpx;
+
+  padding: 12rpx 14rpx;
+
+  border-radius: 12rpx;
+
+  background: #FFF7E9;
+
+  color: #A06D31;
+
+  font-size: 22rpx;
+}
+
+
+/* 底部 */
+
+.order-bottom {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 18rpx;
+
+  padding-top: 16rpx;
+
+  border-top: 1rpx solid #F0F2F0;
+}
+
+.order-time {
+  font-size: 20rpx;
+
+  color: #A0AAA5;
+}
+
+.total {
+  font-size: 32rpx;
+  font-weight: 700;
+
+  color: #DF6A43;
+}
+
+
+/* =========================
+   操作按钮
+========================= */
+
+.actions {
+  margin-top: 18rpx;
+
+  display: flex;
+
+  justify-content: flex-end;
+}
+
+.action-btn,
+.disabled-btn,
+.completed-btn,
+.cancelled-btn {
+  padding: 13rpx 24rpx;
+
+  border-radius: 40rpx;
+
+  font-size: 24rpx;
+}
+
+.action-btn {
+  background: #1F6A57;
+
+  color: #FFFFFF;
+}
+
+.disabled-btn {
+  background: #F0F1F0;
+
+  color: #9AA39F;
+}
+
+.completed-btn {
+  background: #EAF5F0;
+
+  color: #1F6A57;
+}
+
+.cancelled-btn {
+  background: #F2F2F2;
+
+  color: #939B97;
+}
+
+
+/* =========================
+   空状态
+========================= */
+
+.empty {
+  text-align: center;
+
+  padding-top: 170rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+}
+
+.empty-title {
+  margin-top: 18rpx;
+
+  font-size: 30rpx;
+
+  font-weight: 600;
+
+  color: #173C34;
+}
+
+.empty-text {
+  margin-top: 8rpx;
+
+  font-size: 23rpx;
+
+  color: #9AA39F;
+}

@@ -291,6 +291,38 @@
 
         </view>
 
+        <!-- 商家后台 -->
+<view
+  class="function-item"
+  bindtap="openMerchantOrder"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      🏪
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        商家后台
+      </view>
+
+      <view class="function-desc">
+        订单管理 · 演示入口
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
       </view>
 
       <view class="function-arrow">
