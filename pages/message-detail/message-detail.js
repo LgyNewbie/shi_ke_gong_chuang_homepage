@@ -38,6 +38,48 @@ emojiList: [
   },
 
   // =========================
+// 创建“评论回复”通知
+// =========================
+addCommentNotification(target, messageId, replyText) {
+  let notifications =
+    wx.getStorageSync('notifications') || []
+
+  const targetName =
+    target.name ||
+    target.userName ||
+    '食客'
+
+  const notification = {
+    id:
+      `comment_reply_${messageId}_${Date.now()}`,
+
+    type: 'comment',
+
+    icon: '💬',
+
+    iconClass: 'comment-icon',
+
+    title: '有人回复了你的评论',
+
+    content:
+      `${targetName}的评论收到了回复：${replyText}`,
+
+    time: '刚刚',
+
+    read: false,
+
+    messageId: messageId
+  }
+
+  notifications.unshift(notification)
+
+  wx.setStorageSync(
+    'notifications',
+    notifications
+  )
+},
+
+  // =========================
   // 每次重新进入页面
   // =========================
   onShow() {
@@ -274,29 +316,40 @@ emojiList: [
     // 创建评论
     const newComment = {
       id: `comment_${Date.now()}`,
-  
+    
       name: '食客',
       userName: '食客',
-  
+    
       avatar: '',
-  
+    
       text: text,
-  
+    
       time: '刚刚',
-  
-      // 回复的评论ID
+    
+      // 当前这条评论属于哪一条留言
+      messageId: postId,
+    
+      // 回复哪一条评论
       replyToId: this.data.replyingTo
         ? this.data.replyingTo.id
         : '',
-  
-      // 回复对象名称
+    
+      // 回复谁
       replyToName: this.data.replyingTo
-        ? this.data.replyingTo.name
+        ? (
+            this.data.replyingTo.name ||
+            this.data.replyingTo.userName ||
+            ''
+          )
         : '',
-  
+    
       // 兼容旧数据
       replyTo: this.data.replyingTo
-        ? this.data.replyingTo.name
+        ? (
+            this.data.replyingTo.name ||
+            this.data.replyingTo.userName ||
+            ''
+          )
         : ''
     }
   
@@ -337,6 +390,26 @@ emojiList: [
       })
       return
     }
+
+    // =========================
+// 如果回复的是其他用户的评论
+// 就生成一条评论回复通知
+// =========================
+
+const replyTarget = this.data.replyingTo
+
+if (
+  replyTarget &&
+  replyTarget.name &&
+  replyTarget.name !== '食客' &&
+  replyTarget.name !== '餐厅'
+) {
+  this.addCommentNotification(
+    replyTarget,
+    postId,
+    text
+  )
+}
   
     // 更新页面
     this.setData({

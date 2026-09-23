@@ -1,3 +1,7 @@
+const {
+  addOrderNotification,
+  updateOrderStatus
+} = require('../../utils/notification.js')
 Page({
 
   data: {
@@ -162,79 +166,53 @@ Page({
 
   // 去付款
   payOrder(e) {
-
-    const id =
-      e.currentTarget.dataset.id
-
-
-    wx.showModal({
-
-      title: '订单付款',
-
-      content:
-        '第一版暂时使用演示付款功能，真实微信支付后续再接入。',
-
-      confirmText: '模拟支付',
-
-      cancelText: '取消',
-
-      success: (res) => {
-
-        if (!res.confirm) {
-          return
-        }
-
-
-        const orders =
-          wx.getStorageSync('orders') || []
-
-
-        const updatedOrders =
-          orders.map(order => {
-
-            if (order.id === id) {
-
-              return {
-
-                ...order,
-
-                status: 'accepted',
-
-                statusName: '商家已接单'
-
-              }
-
-            }
-
-            return order
-
-          })
-
-
-        wx.setStorageSync(
-          'orders',
-          updatedOrders
-        )
-
-
-        this.loadOrders()
-
-
-        wx.showToast({
-
-          title: '支付成功',
-
-          icon: 'success'
-
-        })
-
-      }
-
+    const id = e.currentTarget.dataset.id
+  
+    const orders =
+      wx.getStorageSync('orders') || []
+  
+    const order =
+      orders.find(item =>
+        String(item.id) === String(id)
+      )
+  
+    if (!order) {
+      wx.showToast({
+        title: '订单不存在',
+        icon: 'none'
+      })
+  
+      return
+    }
+  
+    // 模拟付款成功 + 餐厅接单
+    const updatedOrder =
+      updateOrderStatus(
+        id,
+        'accepted',
+        '已接单'
+      )
+  
+    if (!updatedOrder) {
+      wx.showToast({
+        title: '订单更新失败',
+        icon: 'none'
+      })
+  
+      return
+    }
+  
+    // 刷新订单列表
+    this.loadOrders()
+  
+    wx.showToast({
+      title: '订单已接单',
+      icon: 'success'
     })
-
   },
 
   // 取消订单
+// 取消订单
 cancelOrder(e) {
 
   const id =
@@ -259,13 +237,14 @@ cancelOrder(e) {
       const orders =
         wx.getStorageSync('orders') || []
 
+      let cancelledOrder = null
+
       const updatedOrders =
         orders.map(order => {
 
           if (order.id === id) {
 
-            return {
-
+            cancelledOrder = {
               ...order,
 
               status: 'cancelled',
@@ -274,21 +253,46 @@ cancelOrder(e) {
 
               cancelTime:
                 new Date().toLocaleString()
-
             }
 
+            return cancelledOrder
           }
 
           return order
-
         })
 
+
+      // 保存订单
       wx.setStorageSync(
         'orders',
         updatedOrders
       )
 
+      const updatedOrder =
+  updatedOrders.find(order => order.id === id)
+
+if (updatedOrder) {
+  addOrderNotification(
+    updatedOrder,
+    'accepted'
+  )
+}
+
+
+      // 生成订单取消通知
+      if (cancelledOrder) {
+
+        addOrderNotification(
+          cancelledOrder,
+          'cancelled'
+        )
+
+      }
+
+
+      // 刷新订单页面
       this.loadOrders()
+
 
       wx.showToast({
 

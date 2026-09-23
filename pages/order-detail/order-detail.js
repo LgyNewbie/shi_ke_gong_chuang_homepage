@@ -1,3 +1,7 @@
+const {
+  updateOrderStatus
+} = require('../../utils/notification.js')
+
 Page({
 
   data: {
@@ -283,76 +287,37 @@ Page({
 
   // 付款
   payOrder() {
-
-    const id =
+    if (!this.data.order) {
+      return
+    }
+  
+    const orderId =
       this.data.order.id
-
-
-    wx.showModal({
-
-      title: '订单付款',
-
-      content:
-        '当前为演示付款，后续再接入真实微信支付。',
-
-      confirmText: '模拟支付',
-
-      cancelText: '取消',
-
-      success: (res) => {
-
-        if (!res.confirm) {
-          return
-        }
-
-
-        const orders =
-          wx.getStorageSync('orders') || []
-
-
-        const updatedOrders =
-          orders.map(order => {
-
-            if (order.id === id) {
-
-              return {
-
-                ...order,
-
-                status: 'accepted',
-
-                statusName: '商家已接单'
-
-              }
-
-            }
-
-            return order
-
-          })
-
-
-        wx.setStorageSync(
-          'orders',
-          updatedOrders
-        )
-
-
-        wx.showToast({
-
-          title: '支付成功',
-
-          icon: 'success'
-
-        })
-
-
-        this.loadOrder()
-
-      }
-
+  
+    const updatedOrder =
+      updateOrderStatus(
+        orderId,
+        'accepted',
+        '已接单'
+      )
+  
+    if (!updatedOrder) {
+      wx.showToast({
+        title: '订单更新失败',
+        icon: 'none'
+      })
+  
+      return
+    }
+  
+    this.setData({
+      order: updatedOrder
     })
-
+  
+    wx.showToast({
+      title: '订单已接单',
+      icon: 'success'
+    })
   },
 
 
