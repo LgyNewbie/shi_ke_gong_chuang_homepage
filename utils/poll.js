@@ -192,18 +192,120 @@ function getPolls() {
 
 
   const normalized =
-    polls.map(item =>
-      normalizePoll(item)
-    )
-
-
-  wx.setStorageSync(
-    'polls',
-    normalized
+  polls.map(item =>
+    normalizePoll(item)
   )
 
 
-  return normalized
+// =========================
+// 自动检查投票截止日期
+// =========================
+
+const now =
+  new Date()
+
+const today =
+  `${now.getFullYear()}-${String(
+    now.getMonth() + 1
+  ).padStart(2, '0')}-${String(
+    now.getDate()
+  ).padStart(2, '0')}`
+
+
+const checkedPolls =
+  normalized.map(poll => {
+
+    // 只有进行中的投票需要检查
+    if (
+      poll.status !== 'active'
+    ) {
+
+      return poll
+
+    }
+
+
+    // 没有截止日期
+    if (
+      !poll.endDate
+    ) {
+
+      return poll
+
+    }
+
+
+    // 截止日期已经过去
+    if (
+      poll.endDate < today
+    ) {
+
+      return {
+
+        ...poll,
+
+        status:
+          'ended',
+
+        statusName:
+          '已结束',
+
+        endTime:
+          poll.endTime ||
+          `${poll.endDate} 23:59:59`
+
+      }
+
+    }
+
+
+    return poll
+
+  })
+
+
+wx.setStorageSync(
+  'polls',
+  checkedPolls
+)
+
+
+// =========================
+// 同步旧版 weeklyPoll
+// =========================
+
+const weeklyPoll =
+  wx.getStorageSync(
+    'weeklyPoll'
+  )
+
+
+if (
+  weeklyPoll &&
+  weeklyPoll.id
+) {
+
+  const currentPoll =
+    checkedPolls.find(
+      item =>
+        String(item.id) ===
+        String(weeklyPoll.id)
+    )
+
+
+  if (currentPoll) {
+
+    wx.setStorageSync(
+      'weeklyPoll',
+      currentPoll
+    )
+
+  }
+
+}
+
+
+return checkedPolls
 }
 
 
