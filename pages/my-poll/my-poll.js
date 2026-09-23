@@ -105,7 +105,7 @@ function normalizePoll(poll) {
 // 获取最高票选项
 // ================================
 
-function getWinner(poll) {
+function getWinners(poll) {
 
   if (
     !poll ||
@@ -113,29 +113,51 @@ function getWinner(poll) {
     poll.options.length === 0
   ) {
 
-    return null
+    return []
 
   }
 
 
-  return poll.options.reduce(
+  const options =
+    poll.options.map(item => ({
 
-    (current, item) => {
+      ...item,
 
-      if (!current) {
-        return item
-      }
+      votes:
+        Number(
+          item.votes !== undefined
+            ? item.votes
+            : item.count || 0
+        )
+
+    }))
 
 
-      return Number(item.votes || 0) >
-        Number(current.votes || 0)
-        ? item
-        : current
+  const maxVotes =
+    options.reduce(
+      (max, item) => {
 
-    },
+        return Math.max(
+          max,
+          Number(item.votes || 0)
+        )
 
-    null
+      },
+      0
+    )
 
+
+  if (maxVotes <= 0) {
+
+    return []
+
+  }
+
+
+  return options.filter(
+    item =>
+      Number(item.votes || 0) ===
+      maxVotes
   )
 
 }
@@ -279,10 +301,24 @@ Page({
 
       if (voted) {
 
-        const winner =
-          getWinner(
-            poll
-          )
+        const winners =
+  getWinners(
+    poll
+  )
+
+
+const winnerNames =
+  winners.length > 0
+    ? winners
+        .map(item => item.name)
+        .join('、')
+    : '暂无结果'
+
+
+const winnerPercent =
+  winners.length > 0
+    ? winners[0].percent || 0
+    : 0
 
 
         historyPolls.push({
@@ -298,15 +334,14 @@ Page({
           myChoice:
             myChoice,
 
-          winner:
-            winner
-              ? winner.name
-              : '暂无结果',
-
+            winner:
+            winnerNames,
+          
           resultPercent:
-            winner
-              ? winner.percent
-              : 0,
+            winnerPercent,
+          
+          isTie:
+            winners.length > 1,
 
           date:
             poll.endTime ||

@@ -57,21 +57,51 @@ function normalizePoll(item = {}) {
     )
 
 
+    const maxVotes =
+    options.reduce(
+      (max, option) => {
+        return Math.max(
+          max,
+          Number(option.votes || 0)
+        )
+      },
+      0
+    )
+  
+  
   const resultOptions =
-    options.map(option => ({
-
-      ...option,
-
-      percent:
+    options.map(option => {
+  
+      const votes =
+        Number(option.votes || 0)
+  
+  
+      const percent =
         totalVotes > 0
           ? Math.round(
-              Number(option.votes || 0) /
+              votes /
               totalVotes *
               100
             )
           : 0
-
-    }))
+  
+  
+      return {
+  
+        ...option,
+  
+        votes,
+  
+        percent,
+  
+        // 有票时才判断最高票
+        isWinner:
+          maxVotes > 0 &&
+          votes === maxVotes
+  
+      }
+  
+    })
 
 
   let statusName = '进行中'

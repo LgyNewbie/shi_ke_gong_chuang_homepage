@@ -244,9 +244,20 @@
       最终结果
     </text>
 
-    <text class="history-result-name">
-      {{item.winner}}
-    </text>
+    <view>
+
+<text class="history-result-name">
+  {{item.winner}}
+</text>
+
+<text
+  wx:if="{{item.isTie}}"
+  class="winner-tag"
+>
+  并列第一
+</text>
+
+</view>
 
   </view>
 

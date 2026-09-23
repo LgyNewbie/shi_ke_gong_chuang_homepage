@@ -352,3 +352,22 @@ page {
 button::after {
   border: none;
 }
+
+.option-name-box,
+.result-name-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+
+.winner-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 10rpx;
+  border-radius: 999rpx;
+  background: #FFF3D8;
+  color: #A56800;
+  font-size: 22rpx;
+  line-height: 1.4;
+}

@@ -24,6 +24,7 @@
     "pages/notice-detail/notice-detail",
     "pages/merchant-poll-create/merchant-poll-create",
     "pages/merchant-poll/merchant-poll",
+    "pages/merchant-poll-detail/merchant-poll-detail",
     "pages/merchant-notice/merchant-notice",
     "pages/menu/menu"
     

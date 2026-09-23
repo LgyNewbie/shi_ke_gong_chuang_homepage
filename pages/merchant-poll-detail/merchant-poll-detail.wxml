@@ -1,0 +1,309 @@
+<view class="page">
+
+<!-- 顶部 -->
+
+<view class="header">
+
+  <view
+    class="back"
+    bindtap="goBack"
+  >
+    ‹
+  </view>
+
+  <view>
+
+    <view class="title">
+      投票详情
+    </view>
+
+    <view class="subtitle">
+      查看完整投票结果
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 投票不存在 -->
+
+<view
+  wx:if="{{!poll}}"
+  class="empty"
+>
+
+  <view class="empty-icon">
+    🗳️
+  </view>
+
+  <view class="empty-title">
+    投票不存在
+  </view>
+
+</view>
+
+
+<!-- =========================
+     投票详情
+========================== -->
+
+<view
+  wx:if="{{poll}}"
+  class="card"
+>
+
+  <!-- 状态 -->
+
+  <view class="top-row">
+
+    <view class="status-tag">
+      {{poll.statusName}}
+    </view>
+
+    <view class="create-time">
+      {{poll.createTime}}
+    </view>
+
+  </view>
+
+
+  <!-- 标题 -->
+
+  <view class="poll-title">
+    {{poll.title}}
+  </view>
+
+
+  <!-- 描述 -->
+
+  <view
+    wx:if="{{poll.description}}"
+    class="poll-description"
+  >
+    {{poll.description}}
+  </view>
+
+
+  <!-- =========================
+       来源建议
+  ========================== -->
+
+  <view
+    wx:if="{{sourceMessage}}"
+    class="source-box"
+  >
+
+    <view class="source-label">
+      来源建议
+    </view>
+
+    <view class="source-text">
+      {{
+        sourceMessage.text ||
+        sourceMessage.content
+      }}
+    </view>
+
+    <view class="source-user">
+      食客：
+      {{
+        sourceMessage.name ||
+        sourceMessage.userName ||
+        '食客'
+      }}
+    </view>
+
+    <view
+      wx:if="{{sourceMessage.statusName}}"
+      class="source-status"
+    >
+      留言状态：
+      {{sourceMessage.statusName}}
+    </view>
+
+  </view>
+
+
+  <!-- =========================
+       投票信息
+  ========================== -->
+
+  <view class="info-grid">
+
+    <view class="info-item">
+
+      <view class="info-label">
+        参与人数
+      </view>
+
+      <view class="info-value">
+        {{poll.totalVotes || 0}}
+      </view>
+
+    </view>
+
+
+    <view class="info-item">
+
+      <view class="info-label">
+        选项数量
+      </view>
+
+      <view class="info-value">
+        {{poll.options.length}}
+      </view>
+
+    </view>
+
+  </view>
+
+
+  <view
+    wx:if="{{poll.endDate}}"
+    class="date-row"
+  >
+    截止日期：
+    {{poll.endDate}}
+  </view>
+
+
+  <view
+    wx:if="{{poll.endTime}}"
+    class="date-row"
+  >
+    结束时间：
+    {{poll.endTime}}
+  </view>
+
+
+  <!-- =========================
+       投票结果
+  ========================== -->
+
+  <view class="section-title">
+    {{
+      poll.status === 'active'
+        ? '当前投票结果'
+        : '最终投票结果'
+    }}
+  </view>
+
+
+  <view class="result-list">
+
+    <view
+      wx:for="{{poll.options}}"
+      wx:for-item="option"
+      wx:key="id"
+      class="result-item"
+    >
+
+      <view class="result-top">
+
+        <view class="result-name-box">
+
+          <text class="result-name">
+            {{option.name}}
+          </text>
+
+          <text
+            wx:if="{{option.isWinner}}"
+            class="winner-tag"
+          >
+            🏆最高票
+          </text>
+
+        </view>
+
+
+        <view class="result-number">
+
+          <text>
+            {{option.votes}}票
+          </text>
+
+          <text class="result-percent">
+            {{option.percent}}%
+          </text>
+
+        </view>
+
+      </view>
+
+
+      <view class="progress-bg">
+
+        <view
+          class="progress-fill"
+          style="{{option.percentStyle}}"
+        ></view>
+
+      </view>
+
+    </view>
+
+  </view>
+
+
+  <!-- =========================
+       最高票结果
+  ========================== -->
+
+  <view class="winner-box">
+
+    <view class="winner-label">
+      结果
+    </view>
+
+    <view class="winner-name">
+      {{winnerNames}}
+    </view>
+
+    <view
+      wx:if="{{isTie}}"
+      class="winner-subtitle"
+    >
+      并列第一
+    </view>
+
+    <view
+      wx:if="{{!isTie && winnerNames !== '暂无结果'}}"
+      class="winner-subtitle"
+    >
+      当前最高票选项
+    </view>
+
+  </view>
+
+
+  <!-- =========================
+       当前状态
+  ========================== -->
+
+  <view class="state-box">
+
+    <view class="state-title">
+      当前处理状态
+    </view>
+
+    <view class="state-name">
+      {{poll.statusName}}
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 返回按钮 -->
+
+<view
+  wx:if="{{poll}}"
+  class="back-button"
+  bindtap="goBack"
+>
+  返回投票管理
+</view>
+
+</view>

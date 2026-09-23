@@ -55,6 +55,18 @@
     {{item.title}}
   </view>
 
+  <view class="decision-buttons">
+
+<view
+  class="accept-btn"
+  catchtap="openDetail"
+  data-poll-id="{{item.id}}"
+>
+  查看详情
+</view>
+
+</view>
+
 
   <!-- 投票说明 -->
 
@@ -129,9 +141,20 @@
 
     <view class="result-top">
 
-      <text class="option-name">
-        {{option.name}}
-      </text>
+      <view class="option-name-box">
+
+<text class="option-name">
+  {{option.name}}
+</text>
+
+<text
+  wx:if="{{option.isWinner}}"
+  class="winner-tag"
+>
+  🏆最高票
+</text>
+
+</view>
 
       <text class="option-count">
         {{option.votes || 0}} 票 · {{option.percent || 0}}%

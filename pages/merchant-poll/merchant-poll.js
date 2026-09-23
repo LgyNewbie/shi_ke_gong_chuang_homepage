@@ -567,6 +567,45 @@ Page({
 
     })
 
+
+
+  },
+
+    // =========================
+  // 查看投票详情
+  // =========================
+
+  openDetail(e) {
+
+    const pollId =
+      String(
+        e.currentTarget.dataset.pollId || ''
+      )
+
+
+    if (!pollId) {
+
+      wx.showToast({
+
+        title:
+          '没有收到投票ID',
+
+        icon:
+          'none'
+
+      })
+
+      return
+    }
+
+
+    wx.navigateTo({
+
+      url:
+        `/pages/merchant-poll-detail/merchant-poll-detail?id=${encodeURIComponent(pollId)}`
+
+    })
+
   }
 
 })
