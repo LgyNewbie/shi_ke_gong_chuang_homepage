@@ -1,7 +1,9 @@
 <view class="page">
 
 <!-- 顶部 -->
+
 <view class="header">
+
   <view class="title">
     创建投票
   </view>
@@ -9,10 +11,12 @@
   <view class="subtitle">
     将食客建议转交给大家共同决定
   </view>
+
 </view>
 
 
 <!-- 来源留言 -->
+
 <view class="source-card">
 
   <view class="source-title">
@@ -31,11 +35,13 @@
 
 
 <!-- 投票标题 -->
+
 <view class="form-card">
 
   <view class="form-title">
     投票标题
   </view>
+
 
   <input
     class="title-input"
@@ -48,20 +54,82 @@
 </view>
 
 
-<!-- 投票选项 -->
+<!-- 投票说明 -->
+
 <view class="form-card">
 
   <view class="form-title">
+    投票说明
+  </view>
+
+
+  <textarea
+    class="description-input"
+    value="{{pollDescription}}"
+    placeholder="请输入投票说明"
+    bindinput="inputDescription"
+    maxlength="150"
+  ></textarea>
+
+
+  <view class="word-count">
+    {{pollDescription.length}} / 150
+  </view>
+
+</view>
+
+
+<!-- 截止日期 -->
+
+<view class="form-card">
+
+  <view class="form-title">
+    截止日期
+  </view>
+
+
+  <picker
+    mode="date"
+    value="{{endDate}}"
+    bindchange="changeEndDate"
+  >
+
+    <view class="date-picker">
+
+      <text class="date-text">
+        {{endDate || '请选择截止日期'}}
+      </text>
+
+      <text class="date-arrow">
+        ›
+      </text>
+
+    </view>
+
+  </picker>
+
+</view>
+
+
+<!-- 投票选项 -->
+
+<view class="form-card">
+
+  <view class="form-title">
+
     投票选项
+
     <text class="form-tip">
       最少 2 项
     </text>
+
   </view>
 
 
   <view
     wx:for="{{options}}"
     wx:key="id"
+
     class="option-row"
   >
 
@@ -69,20 +137,34 @@
       {{index + 1}}
     </view>
 
+
     <input
+
       class="option-input"
+
       value="{{item.name}}"
+
       placeholder="输入选项"
+
       data-index="{{index}}"
+
       bindinput="inputOption"
+
       maxlength="20"
+
     />
 
+
     <view
+
       wx:if="{{options.length > 2}}"
+
       class="delete-option"
+
       data-index="{{index}}"
+
       catchtap="deleteOption"
+
     >
       ×
     </view>
@@ -91,9 +173,13 @@
 
 
   <view
+
     wx:if="{{options.length < 4}}"
+
     class="add-option"
+
     bindtap="addOption"
+
   >
     ＋ 添加选项
   </view>
@@ -102,16 +188,22 @@
 
 
 <!-- 发布 -->
+
 <button
+
   class="publish-btn"
+
   bindtap="publishPoll"
+
 >
   发布投票
 </button>
 
 
 <view class="bottom-tip">
+
   发布后，这条建议将自动标记为“已转为投票”
+
 </view>
 
 </view>

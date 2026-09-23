@@ -6,6 +6,8 @@ Page({
 
     hasVoted: false,
 
+
+    // 默认投票
     poll: {
 
       id: 'weekly_001',
@@ -21,7 +23,7 @@ Page({
       options: [
 
         {
-          id: 1,
+          id: '1',
           name: '辣子鸡',
           desc: '香辣过瘾，经典川味',
           votes: 128,
@@ -29,7 +31,7 @@ Page({
         },
 
         {
-          id: 2,
+          id: '2',
           name: '番茄牛腩',
           desc: '酸甜浓郁，牛腩软嫩',
           votes: 83,
@@ -37,7 +39,7 @@ Page({
         },
 
         {
-          id: 3,
+          id: '3',
           name: '黑椒鸡排',
           desc: '外酥里嫩，黑椒香浓',
           votes: 56,
@@ -51,12 +53,20 @@ Page({
   },
 
 
+  // =========================
+  // 页面加载
+  // =========================
+
   onLoad() {
 
     this.loadPoll()
 
   },
 
+
+  // =========================
+  // 页面显示
+  // =========================
 
   onShow() {
 
@@ -65,30 +75,147 @@ Page({
   },
 
 
-  // 读取本地投票数据
+  // =========================
+  // 读取本地投票
+  // =========================
+
   loadPoll() {
 
     const savedPoll =
       wx.getStorageSync('weeklyPoll')
 
 
-    if (savedPoll) {
+    // 没有商家发布的新投票
+    if (!savedPoll) {
 
       this.setData({
 
-        poll: savedPoll,
+        hasVoted: false,
 
-        hasVoted: true
+        selectedId: ''
 
       })
 
+      return
+
     }
+
+
+    // =========================
+    // 兼容旧投票数据
+    // count → votes
+    // =========================
+
+    const options =
+      Array.isArray(savedPoll.options)
+        ? savedPoll.options.map(item => ({
+
+            ...item,
+
+            votes:
+              Number(
+                item.votes !== undefined
+                  ? item.votes
+                  : item.count || 0
+              )
+
+          }))
+        : []
+
+
+    // 重新计算总票数
+    const totalVotes =
+      options.reduce(
+        (sum, item) => {
+          return sum + Number(item.votes || 0)
+        },
+        0
+      )
+
+
+    // 重新计算百分比
+    const newOptions =
+      options.map(item => {
+
+        const votes =
+          Number(item.votes || 0)
+
+        return {
+
+          ...item,
+
+          votes,
+
+          percent:
+            totalVotes > 0
+              ? Math.round(
+                  votes /
+                  totalVotes *
+                  100
+                )
+              : 0
+
+        }
+
+      })
+
+
+    const poll = {
+
+      ...savedPoll,
+
+      options: newOptions,
+
+      totalVotes:
+        totalVotes
+
+    }
+
+
+    // =========================
+    // 查看当前设备是否已经投票
+    // =========================
+
+    const voted =
+      wx.getStorageSync('weeklyPollVoted')
+
+
+    const choice =
+      wx.getStorageSync('weeklyPollChoice')
+
+
+    this.setData({
+
+      poll,
+
+      hasVoted:
+        voted === true,
+
+      selectedId:
+        choice || ''
+
+    })
+
+
+    // 同步修正 Storage
+    wx.setStorageSync(
+      'weeklyPoll',
+      poll
+    )
 
   },
 
 
+  // =========================
   // 选择投票
+  // =========================
+
   selectOption(e) {
+
+    if (this.data.hasVoted) {
+      return
+    }
+
 
     const id =
       e.currentTarget.dataset.id
@@ -96,15 +223,34 @@ Page({
 
     this.setData({
 
-      selectedId: id
+      selectedId:
+        String(id)
 
     })
 
   },
 
 
+  // =========================
   // 提交投票
+  // =========================
+
   submitVote() {
+
+    if (this.data.hasVoted) {
+
+      wx.showToast({
+
+        title: '你已经投过票了',
+
+        icon: 'none'
+
+      })
+
+      return
+
+    }
+
 
     if (!this.data.selectedId) {
 
@@ -121,16 +267,20 @@ Page({
     }
 
 
-    // 防止重复投票
-    const hasVoted =
-      wx.getStorageSync('weeklyPollVoted')
+    const poll =
+      this.data.poll
 
 
-    if (hasVoted) {
+    if (
+      !poll ||
+      !Array.isArray(poll.options)
+    ) {
 
-      this.setData({
+      wx.showToast({
 
-        hasVoted: true
+        title: '投票不存在',
+
+        icon: 'none'
 
       })
 
@@ -139,12 +289,16 @@ Page({
     }
 
 
+    // =========================
+    // 更新票数
+    // =========================
+
     const options =
-      this.data.poll.options.map(item => {
+      poll.options.map(item => {
 
         if (
-          item.id ===
-          this.data.selectedId
+          String(item.id) ===
+          String(this.data.selectedId)
         ) {
 
           return {
@@ -152,7 +306,7 @@ Page({
             ...item,
 
             votes:
-              item.votes + 1
+              Number(item.votes || 0) + 1
 
           }
 
@@ -163,24 +317,44 @@ Page({
       })
 
 
+    // 总票数
     const totalVotes =
-      this.data.poll.totalVotes + 1
+      options.reduce(
+        (sum, item) => {
+
+          return sum +
+            Number(item.votes || 0)
+
+        },
+        0
+      )
 
 
+    // =========================
     // 重新计算百分比
+    // =========================
+
     const newOptions =
       options.map(item => {
+
+        const votes =
+          Number(item.votes || 0)
+
 
         return {
 
           ...item,
 
+          votes,
+
           percent:
-            Math.round(
-              item.votes /
-              totalVotes *
-              100
-            )
+            totalVotes > 0
+              ? Math.round(
+                  votes /
+                  totalVotes *
+                  100
+                )
+              : 0
 
         }
 
@@ -189,39 +363,59 @@ Page({
 
     const newPoll = {
 
-      ...this.data.poll,
+      ...poll,
 
-      options: newOptions,
+      options:
+        newOptions,
 
-      totalVotes: totalVotes
+      totalVotes:
+        totalVotes
 
     }
 
 
+    // =========================
     // 保存投票结果
+    // =========================
+
     wx.setStorageSync(
+
       'weeklyPoll',
+
       newPoll
+
     )
 
 
-    // 记录已经投过
+    // 当前设备已经投过票
     wx.setStorageSync(
+
       'weeklyPollVoted',
+
       true
+
     )
 
+
+    // 保存选择
     wx.setStorageSync(
+
       'weeklyPollChoice',
-      this.data.selectedId
+
+      String(
+        this.data.selectedId
+      )
+
     )
 
 
     this.setData({
 
-      poll: newPoll,
+      poll:
+        newPoll,
 
-      hasVoted: true
+      hasVoted:
+        true
 
     })
 
@@ -237,7 +431,10 @@ Page({
   },
 
 
+  // =========================
   // 返回
+  // =========================
+
   goBack() {
 
     wx.navigateBack()
@@ -245,12 +442,16 @@ Page({
   },
 
 
+  // =========================
   // 去留言
+  // =========================
+
   goCommunity() {
 
     wx.navigateTo({
 
-      url: '/pages/community/community'
+      url:
+        '/pages/community/community'
 
     })
 

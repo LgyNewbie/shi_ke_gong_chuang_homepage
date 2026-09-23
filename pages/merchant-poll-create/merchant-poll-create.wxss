@@ -214,3 +214,49 @@ page {
 
   color: #9AA39F;
 }
+.description-input {
+  width: 100%;
+  min-height: 180rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+
+  background: #F7F5EF;
+  border-radius: 16rpx;
+
+  font-size: 26rpx;
+  line-height: 1.7;
+
+  color: #173C34;
+}
+
+.word-count {
+  margin-top: 10rpx;
+  text-align: right;
+
+  font-size: 21rpx;
+  color: #999;
+}
+
+.date-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 78rpx;
+  padding: 0 22rpx;
+
+  background: #F7F5EF;
+  border-radius: 16rpx;
+
+  box-sizing: border-box;
+}
+
+.date-text {
+  font-size: 26rpx;
+  color: #173C34;
+}
+
+.date-arrow {
+  font-size: 38rpx;
+  color: #9AA59F;
+}
