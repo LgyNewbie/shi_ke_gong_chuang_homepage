@@ -699,5 +699,85 @@ saveStatus() {
 
 },
 
+// =========================
+// 将当前留言转为投票
+// =========================
+
+createPoll() {
+
+  const messageId =
+    this.data.messageId
+
+
+  if (!messageId) {
+
+    wx.showToast({
+
+      title:
+        '留言不存在',
+
+      icon:
+        'none'
+
+    })
+
+    return
+
+  }
+
+
+  const message =
+    getMessageById(
+      messageId
+    )
+
+
+  if (!message) {
+
+    wx.showToast({
+
+      title:
+        '留言不存在',
+
+      icon:
+        'none'
+
+    })
+
+    return
+
+  }
+
+
+  // 已经转成投票
+  if (
+    message.status === 'poll' &&
+    message.pollId
+  ) {
+
+    wx.showToast({
+
+      title:
+        '这条留言已经转为投票',
+
+      icon:
+        'none'
+
+    })
+
+    return
+
+  }
+
+
+  wx.navigateTo({
+
+    url:
+      `/pages/merchant-poll-create/merchant-poll-create?id=${encodeURIComponent(messageId)}`
+
+  })
+
+},
+
 
 })

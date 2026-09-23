@@ -90,16 +90,33 @@ addCommentNotification(target, messageId, replyText) {
     this.loadMessage(this.data.messageId)
 
     const merchantUpdate =
-      wx.getStorageSync('merchantUpdate')
+  wx.getStorageSync('merchantUpdate')
 
-    if (
-      merchantUpdate &&
-      String(merchantUpdate.id) === String(this.data.messageId)
-    ) {
-      this.applyMerchantUpdate(merchantUpdate)
 
-      wx.removeStorageSync('merchantUpdate')
-    }
+if (merchantUpdate) {
+
+  const updateMessageId =
+    merchantUpdate.messageId ||
+    merchantUpdate.id ||
+    ''
+
+
+  if (
+    String(updateMessageId) ===
+    String(this.data.messageId)
+  ) {
+
+    this.applyMerchantUpdate(
+      merchantUpdate
+    )
+
+    wx.removeStorageSync(
+      'merchantUpdate'
+    )
+
+  }
+
+}
   },
 
   // =========================
