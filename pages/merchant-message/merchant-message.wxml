@@ -97,35 +97,58 @@
 
   <!-- 处理状态 -->
 
-  <view class="card">
+  <!-- 处理状态 -->
 
-    <view class="card-title">
-      处理状态
-    </view>
+<view class="card">
+
+<view class="card-title">
+  处理状态
+</view>
 
 
-    <view class="status-list">
+<view class="status-list">
 
-      <view
-        wx:for="{{statuses}}"
-        wx:key="id"
+  <view
+    wx:for="{{statuses}}"
+    wx:key="id"
 
-        class="status-item {{currentStatus === item.id ? 'active' : ''}}"
+    class="status-item {{currentStatus === item.id ? 'active' : ''}}"
 
-        data-id="{{item.id}}"
+    data-id="{{item.id}}"
 
-        bindtap="selectStatus"
-      >
+    bindtap="selectStatus"
+  >
 
-        <text>
-          {{item.name}}
-        </text>
-
-      </view>
-
-    </view>
+    <text>
+      {{item.name}}
+    </text>
 
   </view>
+
+</view>
+
+
+<!-- 保存状态 -->
+
+<button
+  class="status-save-btn"
+  bindtap="saveStatus"
+>
+  保存处理状态
+</button>
+
+
+<!-- 转为投票 -->
+
+<button
+  wx:if="{{currentStatus === 'accepted'}}"
+  class="poll-btn"
+  bindtap="createPoll"
+>
+  转为投票
+</button>
+
+</view>
 
 
   <!-- 回复方式 -->

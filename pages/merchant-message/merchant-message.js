@@ -212,20 +212,37 @@ Page({
   // 选择处理状态
   // =========================
 
-  selectStatus(e) {
+  // =========================
+// 选择处理状态
+// =========================
 
-    const id =
-      e.currentTarget.dataset.id
+selectStatus(e) {
+
+  const id =
+    e.currentTarget.dataset.id
 
 
-    this.setData({
+  // “已转为投票”不能直接手动设置
+  // 应通过“转为投票”流程创建投票
+  if (id === 'poll') {
 
-      currentStatus: id
-
+    wx.showToast({
+      title: '请使用“转为投票”功能',
+      icon: 'none'
     })
 
-  },
+    return
 
+  }
+
+
+  this.setData({
+
+    currentStatus: id
+
+  })
+
+},
 
   // =========================
   // 选择回复方式
@@ -513,6 +530,174 @@ Page({
 
     }, 1000)
 
+  },
+
+  // =========================
+// 保存处理状态
+// =========================
+
+saveStatus() {
+
+  const messageId =
+    this.data.messageId
+
+
+  if (!messageId) {
+
+    wx.showToast({
+      title: '留言不存在',
+      icon: 'none'
+    })
+
+    return
+
   }
+
+
+  const statusMap = {
+
+    pending: '待处理',
+
+    review: '正在评估',
+
+    accepted: '已采纳',
+
+    rejected: '暂不采纳'
+
+  }
+
+
+  const status =
+    this.data.currentStatus
+
+
+  // 防止手动把留言设置成“已转为投票”
+  if (status === 'poll') {
+
+    wx.showToast({
+      title: '请使用“转为投票”功能',
+      icon: 'none'
+    })
+
+    return
+
+  }
+
+
+  const statusName =
+    statusMap[status] || '待处理'
+
+
+  // =========================
+  // 写回统一留言数据
+  // =========================
+
+  const updatedMessage =
+    updateMessage(
+      messageId,
+
+      item => ({
+
+        ...item,
+
+        status: status,
+
+        statusName: statusName
+
+      })
+    )
+
+
+  if (!updatedMessage) {
+
+    wx.showToast({
+      title: '状态保存失败',
+      icon: 'none'
+    })
+
+    return
+
+  }
+
+
+  // =========================
+  // 创建状态通知
+  // =========================
+
+  let title = '留言状态已更新'
+  let content = `你的留言当前状态：${statusName}`
+
+
+  if (status === 'review') {
+
+    title = '留言正在评估'
+
+    content =
+      '餐厅正在认真评估你的建议。'
+
+  }
+
+
+  if (status === 'accepted') {
+
+    title = '你的建议已采纳'
+
+    content =
+      '感谢你的建议！餐厅已经采纳了这条留言。'
+
+  }
+
+
+  if (status === 'rejected') {
+
+    title = '留言处理结果'
+
+    content =
+      '你的建议暂未采纳，感谢你的参与和反馈。'
+
+  }
+
+
+  addNotification({
+
+    id:
+      `message_status_${messageId}_${status}_${Date.now()}`,
+
+    type: 'merchant',
+
+    icon: '💬',
+
+    iconClass: 'merchant-icon',
+
+    title: title,
+
+    content: content,
+
+    time: '刚刚',
+
+    messageId: messageId
+
+  })
+
+
+  // 更新当前页面
+  this.setData({
+
+    message:
+      updatedMessage
+
+  })
+
+
+  wx.showToast({
+
+    title: '状态保存成功',
+
+    icon: 'success'
+
+  })
+
+},
+
 
 })
