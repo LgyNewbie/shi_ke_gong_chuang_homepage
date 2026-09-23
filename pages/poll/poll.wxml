@@ -1,6 +1,7 @@
 <view class="page">
 
 <!-- 顶部 -->
+
 <view class="header">
 
   <view
@@ -11,7 +12,7 @@
   </view>
 
   <text class="title">
-    本周投票
+    食客投票
   </text>
 
   <view class="header-more">
@@ -21,8 +22,15 @@
 </view>
 
 
-<!-- 投票主题 -->
-<view class="poll-card">
+<!-- 多个投票 -->
+
+<view
+  wx:for="{{polls}}"
+  wx:key="id"
+  class="poll-card"
+>
+
+  <!-- 投票图片 -->
 
   <image
     class="poll-image"
@@ -30,148 +38,261 @@
     mode="aspectFill"
   />
 
+
+  <!-- 状态 -->
+
   <view class="poll-tag">
-    进行中
+
+    {{item.status === 'active'
+      ? '进行中'
+      : item.statusName}}
+
   </view>
+
+
+  <!-- 标题 -->
 
   <view class="poll-title">
-    {{poll.title}}
+    {{item.title}}
   </view>
 
-  <view class="poll-desc">
-    {{poll.description}}
+
+  <!-- 说明 -->
+
+  <view
+    wx:if="{{item.description}}"
+    class="poll-desc"
+  >
+    {{item.description}}
   </view>
+
+
+  <!-- 信息 -->
 
   <view class="poll-info">
 
     <text>
-      {{poll.totalVotes}} 人已参与
+      {{item.totalVotes || 0}} 人已参与
     </text>
 
-    <text>
-      截止 {{poll.endDate}}
+    <text wx:if="{{item.status === 'active' && item.endDate}}">
+      截止 {{item.endDate}}
+    </text>
+
+    <text wx:if="{{item.status !== 'active' && item.endTime}}">
+      已结束 {{item.endTime}}
     </text>
 
   </view>
 
-</view>
 
+  <!-- =========================
+       未投票
+  ========================== -->
 
-<!-- 还没有投票 -->
-<view
-  wx:if="{{!hasVoted}}"
-  class="card"
->
-
-  <view class="card-title">
-    请选择你最期待的新品
-  </view>
-
-
-  <view class="options">
-
-    <view
-      wx:for="{{poll.options}}"
-      wx:key="id"
-      class="option {{selectedId === item.id ? 'selected' : ''}}"
-      data-id="{{item.id}}"
-      bindtap="selectOption"
-    >
-
-      <view class="radio">
-        <view
-          wx:if="{{selectedId === item.id}}"
-          class="radio-dot"
-        >
-        </view>
-      </view>
-
-      <view class="option-info">
-
-        <text class="option-name">
-          {{item.name}}
-        </text>
-
-        <text class="option-desc">
-          {{item.desc}}
-        </text>
-
-      </view>
-
-    </view>
-
-  </view>
-
-
-  <button
-    class="vote-btn"
-    bindtap="submitVote"
+  <view
+    wx:if="{{item.status === 'active' && !item.hasVoted}}"
+    class="card"
   >
-    立即投票
-  </button>
 
-</view>
-
-
-<!-- 已投票 -->
-<view
-  wx:if="{{hasVoted}}"
-  class="card result-card"
->
-
-  <view class="voted-tip">
-    ✓ 感谢你的参与
-  </view>
-
-  <view class="voted-desc">
-    你已经完成本周投票，下面是当前结果
-  </view>
+    <view class="card-title">
+      请选择你最期待的选项
+    </view>
 
 
-  <view class="result-list">
+    <view class="options">
 
-    <view
-      wx:for="{{poll.options}}"
-      wx:key="id"
-      class="result-item"
-    >
+      <view
+        wx:for="{{item.options}}"
+        wx:for-item="option"
+        wx:key="id"
 
-      <view class="result-top">
+        class="option {{item.selectedId === option.id ? 'selected' : ''}}"
 
-        <text class="result-name">
-          {{item.name}}
-        </text>
+        data-poll-id="{{item.id}}"
 
-        <view class="result-number">
-          <text>{{item.percent}}%</text>
-          <text class="result-count">
-            （{{item.votes}}票）
+        data-option-id="{{option.id}}"
+
+        bindtap="selectOption"
+      >
+
+        <view class="radio">
+
+          <view
+            wx:if="{{item.selectedId === option.id}}"
+            class="radio-dot"
+          ></view>
+
+        </view>
+
+
+        <view class="option-info">
+
+          <text class="option-name">
+            {{option.name}}
           </text>
+
+          <text
+            wx:if="{{option.desc}}"
+            class="option-desc"
+          >
+            {{option.desc}}
+          </text>
+
         </view>
 
       </view>
 
-      <progress
-        percent="{{item.percent}}"
-        activeColor="#1F6A57"
-        backgroundColor="#E7ECE9"
-        stroke-width="10"
-        active
-      />
+    </view>
 
+
+    <button
+      class="vote-btn"
+
+      data-poll-id="{{item.id}}"
+
+      bindtap="submitVote"
+    >
+      立即投票
+    </button>
+
+  </view>
+
+
+  <!-- =========================
+       已投票 / 已结束
+  ========================== -->
+
+  <view
+    wx:if="{{item.status !== 'active' || item.hasVoted}}"
+    class="card result-card"
+  >
+
+    <view
+      wx:if="{{item.hasVoted}}"
+      class="voted-tip"
+    >
+      ✓ 感谢你的参与
+    </view>
+
+
+    <view
+      wx:if="{{item.status === 'ended'}}"
+      class="voted-tip"
+    >
+      投票已结束
+    </view>
+
+
+    <view
+      wx:if="{{item.status === 'accepted'}}"
+      class="voted-tip"
+    >
+      ✓ 这条建议已采纳
+    </view>
+
+
+    <view
+      wx:if="{{item.status === 'rejected'}}"
+      class="voted-tip"
+    >
+      这条建议暂不采纳
+    </view>
+
+
+    <view class="voted-desc">
+
+      {{item.hasVoted
+        ? '下面是当前投票结果'
+        : '下面是最终投票结果'}}
+
+    </view>
+
+
+    <view class="result-list">
+
+      <view
+        wx:for="{{item.options}}"
+        wx:for-item="option"
+        wx:key="id"
+
+        class="result-item"
+      >
+
+        <view class="result-top">
+
+          <text class="result-name">
+            {{option.name}}
+          </text>
+
+          <view class="result-number">
+
+            <text>
+              {{option.percent}}%
+            </text>
+
+            <text class="result-count">
+              （{{option.votes}}票）
+            </text>
+
+          </view>
+
+        </view>
+
+
+        <progress
+
+          percent="{{option.percent}}"
+
+          activeColor="#1F6A57"
+
+          backgroundColor="#E7ECE9"
+
+          stroke-width="10"
+
+          active
+
+        />
+
+      </view>
+
+    </view>
+
+
+    <view class="total-votes">
+      当前共有 {{item.totalVotes || 0}} 人参与
     </view>
 
   </view>
 
 
-  <view class="total-votes">
-    当前共有 {{poll.totalVotes}} 人参与
-  </view>
+</view>
+
+
+<!-- 没有投票 -->
+
+<view
+  wx:if="{{polls.length === 0}}"
+  class="empty"
+>
+
+  <text class="empty-icon">
+    🗳️
+  </text>
+
+  <text class="empty-title">
+    暂时没有可参与的投票
+  </text>
+
+  <text class="empty-text">
+    商家发布新的共创投票后，会显示在这里
+  </text>
 
 </view>
 
 
 <!-- 投票说明 -->
+
 <view class="info-card">
 
   <view class="info-title">
@@ -179,17 +300,18 @@
   </view>
 
   <view class="info-text">
-    你的每一次投票，都可能影响餐厅下一款新品。
+    每一场投票都对应一次真实的食客共创建议。
   </view>
 
   <view class="info-text">
-    商家会根据投票结果和食客留言决定后续菜单。
+    你可以连续参与不同投票，为餐厅新品提供意见。
   </view>
 
 </view>
 
 
 <!-- 查看留言 -->
+
 <view
   class="community-link"
   bindtap="goCommunity"

@@ -1,3 +1,7 @@
+// ================================
+// 食客共创 - 商家多投票管理
+// ================================
+
 const {
   getMessageById,
   updateMessage
@@ -7,127 +11,183 @@ const {
   addNotification
 } = require('../../utils/notification.js')
 
+const {
+  getPolls,
+  updatePoll
+} = require('../../utils/poll.js')
+
 
 Page({
-  data: {
-    poll: null,
 
-    sourceMessage: null
+  data: {
+
+    polls: []
+
   },
 
 
   onShow() {
-    this.loadPoll()
+
+    this.loadPolls()
+
   },
 
 
   // =========================
-  // 加载当前投票
+  // 加载全部投票
   // =========================
 
-  loadPoll() {
-    const poll =
-      wx.getStorageSync('weeklyPoll') || null
+  loadPolls() {
 
-    if (!poll) {
-      this.setData({
-        poll: null,
-        sourceMessage: null
-      })
-
-      return
-    }
+    const polls = getPolls()
 
 
-    // 重新计算百分比
-    const total =
-      Number(poll.totalVotes || 0)
+    const displayPolls =
+      polls.map(poll => {
 
-    const options =
-      (poll.options || []).map(item => {
+        let sourceMessage = null
 
-        let percent = 0
 
-        if (total > 0) {
-          percent =
-            Math.round(
-              Number(item.count || 0)
-              / total
-              * 100
+        if (poll.sourceMessageId) {
+
+          sourceMessage =
+            getMessageById(
+              poll.sourceMessageId
             )
+
         }
+
+
+        // 重新给每个选项计算样式
+        const options =
+          (poll.options || []).map(option => {
+
+            const percent =
+              Number(option.percent || 0)
+
+
+            return {
+
+              ...option,
+
+              // 直接生成完整 CSS
+              percentStyle:
+                `width: ${percent}%;`
+
+            }
+
+          })
+
 
         return {
-          ...item,
-          percent
+
+          ...poll,
+
+          options,
+
+          sourceMessage
+
         }
+
       })
-
-
-    const newPoll = {
-      ...poll,
-      options
-    }
-
-
-    // 找到来源留言
-    let sourceMessage = null
-
-    if (poll.sourceMessageId) {
-      sourceMessage =
-        getMessageById(
-          poll.sourceMessageId
-        )
-    }
 
 
     this.setData({
-      poll: newPoll,
-      sourceMessage
+
+      polls:
+        displayPolls
+
     })
+
   },
 
 
   // =========================
-  // 处理建议
+  // 结束某一场投票
   // =========================
 
-  makeDecision(e) {
-    if (!this.data.poll) {
+  endPoll(e) {
+
+    const pollId =
+      String(
+        e.currentTarget.dataset.pollId || ''
+      )
+
+
+    if (!pollId) {
+
+      wx.showToast({
+
+        title:
+          '没有收到投票ID',
+
+        icon:
+          'none'
+
+      })
+
       return
+
     }
 
 
-    const result =
-      e.currentTarget.dataset.result
+    const poll =
+      this.data.polls.find(
+        item =>
+          String(item.id) ===
+          String(pollId)
+      )
 
 
-    let resultText = ''
+    if (!poll) {
 
-    if (result === 'accepted') {
-      resultText = '已采纳'
-    }
+      wx.showToast({
 
-    if (result === 'rejected') {
-      resultText = '暂不采纳'
-    }
+        title:
+          '投票不存在',
 
+        icon:
+          'none'
 
-    if (!resultText) {
+      })
+
       return
+
+    }
+
+
+    if (
+      poll.status !== 'active'
+    ) {
+
+      wx.showToast({
+
+        title:
+          '这场投票已经结束',
+
+        icon:
+          'none'
+
+      })
+
+      return
+
     }
 
 
     wx.showModal({
 
-      title: '确认处理',
+      title:
+        '结束投票',
 
       content:
-        `确定将这条投票建议标记为“${resultText}”吗？`,
+        `确定结束“${poll.title}”这场投票吗？`,
 
-      confirmText: '确定',
+      confirmText:
+        '结束投票',
 
-      cancelText: '取消',
+      cancelText:
+        '暂不结束',
 
       success: (res) => {
 
@@ -136,67 +196,329 @@ Page({
         }
 
 
-        const poll =
-          this.data.poll
+        const endTime =
+          new Date().toLocaleString()
 
 
-        // 更新投票状态
-        const updatedPoll = {
-          ...poll,
+        const updatedPoll =
+          updatePoll(
 
-          status: result,
+            pollId,
 
-          statusName: resultText,
+            oldPoll => ({
 
-          endTime:
-            new Date().toLocaleString()
+              ...oldPoll,
+
+              status:
+                'ended',
+
+              statusName:
+                '已结束',
+
+              endTime
+
+            })
+
+          )
+
+
+        if (!updatedPoll) {
+
+          wx.showToast({
+
+            title:
+              '结束投票失败',
+
+            icon:
+              'none'
+
+          })
+
+          return
+
         }
 
 
-        wx.setStorageSync(
-          'weeklyPoll',
-          updatedPoll
-        )
-
-
-        // =========================
         // 更新来源留言
-        // =========================
-
-        if (poll.sourceMessageId) {
+        if (
+          poll.sourceMessageId
+        ) {
 
           updateMessage(
+
             poll.sourceMessageId,
+
             oldMessage => ({
 
               ...oldMessage,
 
-              status: result,
+              status:
+                'ended',
 
-              statusName: resultText,
+              statusName:
+                '投票已结束',
 
-              pollId: poll.id
+              pollId:
+                poll.id
 
             })
+
           )
 
         }
 
 
-        // =========================
-        // 生成通知
-        // =========================
+        // 通知
+        addNotification({
 
+          id:
+            `poll_end_${poll.id}_${Date.now()}`,
+
+          type:
+            'poll',
+
+          icon:
+            '🗳️',
+
+          iconClass:
+            'poll-icon',
+
+          title:
+            '投票已经结束',
+
+          content:
+            `“${poll.title}”投票已经结束，可以查看最终结果。`,
+
+          time:
+            '刚刚',
+
+          read:
+            false,
+
+          messageId:
+            poll.sourceMessageId || ''
+
+        })
+
+
+        this.loadPolls()
+
+
+        wx.showToast({
+
+          title:
+            '已结束投票',
+
+          icon:
+            'success'
+
+        })
+
+      }
+
+    })
+
+  },
+
+
+  // =========================
+  // 采纳 / 暂不采纳
+  // =========================
+
+  makeDecision(e) {
+
+    const pollId =
+      String(
+        e.currentTarget.dataset.pollId || ''
+      )
+
+
+    const result =
+      e.currentTarget.dataset.result
+
+
+    if (!pollId) {
+
+      wx.showToast({
+
+        title:
+          '没有收到投票ID',
+
+        icon:
+          'none'
+
+      })
+
+      return
+
+    }
+
+
+    if (
+      result !== 'accepted' &&
+      result !== 'rejected'
+    ) {
+
+      return
+
+    }
+
+
+    const poll =
+      this.data.polls.find(
+        item =>
+          String(item.id) ===
+          String(pollId)
+      )
+
+
+    if (!poll) {
+
+      wx.showToast({
+
+        title:
+          '投票不存在',
+
+        icon:
+          'none'
+
+      })
+
+      return
+
+    }
+
+
+    if (
+      poll.status !== 'ended'
+    ) {
+
+      wx.showToast({
+
+        title:
+          '请先结束投票',
+
+        icon:
+          'none'
+
+      })
+
+      return
+
+    }
+
+
+    const resultText =
+      result === 'accepted'
+        ? '已采纳'
+        : '暂不采纳'
+
+
+    wx.showModal({
+
+      title:
+        '确认处理',
+
+      content:
+        `确定将“${poll.title}”对应的食客建议标记为“${resultText}”吗？`,
+
+      confirmText:
+        '确定',
+
+      cancelText:
+        '取消',
+
+      success: (res) => {
+
+        if (!res.confirm) {
+          return
+        }
+
+
+        const updatedPoll =
+          updatePoll(
+
+            pollId,
+
+            oldPoll => ({
+
+              ...oldPoll,
+
+              status:
+                result,
+
+              statusName:
+                resultText,
+
+              endTime:
+                oldPoll.endTime ||
+                new Date().toLocaleString()
+
+            })
+
+          )
+
+
+        if (!updatedPoll) {
+
+          wx.showToast({
+
+            title:
+              '处理失败',
+
+            icon:
+              'none'
+
+          })
+
+          return
+
+        }
+
+
+        // 更新来源留言
+        if (
+          poll.sourceMessageId
+        ) {
+
+          updateMessage(
+
+            poll.sourceMessageId,
+
+            oldMessage => ({
+
+              ...oldMessage,
+
+              status:
+                result,
+
+              statusName:
+                resultText,
+
+              pollId:
+                poll.id
+
+            })
+
+          )
+
+        }
+
+
+        // 通知
         addNotification({
 
           id:
             `poll_result_${poll.id}_${Date.now()}`,
 
-          type: 'poll',
+          type:
+            'poll',
 
-          icon: '🗳️',
+          icon:
+            '🗳️',
 
-          iconClass: 'poll-icon',
+          iconClass:
+            'poll-icon',
 
           title:
             result === 'accepted'
@@ -208,9 +530,11 @@ Page({
               ? `“${poll.title}”对应的食客建议已被采纳。`
               : `“${poll.title}”对应的建议暂不采纳。`,
 
-          time: '刚刚',
+          time:
+            '刚刚',
 
-          read: false,
+          read:
+            false,
 
           messageId:
             poll.sourceMessageId || ''
@@ -218,46 +542,31 @@ Page({
         })
 
 
-        this.setData({
-          poll: updatedPoll
-        })
-
-
-        // 如果是采纳
-        if (result === 'accepted') {
-
-          wx.showModal({
-
-            title: '处理完成',
-
-            content:
-              '这条食客建议已经标记为“已采纳”。',
-
-            showCancel: false,
-
-            confirmText: '好的'
-
-          })
-
-          return
-        }
+        this.loadPolls()
 
 
         wx.showModal({
 
-          title: '处理完成',
+          title:
+            '处理完成',
 
           content:
-            '这条食客建议已经标记为“暂不采纳”。',
+            result === 'accepted'
+              ? '这条食客建议已经标记为“已采纳”。'
+              : '这条食客建议已经标记为“暂不采纳”。',
 
-          showCancel: false,
+          showCancel:
+            false,
 
-          confirmText: '好的'
+          confirmText:
+            '好的'
 
         })
 
       }
 
     })
+
   }
+
 })

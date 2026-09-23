@@ -1,230 +1,168 @@
+const {
+  getPolls,
+  hasVoted,
+  getMyChoice,
+  votePoll
+} = require('../../utils/poll.js')
+
+
 Page({
 
   data: {
 
-    selectedId: '',
+    polls: [],
 
-    hasVoted: false,
-
-
-    // 默认投票
-    poll: {
-
-      id: 'weekly_001',
-
-      title: '下周最想吃什么新品？',
-
-      description: '从下面三款新品中选出你最期待的一款',
-
-      endDate: '本周日',
-
-      totalVotes: 267,
-
-      options: [
-
-        {
-          id: '1',
-          name: '辣子鸡',
-          desc: '香辣过瘾，经典川味',
-          votes: 128,
-          percent: 48
-        },
-
-        {
-          id: '2',
-          name: '番茄牛腩',
-          desc: '酸甜浓郁，牛腩软嫩',
-          votes: 83,
-          percent: 31
-        },
-
-        {
-          id: '3',
-          name: '黑椒鸡排',
-          desc: '外酥里嫩，黑椒香浓',
-          votes: 56,
-          percent: 21
-        }
-
-      ]
-
-    }
+    scrollToPollId: ''
 
   },
 
 
-  // =========================
-  // 页面加载
-  // =========================
+  onLoad(options) {
 
-  onLoad() {
-
-    this.loadPoll()
-
-  },
-
-
-  // =========================
-  // 页面显示
-  // =========================
-
-  onShow() {
-
-    this.loadPoll()
-
-  },
-
-
-  // =========================
-  // 读取本地投票
-  // =========================
-
-  loadPoll() {
-
-    const savedPoll =
-      wx.getStorageSync('weeklyPoll')
-
-
-    // 没有商家发布的新投票
-    if (!savedPoll) {
-
-      this.setData({
-
-        hasVoted: false,
-
-        selectedId: ''
-
-      })
-
-      return
-
-    }
-
-
-    // =========================
-    // 兼容旧投票数据
-    // count → votes
-    // =========================
-
-    const options =
-      Array.isArray(savedPoll.options)
-        ? savedPoll.options.map(item => ({
-
-            ...item,
-
-            votes:
-              Number(
-                item.votes !== undefined
-                  ? item.votes
-                  : item.count || 0
-              )
-
-          }))
-        : []
-
-
-    // 重新计算总票数
-    const totalVotes =
-      options.reduce(
-        (sum, item) => {
-          return sum + Number(item.votes || 0)
-        },
-        0
-      )
-
-
-    // 重新计算百分比
-    const newOptions =
-      options.map(item => {
-
-        const votes =
-          Number(item.votes || 0)
-
-        return {
-
-          ...item,
-
-          votes,
-
-          percent:
-            totalVotes > 0
-              ? Math.round(
-                  votes /
-                  totalVotes *
-                  100
-                )
-              : 0
-
-        }
-
-      })
-
-
-    const poll = {
-
-      ...savedPoll,
-
-      options: newOptions,
-
-      totalVotes:
-        totalVotes
-
-    }
-
-
-    // =========================
-    // 查看当前设备是否已经投票
-    // =========================
-
-    const voted =
-      wx.getStorageSync('weeklyPollVoted')
-
-
-    const choice =
-      wx.getStorageSync('weeklyPollChoice')
+    const pollId =
+      options &&
+      options.pollId
+        ? String(options.pollId)
+        : ''
 
 
     this.setData({
 
-      poll,
-
-      hasVoted:
-        voted === true,
-
-      selectedId:
-        choice || ''
+      scrollToPollId:
+        pollId
 
     })
 
 
-    // 同步修正 Storage
-    wx.setStorageSync(
-      'weeklyPoll',
-      poll
-    )
+    this.loadPolls()
+
+  },
+
+
+  onShow() {
+
+    this.loadPolls()
 
   },
 
 
   // =========================
-  // 选择投票
+  // 加载全部投票
+  // =========================
+
+  loadPolls() {
+
+    const polls =
+      getPolls()
+
+
+    const displayPolls =
+      polls.map(poll => {
+
+        const voted =
+          hasVoted(
+            poll.id
+          )
+
+
+        const choiceId =
+          getMyChoice(
+            poll.id
+          )
+
+
+        return {
+
+          ...poll,
+
+          hasVoted:
+            voted,
+
+          selectedId:
+            choiceId
+
+        }
+
+      })
+
+
+    this.setData({
+
+      polls:
+        displayPolls
+
+    })
+
+  },
+
+
+  // =========================
+  // 选择选项
   // =========================
 
   selectOption(e) {
 
-    if (this.data.hasVoted) {
-      return
-    }
+    const pollId =
+      String(
+        e.currentTarget.dataset.pollId
+      )
 
 
-    const id =
-      e.currentTarget.dataset.id
+    const optionId =
+      String(
+        e.currentTarget.dataset.optionId
+      )
+
+
+    const polls =
+      this.data.polls.map(
+        poll => {
+
+          if (
+            String(poll.id) !==
+            String(pollId)
+          ) {
+
+            return poll
+
+          }
+
+
+          if (
+            poll.status !==
+            'active'
+          ) {
+
+            return poll
+
+          }
+
+
+          if (
+            poll.hasVoted
+          ) {
+
+            return poll
+
+          }
+
+
+          return {
+
+            ...poll,
+
+            selectedId:
+              optionId
+
+          }
+
+        }
+      )
 
 
     this.setData({
 
-      selectedId:
-        String(id)
+      polls
 
     })
 
@@ -232,199 +170,132 @@ Page({
 
 
   // =========================
-  // 提交投票
+  // 提交某一场投票
   // =========================
 
-  submitVote() {
+  submitVote(e) {
 
-    if (this.data.hasVoted) {
-
-      wx.showToast({
-
-        title: '你已经投过票了',
-
-        icon: 'none'
-
-      })
-
-      return
-
-    }
-
-
-    if (!this.data.selectedId) {
-
-      wx.showToast({
-
-        title: '请选择一个选项',
-
-        icon: 'none'
-
-      })
-
-      return
-
-    }
+    const pollId =
+      String(
+        e.currentTarget.dataset.pollId
+      )
 
 
     const poll =
-      this.data.poll
+      this.data.polls.find(
+        item =>
+          String(item.id) ===
+          String(pollId)
+      )
+
+
+    if (!poll) {
+
+      wx.showToast({
+
+        title:
+          '投票不存在',
+
+        icon:
+          'none'
+
+      })
+
+      return
+    }
 
 
     if (
-      !poll ||
-      !Array.isArray(poll.options)
+      poll.status !==
+      'active'
     ) {
 
       wx.showToast({
 
-        title: '投票不存在',
+        title:
+          '这场投票已经结束',
 
-        icon: 'none'
+        icon:
+          'none'
 
       })
 
       return
-
     }
 
 
-    // =========================
-    // 更新票数
-    // =========================
+    if (
+      poll.hasVoted
+    ) {
 
-    const options =
-      poll.options.map(item => {
+      wx.showToast({
 
-        if (
-          String(item.id) ===
-          String(this.data.selectedId)
-        ) {
+        title:
+          '你已经投过这场投票了',
 
-          return {
-
-            ...item,
-
-            votes:
-              Number(item.votes || 0) + 1
-
-          }
-
-        }
-
-        return item
+        icon:
+          'none'
 
       })
 
-
-    // 总票数
-    const totalVotes =
-      options.reduce(
-        (sum, item) => {
-
-          return sum +
-            Number(item.votes || 0)
-
-        },
-        0
-      )
-
-
-    // =========================
-    // 重新计算百分比
-    // =========================
-
-    const newOptions =
-      options.map(item => {
-
-        const votes =
-          Number(item.votes || 0)
-
-
-        return {
-
-          ...item,
-
-          votes,
-
-          percent:
-            totalVotes > 0
-              ? Math.round(
-                  votes /
-                  totalVotes *
-                  100
-                )
-              : 0
-
-        }
-
-      })
-
-
-    const newPoll = {
-
-      ...poll,
-
-      options:
-        newOptions,
-
-      totalVotes:
-        totalVotes
-
+      return
     }
 
 
-    // =========================
-    // 保存投票结果
-    // =========================
+    if (
+      !poll.selectedId
+    ) {
 
-    wx.setStorageSync(
+      wx.showToast({
 
-      'weeklyPoll',
+        title:
+          '请选择一个选项',
 
-      newPoll
+        icon:
+          'none'
 
-    )
+      })
 
-
-    // 当前设备已经投过票
-    wx.setStorageSync(
-
-      'weeklyPollVoted',
-
-      true
-
-    )
+      return
+    }
 
 
-    // 保存选择
-    wx.setStorageSync(
+    const updatedPoll =
+      votePoll(
 
-      'weeklyPollChoice',
+        pollId,
 
-      String(
-        this.data.selectedId
+        poll.selectedId
+
       )
 
-    )
+
+    if (!updatedPoll) {
+
+      wx.showToast({
+
+        title:
+          '投票失败',
+
+        icon:
+          'none'
+
+      })
+
+      return
+    }
 
 
-    this.setData({
-
-      poll:
-        newPoll,
-
-      hasVoted:
-        true
-
-    })
+    this.loadPolls()
 
 
     wx.showToast({
 
-      title: '投票成功',
+      title:
+        '投票成功',
 
-      icon: 'success'
+      icon:
+        'success'
 
     })
 

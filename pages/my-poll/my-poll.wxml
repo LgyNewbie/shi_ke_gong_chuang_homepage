@@ -1,6 +1,7 @@
 <view class="page">
 
 <!-- 顶部 -->
+
 <view class="header">
 
   <view
@@ -17,7 +18,8 @@
 </view>
 
 
-<!-- 当前投票 -->
+<!-- 当前投票 / 最终结果 -->
+
 <view
   wx:if="{{currentPoll}}"
   class="card current-card"
@@ -26,17 +28,24 @@
   <view class="card-head">
 
     <view>
+
       <text class="section-title">
-        正在进行
+
+        {{currentPoll.status === 'active'
+          ? '正在进行'
+          : '投票结果'}}
+
       </text>
 
       <text class="section-subtitle">
         本周投票
       </text>
+
     </view>
 
+
     <text class="status">
-      进行中
+      {{currentPoll.statusName}}
     </text>
 
   </view>
@@ -46,12 +55,17 @@
     {{currentPoll.title}}
   </view>
 
-  <view class="poll-description">
+
+  <view
+    wx:if="{{currentPoll.description}}"
+    class="poll-description"
+  >
     {{currentPoll.description}}
   </view>
 
 
   <!-- 用户选择 -->
+
   <view class="my-choice">
 
     <text class="choice-label">
@@ -65,7 +79,8 @@
   </view>
 
 
-  <!-- 当前结果 -->
+  <!-- 最终结果 -->
+
   <view class="result-list">
 
     <view
@@ -94,6 +109,7 @@
 
       </view>
 
+
       <progress
         percent="{{item.percent}}"
         activeColor="#1F6A57"
@@ -113,17 +129,37 @@
       共 {{currentPoll.totalVotes}} 人参与
     </text>
 
-    <text>
+
+    <text wx:if="{{currentPoll.endDate}}">
       截止 {{currentPoll.endDate}}
     </text>
 
+    <text wx:if="{{currentPoll.endTime}}">
+      结束 {{currentPoll.endTime}}
+    </text>
+
   </view>
+
+
+  <!-- 尚未投票 -->
+
+  <button
+    wx:if="{{currentPoll.status === 'active' && myChoice === '未投票'}}"
+    class="go-poll"
+    bindtap="goPoll"
+  >
+    去投票
+  </button>
 
 </view>
 
 
 <!-- 历史投票 -->
-<view class="history-title">
+
+<view
+  wx:if="{{historyPolls.length > 0}}"
+  class="history-title"
+>
   历史投票
 </view>
 
@@ -148,8 +184,9 @@
 
     </view>
 
+
     <text class="ended-tag">
-      已结束
+      {{item.statusName || '已结束'}}
     </text>
 
   </view>
@@ -162,7 +199,7 @@
     </text>
 
     <text class="history-choice-name">
-      {{item.myChoice}}
+      {{item.myChoice || '未投票'}}
     </text>
 
   </view>
@@ -175,7 +212,7 @@
     </text>
 
     <text class="history-result-name">
-      {{item.winner}}
+      {{item.winner || '暂无结果'}}
     </text>
 
   </view>
@@ -184,11 +221,11 @@
   <view class="history-summary">
 
     <text>
-      {{item.totalVotes}} 人参与
+      {{item.totalVotes || 0}} 人参与
     </text>
 
     <text>
-      {{item.resultPercent}}%
+      {{item.resultPercent || 0}}%
     </text>
 
   </view>
@@ -197,6 +234,7 @@
 
 
 <!-- 空状态 -->
+
 <view
   wx:if="{{!currentPoll && historyPolls.length === 0}}"
   class="empty"

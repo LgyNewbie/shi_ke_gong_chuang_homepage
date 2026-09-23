@@ -1,6 +1,7 @@
 <view class="page">
 
 <!-- 顶部 -->
+
 <view class="header">
 
   <view class="title">
@@ -14,33 +15,61 @@
 </view>
 
 
-<!-- 当前投票 -->
+<!-- =========================
+     多张投票
+========================== -->
+
 <view
-  wx:if="{{poll}}"
+  wx:for="{{polls}}"
+  wx:key="id"
   class="poll-card"
 >
+
+  <!-- 投票头部 -->
 
   <view class="poll-head">
 
     <view class="active-badge">
-      {{poll.status === 'active' ? '进行中' : '已结束'}}
+
+      {{
+        item.statusName ||
+        (
+          item.status === 'active'
+            ? '进行中'
+            : '已结束'
+        )
+      }}
+
     </view>
 
     <view class="poll-time">
-      {{poll.createTime}}
+      {{item.createTime}}
     </view>
 
   </view>
 
 
+  <!-- 标题 -->
+
   <view class="poll-title">
-    {{poll.title}}
+    {{item.title}}
+  </view>
+
+
+  <!-- 投票说明 -->
+
+  <view
+    wx:if="{{item.description}}"
+    class="poll-description"
+  >
+    {{item.description}}
   </view>
 
 
   <!-- 来源留言 -->
+
   <view
-    wx:if="{{sourceMessage}}"
+    wx:if="{{item.sourceMessage}}"
     class="source-box"
   >
 
@@ -49,24 +78,51 @@
     </view>
 
     <view class="source-text">
-      {{sourceMessage.text || sourceMessage.content}}
+      {{
+        item.sourceMessage.text ||
+        item.sourceMessage.content
+      }}
     </view>
 
     <view class="source-user">
-      {{sourceMessage.name || sourceMessage.userName || '食客'}}
+      {{
+        item.sourceMessage.name ||
+        item.sourceMessage.userName ||
+        '食客'
+      }}
     </view>
 
   </view>
 
 
-  <!-- 投票结果 -->
+  <!-- 截止时间 -->
+
+  <view
+    wx:if="{{item.endDate}}"
+    class="poll-deadline"
+  >
+    截止：{{item.endDate}}
+  </view>
+
+
+  <!-- =========================
+       投票结果
+  ========================== -->
+
   <view class="result-title">
-    当前投票结果
+
+    {{
+      item.status === 'active'
+        ? '当前投票结果'
+        : '最终投票结果'
+    }}
+
   </view>
 
 
   <view
-    wx:for="{{poll.options}}"
+    wx:for="{{item.options}}"
+    wx:for-item="option"
     wx:key="id"
     class="result-row"
   >
@@ -74,11 +130,11 @@
     <view class="result-top">
 
       <text class="option-name">
-        {{item.name}}
+        {{option.name}}
       </text>
 
       <text class="option-count">
-        {{item.count}} 票 · {{item.percent}}%
+        {{option.votes || 0}} 票 · {{option.percent || 0}}%
       </text>
 
     </view>
@@ -86,29 +142,65 @@
 
     <view class="progress-bg">
 
+<view
+  class="progress-fill"
+  style="{{option.percentStyle}}"
+></view>
+
+</view>
+
+  </view>
+
+
+  <!-- 总票数 -->
+
+  <view class="total-votes">
+
+    共 {{item.totalVotes || 0}} 人参与投票
+
+  </view>
+
+
+  <!-- =========================
+       进行中：结束投票
+  ========================== -->
+
+  <view
+    wx:if="{{item.status === 'active'}}"
+    class="decision-area"
+  >
+
+    <view class="decision-title">
+      当前投票正在进行
+    </view>
+
+
+    <view class="decision-buttons">
+
       <view
-        class="progress-fill"
-        style="width: {{item.percent}}%;"
-      ></view>
+        class="accept-btn"
+        catchtap="endPoll"
+        data-poll-id="{{item.id}}"
+      >
+        结束投票
+      </view>
 
     </view>
 
   </view>
 
 
-  <view class="total-votes">
-    共 {{poll.totalVotes || 0}} 人参与投票
-  </view>
+  <!-- =========================
+       已结束：商家处理
+  ========================== -->
 
-
-  <!-- 操作 -->
   <view
-    wx:if="{{poll.status === 'active'}}"
+    wx:if="{{item.status === 'ended'}}"
     class="decision-area"
   >
 
     <view class="decision-title">
-      投票结束后，请处理这条食客建议
+      投票已经结束，请根据最终结果处理这条食客建议
     </view>
 
 
@@ -117,14 +209,17 @@
       <view
         class="accept-btn"
         catchtap="makeDecision"
+        data-poll-id="{{item.id}}"
         data-result="accepted"
       >
         采纳建议
       </view>
 
+
       <view
         class="reject-btn"
         catchtap="makeDecision"
+        data-poll-id="{{item.id}}"
         data-result="rejected"
       >
         暂不采纳
@@ -135,28 +230,48 @@
   </view>
 
 
-  <!-- 已处理 -->
+  <!-- =========================
+       已采纳
+  ========================== -->
+
   <view
-    wx:if="{{poll.status === 'accepted'}}"
+    wx:if="{{item.status === 'accepted'}}"
     class="decision-result accepted-result"
   >
     ✓ 这条建议已采纳
   </view>
 
 
+  <!-- =========================
+       暂不采纳
+  ========================== -->
+
   <view
-    wx:if="{{poll.status === 'rejected'}}"
+    wx:if="{{item.status === 'rejected'}}"
     class="decision-result rejected-result"
   >
     已结束：这条建议暂不采纳
   </view>
 
+
+  <!-- 结束时间 -->
+
+  <view
+    wx:if="{{item.endTime}}"
+    class="poll-end-time"
+  >
+    投票结束：{{item.endTime}}
+  </view>
+
 </view>
 
 
-<!-- 没有投票 -->
+<!-- =========================
+     没有投票
+========================== -->
+
 <view
-  wx:if="{{!poll}}"
+  wx:if="{{polls.length === 0}}"
   class="empty"
 >
 

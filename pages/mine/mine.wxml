@@ -1,6 +1,9 @@
 <view class="page">
 
-<!-- 用户信息 -->
+<!-- =========================
+     用户信息
+========================== -->
+
 <view class="user-card">
 
   <view class="user-avatar">
@@ -8,6 +11,7 @@
   </view>
 
   <view class="user-info">
+
     <view class="user-name">
       {{userName}}
     </view>
@@ -15,6 +19,7 @@
     <view class="user-level">
       食客会员
     </view>
+
   </view>
 
   <view class="user-arrow">
@@ -24,88 +29,80 @@
 </view>
 
 
-<!-- 数据统计 -->
+<!-- =========================
+     数据统计
+========================== -->
+
 <view class="stats-card">
 
+  <!-- 我的留言 -->
+
   <view class="stat-item">
+
     <view class="stat-number">
       {{messageCount}}
     </view>
+
     <view class="stat-label">
       我的留言
     </view>
+
   </view>
+
 
   <view class="stat-line"></view>
 
+
+  <!-- 我的投票 -->
+
   <view class="stat-item">
+
     <view class="stat-number">
       {{voteCount}}
     </view>
+
     <view class="stat-label">
       我的投票
     </view>
-  </view>
-
-  <!-- 我的收藏 -->
-<view
-  class="function-item"
-  bindtap="openFavorites"
->
-
-  <view class="function-left">
-
-    <view class="function-icon">
-      ♡
-    </view>
-
-    <view class="function-text">
-
-      <view class="function-title">
-        我的收藏
-      </view>
-
-      <view class="function-desc">
-        查看收藏的菜品
-      </view>
-
-    </view>
 
   </view>
-
-  <view class="function-arrow">
-    ›
-  </view>
-
-</view>
-
-
 
 
   <view class="stat-line"></view>
 
+
+  <!-- 收藏 -->
+
   <view class="stat-item">
+
     <view class="stat-number">
       {{favoriteCount}}
     </view>
+
     <view class="stat-label">
       收藏
     </view>
+
   </view>
 
 </view>
 
 
-<!-- 我的共创 -->
+<!-- =========================
+     我的共创
+========================== -->
+
 <view class="section">
 
   <view class="section-title">
     <text>我的共创</text>
   </view>
 
+
   <view class="function-card">
 
     <!-- 我的留言 -->
+
     <view
       class="function-item"
       bindtap="openMyMessage"
@@ -139,6 +136,7 @@
 
 
     <!-- 我的投票 -->
+
     <view
       class="function-item"
       bindtap="openPoll"
@@ -170,21 +168,60 @@
 
     </view>
 
+
+    <!-- 我的收藏 -->
+
+    <view
+      class="function-item"
+      bindtap="openFavorites"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          ♡
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            我的收藏
+          </view>
+
+          <view class="function-desc">
+            查看收藏的菜品
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
   </view>
 
 </view>
 
 
-<!-- 常用功能 -->
+<!-- =========================
+     常用功能
+========================== -->
+
 <view class="section">
 
   <view class="section-title">
     <text>常用功能</text>
   </view>
 
+
   <view class="function-card">
 
-    <!-- 地址 -->
+    <!-- 收货地址 -->
+
     <view
       class="function-item"
       bindtap="manageAddress"
@@ -214,6 +251,7 @@
 
 
     <!-- 我的订单 -->
+
     <view
       class="function-item"
       bindtap="openOrders"
@@ -243,6 +281,7 @@
 
 
     <!-- 设置 -->
+
     <view
       class="function-item"
       bindtap="openSettings"
@@ -272,6 +311,7 @@
 
 
     <!-- 关于 -->
+
     <view
       class="function-item"
       bindtap="aboutUs"
@@ -291,86 +331,158 @@
 
         </view>
 
-        <!-- 商家后台 -->
-<view
-  class="function-item"
-  bindtap="openMerchantOrder"
->
-
-  <view class="function-left">
-
-    <view class="function-icon">
-      🏪
-    </view>
-
-    <view class="function-text">
-
-      <view class="function-title">
-        商家后台
       </view>
 
-      <view class="function-desc">
-        订单管理 · 演示入口
+      <view class="function-arrow">
+        ›
       </view>
 
     </view>
 
-  </view>
-
-<!-- 商家留言管理 -->
-<view
-  class="function-item"
-  bindtap="openMerchantMessage"
->
-
-  <view class="function-left">
-
-    <view class="function-icon">
-      💬
-    </view>
-
-    <view class="function-text">
-
-      <view class="function-title">
-        留言管理
-      </view>
-
-      <view class="function-desc">
-        查看并处理食客建议
-      </view>
-
-    </view>
-
-  </view>
-
-  <view class="function-arrow">
-    ›
   </view>
 
 </view>
 
-<!-- 商家投票管理 -->
-<view
-  class="mine-item"
-  bindtap="openMerchantNotice"
->
-  <view class="mine-item-left">
-    <view class="mine-item-icon">📢</view>
-    <view class="mine-item-title">
-      商家公告
+
+<!-- =========================
+     商家后台
+========================== -->
+
+<view class="section">
+
+  <view class="section-title">
+    <text>商家后台</text>
+  </view>
+
+
+  <view class="function-card">
+
+    <!-- 商家订单 -->
+
+    <view
+      class="function-item"
+      bindtap="openMerchantOrder"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          🏪
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            订单管理
+          </view>
+
+          <view class="function-desc">
+            查看和处理顾客订单
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
     </view>
-  </view>
 
-  <view class="mine-item-arrow">
-    ›
-  </view>
-</view>
 
-  <view class="function-arrow">
-    ›
-  </view>
+    <!-- 商家留言 -->
 
-</view>
+    <view
+      class="function-item"
+      bindtap="openMerchantMessage"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon message-icon">
+          💬
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            留言管理
+          </view>
+
+          <view class="function-desc">
+            查看并处理食客建议
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <!-- 商家投票 -->
+
+    <view
+      class="function-item"
+      bindtap="openMerchantPoll"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon poll-icon">
+          🗳️
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            投票管理
+          </view>
+
+          <view class="function-desc">
+            查看、结束并处理共创投票
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <!-- 商家公告 -->
+
+    <view
+      class="function-item"
+      bindtap="openMerchantNotice"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          📢
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            公告管理
+          </view>
+
+          <view class="function-desc">
+            发布和管理餐厅公告
+          </view>
+
+        </view>
 
       </view>
 
