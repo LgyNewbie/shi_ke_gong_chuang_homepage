@@ -1,0 +1,117 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+  <view class="title">
+    创建投票
+  </view>
+
+  <view class="subtitle">
+    将食客建议转交给大家共同决定
+  </view>
+</view>
+
+
+<!-- 来源留言 -->
+<view class="source-card">
+
+  <view class="source-title">
+    来源留言
+  </view>
+
+  <view class="source-text">
+    {{sourceMessage.text || sourceMessage.content}}
+  </view>
+
+  <view class="source-user">
+    {{sourceMessage.name || sourceMessage.userName || '食客'}}
+  </view>
+
+</view>
+
+
+<!-- 投票标题 -->
+<view class="form-card">
+
+  <view class="form-title">
+    投票标题
+  </view>
+
+  <input
+    class="title-input"
+    value="{{pollTitle}}"
+    placeholder="请输入投票标题"
+    bindinput="inputTitle"
+    maxlength="40"
+  />
+
+</view>
+
+
+<!-- 投票选项 -->
+<view class="form-card">
+
+  <view class="form-title">
+    投票选项
+    <text class="form-tip">
+      最少 2 项
+    </text>
+  </view>
+
+
+  <view
+    wx:for="{{options}}"
+    wx:key="id"
+    class="option-row"
+  >
+
+    <view class="option-index">
+      {{index + 1}}
+    </view>
+
+    <input
+      class="option-input"
+      value="{{item.name}}"
+      placeholder="输入选项"
+      data-index="{{index}}"
+      bindinput="inputOption"
+      maxlength="20"
+    />
+
+    <view
+      wx:if="{{options.length > 2}}"
+      class="delete-option"
+      data-index="{{index}}"
+      catchtap="deleteOption"
+    >
+      ×
+    </view>
+
+  </view>
+
+
+  <view
+    wx:if="{{options.length < 4}}"
+    class="add-option"
+    bindtap="addOption"
+  >
+    ＋ 添加选项
+  </view>
+
+</view>
+
+
+<!-- 发布 -->
+<button
+  class="publish-btn"
+  bindtap="publishPoll"
+>
+  发布投票
+</button>
+
+
+<view class="bottom-tip">
+  发布后，这条建议将自动标记为“已转为投票”
+</view>
+
+</view>

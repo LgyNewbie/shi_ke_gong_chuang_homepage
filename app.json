@@ -20,7 +20,9 @@
     "pages/my-favorite/my-favorite",
     "pages/notification/notification",
     "pages/merchant-order/merchant-order",
+    "pages/merchant-message-list/merchant-message-list",
     "pages/notice-detail/notice-detail",
+    "pages/merchant-poll-create/merchant-poll-create",
     "pages/menu/menu"
     
     

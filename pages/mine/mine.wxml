@@ -317,6 +317,38 @@
 
   </view>
 
+<!-- 商家留言管理 -->
+<view
+  class="function-item"
+  bindtap="openMerchantMessage"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      💬
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        留言管理
+      </view>
+
+      <view class="function-desc">
+        查看并处理食客建议
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
   <view class="function-arrow">
     ›
   </view>

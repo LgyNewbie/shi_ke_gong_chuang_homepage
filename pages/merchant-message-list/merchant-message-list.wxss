@@ -1,0 +1,345 @@
+page {
+  background: #F5F6F4;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 60rpx;
+}
+
+
+/* =========================
+   顶部
+========================= */
+
+.header {
+  padding: 38rpx 28rpx 26rpx;
+
+  background: #FFFFFF;
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: 700;
+
+  color: #173C34;
+}
+
+.subtitle {
+  margin-top: 8rpx;
+
+  font-size: 23rpx;
+
+  color: #8B9791;
+}
+
+
+/* =========================
+   数据统计
+========================= */
+
+.stats {
+  display: flex;
+
+  padding: 20rpx;
+
+  gap: 14rpx;
+
+  background: #FFFFFF;
+}
+
+.stat-card {
+  flex: 1;
+
+  padding: 18rpx 8rpx;
+
+  border-radius: 18rpx;
+
+  background: #F3F7F5;
+
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 34rpx;
+  font-weight: 700;
+
+  color: #1F6A57;
+}
+
+.stat-label {
+  margin-top: 6rpx;
+
+  font-size: 21rpx;
+
+  color: #7E8C85;
+}
+
+
+/* =========================
+   分类
+========================= */
+
+.tabs-scroll {
+  width: 100%;
+
+  background: #FFFFFF;
+}
+
+.tabs {
+  display: flex;
+
+  padding: 0 24rpx 20rpx;
+
+  gap: 14rpx;
+}
+
+.tab {
+  flex-shrink: 0;
+
+  padding: 12rpx 22rpx;
+
+  border-radius: 30rpx;
+
+  background: #F3F5F3;
+
+  color: #7D8983;
+
+  font-size: 23rpx;
+}
+
+.tab.active {
+  background: #1F6A57;
+
+  color: #FFFFFF;
+}
+
+
+/* =========================
+   留言
+========================= */
+
+.message-list {
+  padding: 20rpx;
+}
+
+.message-card {
+  margin-bottom: 18rpx;
+
+  padding: 24rpx;
+
+  background: #FFFFFF;
+
+  border-radius: 22rpx;
+
+  box-sizing: border-box;
+}
+
+
+/* 用户 */
+
+.user-row {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 68rpx;
+  height: 68rpx;
+
+  border-radius: 50%;
+
+  background: #E7F1ED;
+
+  color: #1F6A57;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.user-info {
+  margin-left: 16rpx;
+}
+
+.user-name {
+  font-size: 27rpx;
+  font-weight: 600;
+
+  color: #173C34;
+}
+
+.level {
+  margin-left: 8rpx;
+
+  padding: 4rpx 9rpx;
+
+  border-radius: 8rpx;
+
+  background: #FFF4DD;
+
+  color: #D99B37;
+
+  font-size: 18rpx;
+}
+
+.time {
+  margin-top: 5rpx;
+
+  font-size: 20rpx;
+
+  color: #A0AAA5;
+}
+
+
+/* 分类 */
+
+.message-tag {
+  display: inline-block;
+
+  margin-top: 18rpx;
+
+  padding: 6rpx 13rpx;
+
+  border-radius: 10rpx;
+
+  background: #EEF7F3;
+
+  color: #1F6A57;
+
+  font-size: 21rpx;
+}
+
+
+/* 内容 */
+
+.message-text {
+  margin-top: 12rpx;
+
+  font-size: 27rpx;
+
+  line-height: 1.7;
+
+  color: #485B54;
+}
+
+
+/* 图片 */
+
+.message-image {
+  width: 210rpx;
+  height: 150rpx;
+
+  margin-top: 15rpx;
+
+  border-radius: 14rpx;
+}
+
+
+/* 底部 */
+
+.message-bottom {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 20rpx;
+
+  padding-top: 18rpx;
+
+  border-top: 1rpx solid #F0F2F0;
+}
+
+.bottom-actions {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.poll-action {
+  padding: 8rpx 14rpx;
+
+  border-radius: 12rpx;
+
+  background: #FFF2E9;
+
+  color: #D46B3D;
+
+  font-size: 21rpx;
+}
+
+
+.status {
+  padding: 7rpx 14rpx;
+
+  border-radius: 10rpx;
+
+  font-size: 21rpx;
+}
+
+.status-pending {
+  background: #FFF4E6;
+  color: #C27A2B;
+}
+
+.status-review {
+  background: #EAF5F0;
+  color: #1F6A57;
+}
+
+.status-accepted {
+  background: #E6F5EA;
+  color: #32824C;
+}
+
+.status-rejected {
+  background: #F3F3F3;
+  color: #858C88;
+}
+
+.status-poll {
+  background: #F1ECFB;
+  color: #7656B7;
+}
+
+.detail-arrow {
+  font-size: 22rpx;
+
+  color: #1F6A57;
+}
+
+
+/* =========================
+   空状态
+========================= */
+
+.empty {
+  text-align: center;
+
+  padding-top: 170rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+}
+
+.empty-title {
+  margin-top: 18rpx;
+
+  font-size: 30rpx;
+  font-weight: 600;
+
+  color: #173C34;
+}
+
+.empty-text {
+  margin-top: 8rpx;
+
+  font-size: 23rpx;
+
+  color: #9AA39F;
+}

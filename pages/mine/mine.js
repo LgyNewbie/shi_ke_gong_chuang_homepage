@@ -114,6 +114,11 @@ Page({
     })
   },
 
+  openMerchantMessage() {
+    wx.navigateTo({
+      url: '/pages/merchant-message-list/merchant-message-list'
+    })
+  },
 
   // =========================
   // 关于
