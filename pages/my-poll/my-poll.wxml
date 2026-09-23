@@ -1,6 +1,8 @@
 <view class="page">
 
-<!-- 顶部 -->
+<!-- =========================
+     顶部
+========================== -->
 
 <view class="header">
 
@@ -18,53 +20,66 @@
 </view>
 
 
-<!-- 当前投票 / 最终结果 -->
+<!-- =========================
+     当前进行中的投票
+========================== -->
 
 <view
-  wx:if="{{currentPoll}}"
+  wx:if="{{activePolls.length > 0}}"
+  class="history-title"
+>
+  当前投票
+</view>
+
+
+<view
+  wx:for="{{activePolls}}"
+  wx:key="id"
   class="card current-card"
 >
+
+  <!-- 头部 -->
 
   <view class="card-head">
 
     <view>
 
       <text class="section-title">
-
-        {{currentPoll.status === 'active'
-          ? '正在进行'
-          : '投票结果'}}
-
+        正在进行
       </text>
 
       <text class="section-subtitle">
-        本周投票
+        食客共创投票
       </text>
 
     </view>
 
 
     <text class="status">
-      {{currentPoll.statusName}}
+      {{item.statusName}}
     </text>
 
   </view>
 
 
+  <!-- 标题 -->
+
   <view class="poll-title">
-    {{currentPoll.title}}
+    {{item.title}}
   </view>
 
+
+  <!-- 说明 -->
 
   <view
-    wx:if="{{currentPoll.description}}"
+    wx:if="{{item.description}}"
     class="poll-description"
   >
-    {{currentPoll.description}}
+    {{item.description}}
   </view>
 
 
-  <!-- 用户选择 -->
+  <!-- 我的选择 -->
 
   <view class="my-choice">
 
@@ -73,18 +88,19 @@
     </text>
 
     <text class="choice-name">
-      {{myChoice}}
+      {{item.myChoice}}
     </text>
 
   </view>
 
 
-  <!-- 最终结果 -->
+  <!-- 投票结果 -->
 
   <view class="result-list">
 
     <view
-      wx:for="{{currentPoll.options}}"
+      wx:for="{{item.options}}"
+      wx:for-item="option"
       wx:key="id"
       class="result-item"
     >
@@ -92,17 +108,17 @@
       <view class="result-top">
 
         <text class="result-name">
-          {{item.name}}
+          {{option.name}}
         </text>
 
         <view class="result-number">
 
           <text>
-            {{item.percent}}%
+            {{option.percent}}%
           </text>
 
           <text class="result-count">
-            {{item.votes}}票
+            {{option.votes}}票
           </text>
 
         </view>
@@ -111,7 +127,7 @@
 
 
       <progress
-        percent="{{item.percent}}"
+        percent="{{option.percent}}"
         activeColor="#1F6A57"
         backgroundColor="#E8EEEB"
         stroke-width="10"
@@ -123,19 +139,17 @@
   </view>
 
 
+  <!-- 底部信息 -->
+
   <view class="poll-footer">
 
     <text>
-      共 {{currentPoll.totalVotes}} 人参与
+      共 {{item.totalVotes}} 人参与
     </text>
 
 
-    <text wx:if="{{currentPoll.endDate}}">
-      截止 {{currentPoll.endDate}}
-    </text>
-
-    <text wx:if="{{currentPoll.endTime}}">
-      结束 {{currentPoll.endTime}}
+    <text wx:if="{{item.endDate}}">
+      截止 {{item.endDate}}
     </text>
 
   </view>
@@ -144,17 +158,30 @@
   <!-- 尚未投票 -->
 
   <button
-    wx:if="{{currentPoll.status === 'active' && myChoice === '未投票'}}"
+    wx:if="{{!item.hasVoted}}"
     class="go-poll"
     bindtap="goPoll"
+    data-poll-id="{{item.id}}"
   >
     去投票
   </button>
 
+
+  <!-- 已经投票 -->
+
+  <view
+    wx:if="{{item.hasVoted}}"
+    class="voted-tip"
+  >
+    ✓ 你已经参与这场投票
+  </view>
+
 </view>
 
 
-<!-- 历史投票 -->
+<!-- =========================
+     历史投票
+========================== -->
 
 <view
   wx:if="{{historyPolls.length > 0}}"
@@ -169,6 +196,8 @@
   wx:key="id"
   class="card history-card"
 >
+
+  <!-- 标题 -->
 
   <view class="history-head">
 
@@ -186,11 +215,13 @@
 
 
     <text class="ended-tag">
-      {{item.statusName || '已结束'}}
+      {{item.statusName}}
     </text>
 
   </view>
 
+
+  <!-- 我的选择 -->
 
   <view class="history-choice">
 
@@ -199,11 +230,13 @@
     </text>
 
     <text class="history-choice-name">
-      {{item.myChoice || '未投票'}}
+      {{item.myChoice}}
     </text>
 
   </view>
 
+
+  <!-- 最终结果 -->
 
   <view class="history-result">
 
@@ -212,11 +245,13 @@
     </text>
 
     <text class="history-result-name">
-      {{item.winner || '暂无结果'}}
+      {{item.winner}}
     </text>
 
   </view>
 
+
+  <!-- 参与人数 -->
 
   <view class="history-summary">
 
@@ -233,10 +268,12 @@
 </view>
 
 
-<!-- 空状态 -->
+<!-- =========================
+     没有进行中的投票
+========================== -->
 
 <view
-  wx:if="{{!currentPoll && historyPolls.length === 0}}"
+  wx:if="{{activePolls.length === 0 && historyPolls.length === 0}}"
   class="empty"
 >
 
@@ -249,15 +286,37 @@
   </text>
 
   <text class="empty-text">
-    去参加本周投票，为餐厅新品出一份力吧
+    去参加投票，为餐厅新品出一份力吧
   </text>
+
 
   <button
     class="go-poll"
     bindtap="goPoll"
   >
-    去投票
+    去看看投票
   </button>
+
+</view>
+
+
+<!-- =========================
+     页面说明
+========================== -->
+
+<view class="info-card">
+
+  <view class="info-title">
+    💡 食客共创
+  </view>
+
+  <view class="info-text">
+    每场投票都会独立记录你的选择。
+  </view>
+
+  <view class="info-text">
+    你可以连续参与不同的共创投票。
+  </view>
 
 </view>
 

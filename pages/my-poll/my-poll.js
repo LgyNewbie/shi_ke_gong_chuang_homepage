@@ -1,68 +1,17 @@
-function getWinner(poll) {
-  if (
-    !poll ||
-    !Array.isArray(poll.options) ||
-    poll.options.length === 0
-  ) {
-    return null
-  }
+// ================================
+// 食客共创 - 我的投票
+// 多投票版本
+// ================================
 
-  const options =
-    poll.options.map(item => ({
-      ...item,
-
-      votes:
-        Number(
-          item.votes !== undefined
-            ? item.votes
-            : item.count || 0
-        )
-    }))
-
-
-  const totalVotes =
-    options.reduce(
-      (sum, item) => {
-        return sum +
-          Number(item.votes || 0)
-      },
-      0
-    )
-
-
-  const resultOptions =
-    options.map(item => ({
-      ...item,
-
-      percent:
-        totalVotes > 0
-          ? Math.round(
-              Number(item.votes || 0) /
-              totalVotes *
-              100
-            )
-          : 0
-    }))
-
-
-  return resultOptions.reduce(
-    (current, item) => {
-
-      if (!current) {
-        return item
-      }
-
-      return item.votes > current.votes
-        ? item
-        : current
-
-    },
-    null
-  )
-}
+const {
+  getPolls,
+  hasVoted,
+  getMyChoice
+} = require('../../utils/poll.js')
 
 
 function normalizePoll(poll) {
+
   if (!poll) {
     return null
   }
@@ -70,31 +19,40 @@ function normalizePoll(poll) {
 
   const options =
     Array.isArray(poll.options)
-      ? poll.options.map(item => ({
-          ...item,
+      ? poll.options.map(item => {
 
-          votes:
-            Number(
-              item.votes !== undefined
-                ? item.votes
-                : item.count || 0
-            )
-        }))
+          return {
+
+            ...item,
+
+            votes:
+              Number(
+                item.votes !== undefined
+                  ? item.votes
+                  : item.count || 0
+              )
+
+          }
+
+        })
       : []
 
 
   const totalVotes =
     options.reduce(
       (sum, item) => {
+
         return sum +
           Number(item.votes || 0)
+
       },
       0
     )
 
 
-  const newOptions =
+  const resultOptions =
     options.map(item => ({
+
       ...item,
 
       percent:
@@ -105,6 +63,7 @@ function normalizePoll(poll) {
               100
             )
           : 0
+
     }))
 
 
@@ -125,28 +84,105 @@ function normalizePoll(poll) {
 
 
   return {
+
     ...poll,
 
     options:
-      newOptions,
+      resultOptions,
 
     totalVotes:
       totalVotes,
 
     statusName:
       poll.statusName || statusName
+
   }
+
 }
 
+
+// ================================
+// 获取最高票选项
+// ================================
+
+function getWinner(poll) {
+
+  if (
+    !poll ||
+    !Array.isArray(poll.options) ||
+    poll.options.length === 0
+  ) {
+
+    return null
+
+  }
+
+
+  return poll.options.reduce(
+
+    (current, item) => {
+
+      if (!current) {
+        return item
+      }
+
+
+      return Number(item.votes || 0) >
+        Number(current.votes || 0)
+        ? item
+        : current
+
+    },
+
+    null
+
+  )
+
+}
+
+
+// ================================
+// 获取我的选择名称
+// ================================
+
+function getChoiceName(
+  poll,
+  choiceId
+) {
+
+  if (!poll || !choiceId) {
+    return '未投票'
+  }
+
+
+  const option =
+    (poll.options || []).find(
+      item =>
+        String(item.id) ===
+        String(choiceId)
+    )
+
+
+  return option
+    ? option.name
+    : '已投票'
+
+
+}
+
+
+// ================================
+// 页面
+// ================================
 
 Page({
 
   data: {
 
-    currentPoll: null,
+    // 当前进行中的投票
+    activePolls: [],
 
-    myChoice: '',
-
+    // 我参与过的历史投票
     historyPolls: []
 
   },
@@ -154,150 +190,139 @@ Page({
 
   onShow() {
 
-    this.loadPoll()
+    this.loadPolls()
 
   },
 
 
   // =========================
-  // 读取投票
+  // 加载全部投票
   // =========================
 
-  loadPoll() {
+  loadPolls() {
 
-    const savedPoll =
-      wx.getStorageSync('weeklyPoll')
-
-
-    let currentPoll =
-      normalizePoll(savedPoll)
+    const polls =
+      getPolls()
 
 
-    // =========================
-    // 当前设备投票状态
-    // =========================
+    const activePolls = []
 
-    const voted =
-      wx.getStorageSync(
-        'weeklyPollVoted'
-      )
+    const historyPolls = []
 
 
-    const choiceId =
-      wx.getStorageSync(
-        'weeklyPollChoice'
-      )
+    polls.forEach(pollItem => {
 
-
-    let myChoice = ''
-
-
-    if (
-      currentPoll &&
-      voted === true
-    ) {
-
-      const choice =
-        currentPoll.options.find(
-          item =>
-            String(item.id) ===
-            String(choiceId)
+      const poll =
+        normalizePoll(
+          pollItem
         )
 
 
-      myChoice =
-        choice
-          ? choice.name
-          : '已投票'
-
-    } else {
-
-      myChoice = '未投票'
-
-    }
+      if (!poll) {
+        return
+      }
 
 
-    // =========================
-    // 历史投票
-    // =========================
-
-    const history =
-      wx.getStorageSync(
-        'pollHistory'
-      ) || []
+      const voted =
+        hasVoted(
+          poll.id
+        )
 
 
-    const safeHistory =
-      Array.isArray(history)
-        ? history
-        : []
+      const choiceId =
+        getMyChoice(
+          poll.id
+        )
 
 
-    const historyPolls =
-      safeHistory
-        .filter(item => {
-
-          if (
-            !currentPoll
-          ) {
-            return true
-          }
-
-          return String(item.id) !==
-            String(currentPoll.id)
-
-        })
-        .map(item => {
-
-          const normalized =
-            normalizePoll(item)
+      const myChoice =
+        getChoiceName(
+          poll,
+          choiceId
+        )
 
 
-          const winner =
-            getWinner(normalized)
+      // =========================
+      // 进行中的投票
+      // =========================
 
+      if (
+        poll.status === 'active'
+      ) {
 
-          return {
+        activePolls.push({
 
-            ...normalized,
+          ...poll,
 
-            date:
-              item.date ||
-              item.endTime ||
-              item.createTime ||
-              '已结束',
+          hasVoted:
+            voted,
 
-            myChoice:
-              item.myChoice ||
-              '未投票',
+          choiceId:
+            choiceId,
 
-            winner:
-              item.winner ||
-              (
-                winner
-                  ? winner.name
-                  : '暂无结果'
-              ),
-
-            resultPercent:
-              item.resultPercent !== undefined
-                ? item.resultPercent
-                : (
-                    winner
-                      ? winner.percent
-                      : 0
-                  )
-
-          }
+          myChoice:
+            myChoice
 
         })
+
+        return
+
+      }
+
+
+      // =========================
+      // 已结束投票
+      // =========================
+      // 我的投票页面只显示
+      // 用户真正参加过的历史投票
+      // =========================
+
+      if (voted) {
+
+        const winner =
+          getWinner(
+            poll
+          )
+
+
+        historyPolls.push({
+
+          ...poll,
+
+          hasVoted:
+            true,
+
+          choiceId:
+            choiceId,
+
+          myChoice:
+            myChoice,
+
+          winner:
+            winner
+              ? winner.name
+              : '暂无结果',
+
+          resultPercent:
+            winner
+              ? winner.percent
+              : 0,
+
+          date:
+            poll.endTime ||
+            poll.createTime ||
+            '已结束'
+
+        })
+
+      }
+
+    })
 
 
     this.setData({
 
-      currentPoll,
-
-      myChoice,
+      activePolls,
 
       historyPolls
 
@@ -318,10 +343,30 @@ Page({
 
 
   // =========================
-  // 去投票
+  // 去投某一场投票
   // =========================
 
-  goPoll() {
+  goPoll(e) {
+
+    const pollId =
+      String(
+        e.currentTarget.dataset.pollId || ''
+      )
+
+
+    if (pollId) {
+
+      wx.navigateTo({
+
+        url:
+          `/pages/poll/poll?pollId=${encodeURIComponent(pollId)}`
+
+      })
+
+      return
+
+    }
+
 
     wx.navigateTo({
 
