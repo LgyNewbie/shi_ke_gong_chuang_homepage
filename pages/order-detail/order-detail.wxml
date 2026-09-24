@@ -291,46 +291,119 @@
 
 
 <!-- 金额 -->
+<!-- 金额 -->
 <view class="card price-card">
 
-  <view class="price-row">
+<!-- 商品小计 -->
+<view class="price-row">
 
-    <text>
-      商品小计
-    </text>
+  <text>
+    商品小计
+  </text>
 
-    <text>
-      ¥{{order.total}}
-    </text>
+  <text>
+    ¥{{order.cartTotal}}
+  </text>
 
-  </view>
+</view>
 
-  <view class="price-row">
 
-    <text>
-      配送费
-    </text>
+<!-- 商品优惠 -->
+<view
+  wx:if="{{order.productDiscount > 0}}"
+  class="price-row"
+>
 
-    <text>
-      免配送费
-    </text>
+  <text>
+    商品优惠
+  </text>
 
-  </view>
+  <text class="discount-price">
+    -¥{{order.productDiscount}}
+  </text>
 
-  <view class="price-line">
-  </view>
+</view>
 
-  <view class="price-row total-row">
 
-    <text>
-      {{order.status === 'cancelled' ? '订单金额' : '应付金额'}}
-    </text>
+<!-- 优惠券 -->
+<view
+  wx:if="{{order.couponDiscount > 0}}"
+  class="price-row"
+>
 
-    <text class="total-price">
-      ¥{{order.total}}
-    </text>
+  <text>
+    优惠券
+  </text>
 
-  </view>
+  <text class="discount-price">
+    -¥{{order.couponDiscount}}
+  </text>
+
+</view>
+
+
+<!-- 打包费 -->
+<view class="price-row">
+
+  <text>
+    打包费
+  </text>
+
+  <text>
+    ¥{{order.packingFee}}
+  </text>
+
+</view>
+
+
+<!-- 配送费 -->
+<view class="price-row">
+
+  <text>
+    配送费
+  </text>
+
+  <text wx:if="{{order.deliveryFee === 0}}">
+    免配送费
+  </text>
+
+  <text wx:if="{{order.deliveryFee > 0}}">
+    ¥{{order.deliveryFee}}
+  </text>
+
+</view>
+
+
+<view class="price-line">
+</view>
+
+
+<!-- 实付金额 -->
+<view class="price-row total-row">
+
+  <text>
+    {{order.status === 'cancelled' ? '订单金额' : '实付金额'}}
+  </text>
+
+  <text class="total-price">
+    ¥{{order.finalTotal}}
+  </text>
+
+</view>
+
+
+<!-- 支付方式 -->
+<view class="payment-method-row">
+
+  <text>
+    支付方式
+  </text>
+
+  <text class="payment-method-value">
+    {{order.paymentMethod || '微信支付'}}
+  </text>
+
+</view>
 
 </view>
 

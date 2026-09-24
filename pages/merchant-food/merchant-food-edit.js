@@ -1,13 +1,12 @@
 Page({
 
   data: {
-
     // 是否编辑已有商品
     isEdit: false,
-
+  
     // 商品ID
     foodId: null,
-
+  
     // 商品信息
     name: '',
     price: '',
@@ -18,8 +17,11 @@ Page({
     ingredients: '',
     taste: '',
     weight: '',
-    allergen: ''
-
+    allergen: '',
+  
+    // 商品级费用
+    packingFee: '',
+    deliveryFee: ''
   },
 
   onLoad(options) {
@@ -99,7 +101,17 @@ Page({
         food.weight || '',
 
       allergen:
-        food.allergen || ''
+        food.allergen || '',
+
+      packingFee:
+        food.packingFee !== undefined
+          ? String(food.packingFee)
+          : '0',
+      
+      deliveryFee:
+        food.deliveryFee !== undefined
+          ? String(food.deliveryFee)
+          : '0'
 
     })
 
@@ -124,6 +136,24 @@ Page({
     })
 
   },
+
+  // 打包费
+inputPackingFee(e) {
+
+  this.setData({
+    packingFee: e.detail.value
+  })
+
+},
+
+// 配送费
+inputDeliveryFee(e) {
+
+  this.setData({
+    deliveryFee: e.detail.value
+  })
+
+},
 
 
   // 商品描述
@@ -277,6 +307,44 @@ Page({
     const price =
       Number(priceText)
 
+    // =========================
+// 费用
+// =========================
+
+const packingFee =
+Number(this.data.packingFee || 0)
+
+const deliveryFee =
+Number(this.data.deliveryFee || 0)
+
+
+if (
+!Number.isFinite(packingFee) ||
+packingFee < 0
+) {
+
+wx.showToast({
+  title: '请输入正确的打包费',
+  icon: 'none'
+})
+
+return
+}
+
+
+if (
+!Number.isFinite(deliveryFee) ||
+deliveryFee < 0
+) {
+
+wx.showToast({
+  title: '请输入正确的配送费',
+  icon: 'none'
+})
+
+return
+}
+
 
     if (
       !Number.isFinite(price) ||
@@ -352,7 +420,11 @@ Page({
               this.data.weight.trim(),
 
             allergen:
-              this.data.allergen.trim()
+              this.data.allergen.trim(),
+            
+            packingFee,
+            
+            deliveryFee
 
           }
 
@@ -435,9 +507,13 @@ Page({
 
       allergen:
         this.data.allergen.trim(),
-
+      
+      packingFee,
+      
+      deliveryFee,
+      
       count: 0,
-
+      
       isOnSale: true
 
     }

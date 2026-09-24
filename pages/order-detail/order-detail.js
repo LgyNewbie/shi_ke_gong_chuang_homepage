@@ -43,48 +43,89 @@ Page({
 
 
   // 读取订单
-  loadOrder() {
+  loadOrder(){
 
     const orders =
       wx.getStorageSync('orders') || []
-
-
-    const order =
-      orders.find(item => {
-
-        return String(item.id) ===
+  
+    const oldOrder =
+      orders.find(
+        item =>
+          String(item.id) ===
           String(this.data.orderId)
-
-      })
-
-
-    if (!order) {
-
+      )
+  
+    if(!oldOrder){
+  
       wx.showToast({
-
-        title: '订单不存在',
-
-        icon: 'none'
-
+        title:'订单不存在',
+        icon:'none'
       })
-
+  
       return
-
     }
-
-
+  
+  
+    // =========================
+    // 兼容旧订单
+    // =========================
+  
+    const cartTotal =
+      Number(
+        oldOrder.cartTotal !== undefined
+          ? oldOrder.cartTotal
+          : oldOrder.total || 0
+      )
+  
+    const productDiscount =
+      Number(oldOrder.productDiscount || 0)
+  
+    const couponDiscount =
+      Number(oldOrder.couponDiscount || 0)
+  
+    const packingFee =
+      Number(oldOrder.packingFee || 0)
+  
+    const deliveryFee =
+      Number(oldOrder.deliveryFee || 0)
+  
+    const finalTotal =
+      Number(
+        oldOrder.finalTotal !== undefined
+          ? oldOrder.finalTotal
+          : oldOrder.total || 0
+      )
+  
+    const paymentMethod =
+      oldOrder.paymentMethod || '微信支付'
+  
+  
+    const order = {
+  
+      ...oldOrder,
+  
+      cartTotal,
+      productDiscount,
+      couponDiscount,
+      packingFee,
+      deliveryFee,
+      finalTotal,
+      paymentMethod
+  
+    }
+  
+  
     this.setData({
-
-      order: order
-
-    }, () => {
-
+  
+      order
+  
+    },()=>{
+  
       this.updateStatus()
-
       this.buildTimeline()
-
+  
     })
-
+  
   },
 
 

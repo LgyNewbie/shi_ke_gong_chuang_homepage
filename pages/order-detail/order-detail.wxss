@@ -521,3 +521,29 @@ button::after {
   background: #F1F3F2;
   border: 1rpx solid #E1E6E3;
 }
+/* =========================
+   订单费用明细
+========================= */
+
+.discount-price {
+  color: #DF6A43;
+}
+
+.payment-method-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 12rpx;
+  padding-top: 14rpx;
+
+  border-top: 1rpx solid #E9ECEA;
+
+  color: #718079;
+  font-size: 22rpx;
+}
+
+.payment-method-value {
+  color: #405B51;
+  font-weight: 500;
+}
