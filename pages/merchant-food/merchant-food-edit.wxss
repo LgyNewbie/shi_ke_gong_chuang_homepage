@@ -192,3 +192,37 @@ page {
 .save-button::after {
   border: none;
 }
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.promotion-box {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  background: #fff8ef;
+  border-radius: 16rpx;
+}
+
+.discount-input {
+  display: flex;
+  align-items: center;
+}
+
+.discount-input .form-input {
+  flex: 1;
+}
+
+.discount-input text {
+  margin-left: 12rpx;
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.promotion-tip {
+  margin-top: 10rpx;
+  font-size: 23rpx;
+  color: #999999;
+  line-height: 1.6;
+}

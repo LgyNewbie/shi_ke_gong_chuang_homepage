@@ -1,12 +1,13 @@
 Page({
 
   data: {
+
     // 是否编辑已有商品
     isEdit: false,
-  
+
     // 商品ID
     foodId: null,
-  
+
     // 商品信息
     name: '',
     price: '',
@@ -18,19 +19,24 @@ Page({
     taste: '',
     weight: '',
     allergen: '',
-  
+
     // 商品级费用
     packingFee: '',
-    deliveryFee: ''
+    deliveryFee: '',
+
+    // 商品优惠活动
+    discountEnabled: false,
+    discount: '',
+    promotionName: ''
   },
+
 
   onLoad(options) {
 
     // 编辑商品
     if (options.id) {
 
-      const id =
-        Number(options.id)
+      const id = Number(options.id)
 
       this.setData({
         isEdit: true,
@@ -47,7 +53,6 @@ Page({
       isEdit: false,
       foodId: null
     })
-
   },
 
 
@@ -107,14 +112,25 @@ Page({
         food.packingFee !== undefined
           ? String(food.packingFee)
           : '0',
-      
+
       deliveryFee:
         food.deliveryFee !== undefined
           ? String(food.deliveryFee)
-          : '0'
+          : '0',
+
+      // 优惠活动
+      discountEnabled:
+        food.discountEnabled === true,
+
+      discount:
+        food.discount !== undefined
+          ? String(food.discount)
+          : '',
+
+      promotionName:
+        food.promotionName || ''
 
     })
-
   },
 
 
@@ -124,7 +140,6 @@ Page({
     this.setData({
       name: e.detail.value
     })
-
   },
 
 
@@ -134,26 +149,52 @@ Page({
     this.setData({
       price: e.detail.value
     })
-
   },
 
+
   // 打包费
-inputPackingFee(e) {
+  inputPackingFee(e) {
 
-  this.setData({
-    packingFee: e.detail.value
-  })
+    this.setData({
+      packingFee: e.detail.value
+    })
+  },
 
-},
 
-// 配送费
-inputDeliveryFee(e) {
+  // 配送费
+  inputDeliveryFee(e) {
 
-  this.setData({
-    deliveryFee: e.detail.value
-  })
+    this.setData({
+      deliveryFee: e.detail.value
+    })
+  },
 
-},
+
+  // 活动名称
+  inputPromotionName(e) {
+
+    this.setData({
+      promotionName: e.detail.value
+    })
+  },
+
+
+  // 折扣
+  inputDiscount(e) {
+
+    this.setData({
+      discount: e.detail.value
+    })
+  },
+
+
+  // 开关优惠活动
+  toggleDiscount(e) {
+
+    this.setData({
+      discountEnabled: e.detail.value
+    })
+  },
 
 
   // 商品描述
@@ -162,7 +203,6 @@ inputDeliveryFee(e) {
     this.setData({
       desc: e.detail.value
     })
-
   },
 
 
@@ -172,7 +212,6 @@ inputDeliveryFee(e) {
     this.setData({
       ingredients: e.detail.value
     })
-
   },
 
 
@@ -182,7 +221,6 @@ inputDeliveryFee(e) {
     this.setData({
       taste: e.detail.value
     })
-
   },
 
 
@@ -192,7 +230,6 @@ inputDeliveryFee(e) {
     this.setData({
       weight: e.detail.value
     })
-
   },
 
 
@@ -202,7 +239,6 @@ inputDeliveryFee(e) {
     this.setData({
       allergen: e.detail.value
     })
-
   },
 
 
@@ -215,7 +251,6 @@ inputDeliveryFee(e) {
     this.setData({
       category
     })
-
   },
 
 
@@ -223,10 +258,8 @@ inputDeliveryFee(e) {
   toggleHot(e) {
 
     this.setData({
-      hot:
-        e.detail.value
+      hot: e.detail.value
     })
-
   },
 
 
@@ -261,7 +294,6 @@ inputDeliveryFee(e) {
       }
 
     })
-
   },
 
 
@@ -307,44 +339,108 @@ inputDeliveryFee(e) {
     const price =
       Number(priceText)
 
+
     // =========================
-// 费用
-// =========================
+    // 费用
+    // =========================
 
-const packingFee =
-Number(this.data.packingFee || 0)
+    const packingFee =
+      Number(this.data.packingFee || 0)
 
-const deliveryFee =
-Number(this.data.deliveryFee || 0)
-
-
-if (
-!Number.isFinite(packingFee) ||
-packingFee < 0
-) {
-
-wx.showToast({
-  title: '请输入正确的打包费',
-  icon: 'none'
-})
-
-return
-}
+    const deliveryFee =
+      Number(this.data.deliveryFee || 0)
 
 
-if (
-!Number.isFinite(deliveryFee) ||
-deliveryFee < 0
-) {
+    // =========================
+    // 优惠活动
+    // =========================
 
-wx.showToast({
-  title: '请输入正确的配送费',
-  icon: 'none'
-})
+    const discount =
+      Number(this.data.discount || 0)
 
-return
-}
+    const promotionName =
+      this.data.promotionName.trim()
 
+    const discountEnabled =
+      this.data.discountEnabled
+
+
+    // 开启优惠活动时验证
+    if (discountEnabled) {
+
+      if (!discount) {
+
+        wx.showToast({
+          title: '请输入折扣',
+          icon: 'none'
+        })
+
+        return
+      }
+
+
+      if (
+        !Number.isFinite(discount) ||
+        discount <= 0 ||
+        discount >= 10
+      ) {
+
+        wx.showToast({
+          title: '折扣应为1-9.9折',
+          icon: 'none'
+        })
+
+        return
+      }
+
+
+      if (!promotionName) {
+
+        wx.showToast({
+          title: '请输入活动名称',
+          icon: 'none'
+        })
+
+        return
+      }
+    }
+
+
+    // =========================
+    // 费用验证
+    // =========================
+
+    if (
+      !Number.isFinite(packingFee) ||
+      packingFee < 0
+    ) {
+
+      wx.showToast({
+        title: '请输入正确的打包费',
+        icon: 'none'
+      })
+
+      return
+    }
+
+
+    if (
+      !Number.isFinite(deliveryFee) ||
+      deliveryFee < 0
+    ) {
+
+      wx.showToast({
+        title: '请输入正确的配送费',
+        icon: 'none'
+      })
+
+      return
+    }
+
+
+    // =========================
+    // 商品价格验证
+    // =========================
 
     if (
       !Number.isFinite(price) ||
@@ -421,10 +517,17 @@ return
 
             allergen:
               this.data.allergen.trim(),
-            
+
             packingFee,
-            
-            deliveryFee
+
+            deliveryFee,
+
+            // 优惠活动
+            discountEnabled,
+
+            discount,
+
+            promotionName
 
           }
 
@@ -507,13 +610,20 @@ return
 
       allergen:
         this.data.allergen.trim(),
-      
+
       packingFee,
-      
+
       deliveryFee,
-      
+
+      // 优惠活动
+      discountEnabled,
+
+      discount,
+
+      promotionName,
+
       count: 0,
-      
+
       isOnSale: true
 
     }
@@ -547,7 +657,6 @@ return
       }
 
     })
-
   },
 
 
@@ -557,7 +666,6 @@ return
     wx.navigateBack({
       delta: 1
     })
-
   }
 
 })

@@ -220,19 +220,51 @@
 
         <view class="price-box">
 
-          <text class="price-symbol">
-            ¥
-          </text>
+<!-- 有优惠 -->
+<view wx:if="{{item.discountEnabled && item.discount > 0}}" class="discount-price-box">
 
-          <text class="price">
-            {{item.price}}
-          </text>
+  <view class="promotion-tag">
+    {{item.promotionName || '限时优惠'}}
+  </view>
 
-          <text class="sales">
-            已售 {{item.sales}}
-          </text>
+  <view class="discount-price-row">
 
-        </view>
+    <text class="price-symbol">
+      ¥
+    </text>
+
+    <text class="price">
+  {{item.discountPrice}}
+</text>
+
+    <text class="original-price">
+      ¥{{item.price}}
+    </text>
+
+  </view>
+
+</view>
+
+
+<!-- 没有优惠 -->
+<view wx:else class="normal-price-box">
+
+  <text class="price-symbol">
+    ¥
+  </text>
+
+  <text class="price">
+    {{item.price}}
+  </text>
+
+</view>
+
+
+<text class="sales">
+  已售 {{item.sales}}
+</text>
+
+</view>
 
 
         <view class="add-btn-box">

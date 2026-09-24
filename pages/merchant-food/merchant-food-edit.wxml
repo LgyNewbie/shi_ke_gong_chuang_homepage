@@ -137,6 +137,51 @@
     bindinput="inputDeliveryFee"
   />
 
+
+  <view class="form-item">
+  <view class="form-label">商品优惠</view>
+
+  <view class="switch-row">
+    <text>参加折扣活动</text>
+    <switch
+      checked="{{discountEnabled}}"
+      bindchange="toggleDiscount"
+    />
+  </view>
+</view>
+
+<view wx:if="{{discountEnabled}}" class="promotion-box">
+
+  <view class="form-item">
+    <view class="form-label">活动名称</view>
+    <input
+      class="form-input"
+      placeholder="例如：限时8折"
+      value="{{promotionName}}"
+      bindinput="inputPromotionName"
+    />
+  </view>
+
+  <view class="form-item">
+    <view class="form-label">折扣</view>
+    <view class="discount-input">
+      <input
+        class="form-input"
+        type="digit"
+        placeholder="例如 8"
+        value="{{discount}}"
+        bindinput="inputDiscount"
+      />
+      <text>折</text>
+    </view>
+  </view>
+
+  <view class="promotion-tip">
+    开启后，用户购买该商品时自动按照折扣价计算
+  </view>
+
+</view>
+
 </view>
 
 </view>

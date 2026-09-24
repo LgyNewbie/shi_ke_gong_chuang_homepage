@@ -257,63 +257,87 @@ Page({
     const category =
       this.data.currentCategory
   
-    const foods =
-      this.data.foods.filter(food => {
-  
-        // =========================
-        // 只显示已上架商品
-        // 旧商品没有 isOnSale 时，
-        // 默认视为已上架
-        // =========================
-  
-        const saleMatch =
-          food.isOnSale !== false
-  
-        if (!saleMatch) {
-          return false
-        }
-  
-  
-        // =========================
-        // 分类
-        // =========================
-  
-        let categoryMatch = true
-  
-        if (category === 'hot') {
-  
-          categoryMatch =
-            food.hot === true
-  
-        } else if (category !== 'all') {
-  
-          categoryMatch =
-            food.category === category
-  
-        }
-  
-  
-        // =========================
-        // 搜索
-        // =========================
-  
-        let searchMatch = true
-  
-        if (search) {
-  
-          searchMatch =
-            food.name.includes(search) ||
-            food.desc.includes(search)
-  
-        }
-  
-  
-        return (
-          categoryMatch &&
-          searchMatch
-        )
-  
-      })
+      const foods =
+      this.data.foods
+        .filter(food => {
+    
+          // =========================
+          // 只显示已上架商品
+          // 旧商品没有 isOnSale 时，
+          // 默认视为已上架
+          // =========================
+    
+          const saleMatch =
+            food.isOnSale !== false
+    
+          if (!saleMatch) {
+            return false
+          }
+    
+    
+          // =========================
+          // 分类
+          // =========================
+    
+          let categoryMatch = true
+    
+          if (category === 'hot') {
+    
+            categoryMatch =
+              food.hot === true
+    
+          } else if (category !== 'all') {
+    
+            categoryMatch =
+              food.category === category
+    
+          }
+    
+    
+          // =========================
+          // 搜索
+          // =========================
+    
+          let searchMatch = true
+    
+          if (search) {
+    
+            searchMatch =
+              food.name.includes(search) ||
+              food.desc.includes(search)
+    
+          }
+    
+    
+          return (
+            categoryMatch &&
+            searchMatch
+          )
+        })
+        .map(food => {
+    
+          // =========================
+          // 计算商品优惠价
+          // =========================
+    
+          let discountPrice = Number(food.price || 0)
+    
+          if (
+            food.discountEnabled === true &&
+            Number(food.discount) > 0 &&
+            Number(food.discount) < 10
+          ) {
+            discountPrice =
+              Number(food.price || 0) *
+              Number(food.discount) /
+              10
+          }
+    
+          return {
+            ...food,
+            discountPrice: discountPrice.toFixed(2)
+          }
+        })
   
   
     this.setData({
@@ -441,28 +465,30 @@ Page({
 
   // 更新购物车
   updateCart() {
-
     let count = 0
-
     let total = 0
-
+  
     this.data.foods.forEach(food => {
-
-      count += food.count
-
-      total += food.count * food.price
-
+      count += Number(food.count || 0)
+  
+      let itemPrice = Number(food.price || 0)
+  
+      // 如果商品设置了折扣，则购物车使用折后价
+      if (
+        food.discountEnabled === true &&
+        Number(food.discount) > 0 &&
+        Number(food.discount) < 10
+      ) {
+        itemPrice = Number(food.price || 0) * Number(food.discount) / 10
+      }
+  
+      total += Number(food.count || 0) * itemPrice
     })
-
-
+  
     this.setData({
-
       cartCount: count,
-
-      cartTotal: total
-
+      cartTotal: Number(total.toFixed(2))
     })
-
   },
 
 

@@ -577,3 +577,35 @@ page {
   background: #FFF0EA;
   color: #DF6A43;
 }
+.discount-price-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.promotion-tag {
+  display: inline-block;
+  align-self: flex-start;
+  margin-bottom: 6rpx;
+  padding: 4rpx 10rpx;
+  background: #fff1e6;
+  border-radius: 6rpx;
+  font-size: 20rpx;
+  color: #ff6b00;
+}
+
+.discount-price-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.original-price {
+  margin-left: 12rpx;
+  font-size: 23rpx;
+  color: #999999;
+  text-decoration: line-through;
+}
+
+.normal-price-box {
+  display: flex;
+  align-items: baseline;
+}

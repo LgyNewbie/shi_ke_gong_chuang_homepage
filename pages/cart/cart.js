@@ -51,38 +51,45 @@ Page({
 
   // 计算总价
   calculateTotal() {
-
     let count = 0
-
     let total = 0
-
-
+  
     this.data.cartItems.forEach(item => {
-
+  
       count += item.count
-
-      total += item.count * item.price
-
+  
+      // 默认使用原价
+      let itemPrice = Number(item.price || 0)
+  
+      // 如果商品参加折扣活动，则使用折后价
+      if (
+        item.discountEnabled === true &&
+        Number(item.discount) > 0 &&
+        Number(item.discount) < 10
+      ) {
+        itemPrice =
+          Number(item.price || 0) *
+          Number(item.discount) /
+          10
+      }
+  
+      total += item.count * itemPrice
     })
-
-
+  
     const deliveryFee = 0
-
     const finalTotal = total + deliveryFee
-
-
+  
     this.setData({
-
+  
       cartCount: count,
-
-      cartTotal: total,
-
+  
+      cartTotal: Number(total.toFixed(2)),
+  
       deliveryFee: deliveryFee,
-
-      finalTotal: finalTotal
-
+  
+      finalTotal: Number(finalTotal.toFixed(2))
+  
     })
-
   },
 
 

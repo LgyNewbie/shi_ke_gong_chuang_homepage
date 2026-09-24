@@ -105,61 +105,99 @@ Page({
   // 计算金额
   // =========================
   calculateTotal() {
-
     let total = 0
-
+    let productDiscount = 0
+  
+    // =========================
+    // 计算商品原价和商品优惠
+    // =========================
+  
     this.data.cartItems.forEach(item => {
-
-      total +=
-        Number(item.price || 0) *
-        Number(item.count || 0)
-
-    })
-
-    // 当前阶段先保留商品优惠字段
-    // 后续接入商品促销后再自动计算
-    const productDiscount =
-      Number(this.data.productDiscount || 0)
-
-    // 当前阶段如果没有选择优惠券，则为 0
-    const couponDiscount =
-      Number(this.data.couponDiscount || 0)
-
-    // 打包费
-    let packingFee = 0
-
-    this.data.cartItems.forEach(item => {
-
-      const itemPackingFee =
-        Number(item.packingFee || 0)
-
+  
+      const price =
+        Number(item.price || 0)
+  
       const count =
         Number(item.count || 0)
-
+  
+      // 商品原价小计
+      total += price * count
+  
+      // 商品参加折扣活动
+      if (
+        item.discountEnabled === true &&
+        Number(item.discount) > 0 &&
+        Number(item.discount) < 10
+      ) {
+  
+        const discountPrice =
+          price *
+          Number(item.discount) /
+          10
+  
+        productDiscount +=
+          (price - discountPrice) * count
+      }
+  
+    })
+  
+  
+    // =========================
+    // 优惠券
+    // =========================
+  
+    const couponDiscount =
+      Number(this.data.couponDiscount || 0)
+  
+  
+    // =========================
+    // 打包费
+    // =========================
+  
+    let packingFee = 0
+  
+    this.data.cartItems.forEach(item => {
+  
+      const itemPackingFee =
+        Number(item.packingFee || 0)
+  
+      const count =
+        Number(item.count || 0)
+  
       packingFee +=
         itemPackingFee * count
-
+  
     })
-
+  
+  
+    // =========================
     // 配送费
+    // =========================
+  
     let deliveryFee = 0
-
+  
     if (this.data.deliveryType === 'delivery') {
-
+  
       this.data.cartItems.forEach(item => {
-
+  
         const itemDeliveryFee =
           Number(item.deliveryFee || 0)
-
+  
         const count =
           Number(item.count || 0)
-
+  
         deliveryFee +=
           itemDeliveryFee * count
-
+  
       })
+  
     }
-
+  
+  
+    // =========================
+    // 最终实付
+    // =========================
+  
     const finalTotal =
       Math.max(
         0,
@@ -169,26 +207,28 @@ Page({
         packingFee +
         deliveryFee
       )
-
+  
+  
     this.setData({
-
-      cartTotal: Number(total.toFixed(2)),
-
+  
+      cartTotal:
+        Number(total.toFixed(2)),
+  
       productDiscount:
         Number(productDiscount.toFixed(2)),
-
+  
       couponDiscount:
         Number(couponDiscount.toFixed(2)),
-
+  
       packingFee:
         Number(packingFee.toFixed(2)),
-
+  
       deliveryFee:
         Number(deliveryFee.toFixed(2)),
-
+  
       finalTotal:
         Number(finalTotal.toFixed(2))
-
+  
     })
   },
 
