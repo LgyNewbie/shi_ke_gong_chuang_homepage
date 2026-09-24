@@ -1,0 +1,199 @@
+<view class="page">
+
+<!-- 顶部图片 -->
+<view class="hero">
+
+  <image
+    class="hero-image"
+    src="{{food.image}}"
+    mode="aspectFill"
+  />
+
+  <view
+    class="back-button"
+    bindtap="goBack"
+  >
+    ‹
+  </view>
+
+  <view
+    class="favorite-button {{isFavorite ? 'active' : ''}}"
+    bindtap="toggleFavorite"
+  >
+    {{isFavorite ? '♥' : '♡'}}
+  </view>
+
+</view>
+
+
+<!-- 商品基本信息 -->
+<view
+  wx:if="{{food}}"
+  class="content"
+>
+
+  <view class="title-row">
+
+    <view class="title-box">
+
+      <text class="food-name">
+        {{food.name}}
+      </text>
+
+      <text
+        wx:if="{{food.hot}}"
+        class="hot-tag"
+      >
+        热销
+      </text>
+
+    </view>
+
+  </view>
+
+
+  <text class="food-desc">
+    {{food.desc}}
+  </text>
+
+
+  <!-- 价格和销量 -->
+  <view class="price-row">
+
+    <view class="price-box">
+
+      <text class="price-symbol">
+        ¥
+      </text>
+
+      <text class="price">
+        {{food.price}}
+      </text>
+
+    </view>
+
+    <text class="sales">
+      已售 {{food.sales}}
+    </text>
+
+  </view>
+
+
+  <!-- 商品详情 -->
+  <view class="detail-card">
+
+    <view class="section-title">
+      商品信息
+    </view>
+
+
+    <view class="detail-row">
+
+      <text class="detail-label">
+        食材
+      </text>
+
+      <text class="detail-value">
+        {{food.ingredients}}
+      </text>
+
+    </view>
+
+
+    <view class="detail-row">
+
+      <text class="detail-label">
+        口味
+      </text>
+
+      <text class="detail-value">
+        {{food.taste}}
+      </text>
+
+    </view>
+
+
+    <view class="detail-row">
+
+      <text class="detail-label">
+        分量
+      </text>
+
+      <text class="detail-value">
+        {{food.weight}}
+      </text>
+
+    </view>
+
+
+    <view
+      wx:if="{{food.allergen}}"
+      class="detail-row"
+    >
+
+      <text class="detail-label">
+        提示
+      </text>
+
+      <text class="detail-value warning">
+        {{food.allergen}}
+      </text>
+
+    </view>
+
+  </view>
+
+
+  <!-- 商品说明 -->
+  <view class="intro-card">
+
+    <view class="section-title">
+      菜品介绍
+    </view>
+
+    <text class="intro-text">
+      {{food.desc}}
+    </text>
+
+  </view>
+
+</view>
+
+
+<!-- 底部操作栏 -->
+<view
+  wx:if="{{food}}"
+  class="bottom-bar"
+>
+
+  <view
+    class="bottom-cart"
+    bindtap="openCart"
+  >
+    🛒
+  </view>
+
+
+  <view class="bottom-price">
+
+    <text class="bottom-price-symbol">
+      ¥
+    </text>
+
+    <text class="bottom-price-number">
+      {{food.price}}
+    </text>
+
+  </view>
+
+
+  <view
+    class="add-cart-button"
+    bindtap="addToCart"
+  >
+    加入购物车
+  </view>
+
+</view>
+
+</view>

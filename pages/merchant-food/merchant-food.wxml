@@ -1,0 +1,161 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view
+    class="back"
+    bindtap="goBack"
+  >
+    ‹
+  </view>
+
+  <view class="title">
+    商品管理
+  </view>
+
+  <view
+    class="add-button"
+    bindtap="addFood"
+  >
+    ＋
+  </view>
+
+</view>
+
+
+<!-- 商品筛选 -->
+<view class="tabs">
+
+  <view
+    class="tab {{currentTab === 'all' ? 'active' : ''}}"
+    data-tab="all"
+    bindtap="selectTab"
+  >
+    全部
+  </view>
+
+  <view
+    class="tab {{currentTab === 'on' ? 'active' : ''}}"
+    data-tab="on"
+    bindtap="selectTab"
+  >
+    已上架
+  </view>
+
+  <view
+    class="tab {{currentTab === 'off' ? 'active' : ''}}"
+    data-tab="off"
+    bindtap="selectTab"
+  >
+    已下架
+  </view>
+
+</view>
+
+
+<!-- 商品列表 -->
+<view class="food-list">
+
+  <block
+    wx:for="{{foods}}"
+    wx:key="id"
+    wx:if="{{currentTab === 'all' || (currentTab === 'on' && item.isOnSale !== false) || (currentTab === 'off' && item.isOnSale === false)}}"
+  >
+
+    <view class="food-card">
+
+      <!-- 商品图片 -->
+      <image
+        class="food-image"
+        src="{{item.image}}"
+        mode="aspectFill"
+      />
+
+
+      <!-- 商品信息 -->
+      <view class="food-info">
+
+        <view class="food-top">
+
+          <view class="food-name">
+            {{item.name}}
+          </view>
+
+          <view
+            class="status {{item.isOnSale === false ? 'off' : 'on'}}"
+          >
+            {{item.isOnSale === false ? '已下架' : '已上架'}}
+          </view>
+
+        </view>
+
+
+        <view class="food-desc">
+          {{item.desc}}
+        </view>
+
+
+        <view class="food-meta">
+
+          <view class="price">
+            ¥{{item.price}}
+          </view>
+
+          <view class="sales">
+            已售 {{item.sales || 0}}
+          </view>
+
+        </view>
+
+
+        <!-- 操作 -->
+        <view class="actions">
+
+          <button
+            class="edit-button"
+            size="mini"
+            data-id="{{item.id}}"
+            bindtap="editFood"
+          >
+            编辑
+          </button>
+
+          <button
+            class="sale-button {{item.isOnSale === false ? 'on-button' : 'off-button'}}"
+            size="mini"
+            data-id="{{item.id}}"
+            bindtap="toggleSale"
+          >
+            {{item.isOnSale === false ? '重新上架' : '下架'}}
+          </button>
+
+        </view>
+
+      </view>
+
+    </view>
+
+  </block>
+
+
+  <!-- 空状态 -->
+  <view
+    wx:if="{{foods.length === 0}}"
+    class="empty"
+  >
+    暂无商品
+  </view>
+
+</view>
+
+
+<!-- 新增商品 -->
+<view
+  class="bottom-add"
+  bindtap="addFood"
+>
+  ＋ 新增商品
+</view>
+
+</view>

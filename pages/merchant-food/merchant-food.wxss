@@ -1,0 +1,216 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 150rpx;
+}
+
+
+/* 顶部 */
+
+.header {
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  background: #FFFFFF;
+  border-bottom: 1rpx solid #E8E5DE;
+}
+
+.back {
+  width: 60rpx;
+  font-size: 56rpx;
+  color: #333;
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.add-button {
+  width: 60rpx;
+  text-align: right;
+  font-size: 42rpx;
+  color: #1F6A57;
+}
+
+
+/* 分类 */
+
+.tabs {
+  display: flex;
+  margin: 24rpx;
+  padding: 8rpx;
+  background: #FFFFFF;
+  border-radius: 18rpx;
+}
+
+.tab {
+  flex: 1;
+  padding: 18rpx 0;
+  text-align: center;
+  color: #777;
+  font-size: 27rpx;
+  border-radius: 14rpx;
+}
+
+.tab.active {
+  color: #FFFFFF;
+  background: #1F6A57;
+  font-weight: 700;
+}
+
+
+/* 商品 */
+
+.food-list {
+  padding: 0 24rpx;
+}
+
+.food-card {
+  display: flex;
+  margin-bottom: 20rpx;
+  padding: 22rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  box-sizing: border-box;
+}
+
+.food-image {
+  width: 180rpx;
+  height: 180rpx;
+  flex-shrink: 0;
+  border-radius: 16rpx;
+  background: #F0F0F0;
+}
+
+.food-info {
+  flex: 1;
+  min-width: 0;
+  margin-left: 22rpx;
+}
+
+.food-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+
+.food-name {
+  flex: 1;
+  font-size: 31rpx;
+  font-weight: 700;
+  color: #222;
+}
+
+.status {
+  padding: 6rpx 14rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  flex-shrink: 0;
+}
+
+.status.on {
+  color: #1F6A57;
+  background: #E5F2EC;
+}
+
+.status.off {
+  color: #999;
+  background: #EEEEEE;
+}
+
+.food-desc {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.5;
+  color: #888;
+}
+
+.food-meta {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+}
+
+.price {
+  color: #DF6A43;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.sales {
+  margin-left: 20rpx;
+  color: #999;
+  font-size: 23rpx;
+}
+
+
+/* 操作 */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16rpx;
+}
+
+.actions button {
+  margin: 0 0 0 12rpx;
+  padding: 0 20rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  line-height: 56rpx;
+}
+
+.edit-button {
+  color: #1F6A57;
+  background: #E8F2EE;
+}
+
+.sale-button {
+  color: #FFFFFF;
+}
+
+.off-button {
+  background: #999999;
+}
+
+.on-button {
+  background: #1F6A57;
+}
+
+
+/* 空状态 */
+
+.empty {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}
+
+
+/* 底部新增 */
+
+.bottom-add {
+  position: fixed;
+  left: 30rpx;
+  right: 30rpx;
+  bottom: 30rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  text-align: center;
+  color: #FFFFFF;
+  background: #1F6A57;
+  border-radius: 45rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.12);
+}

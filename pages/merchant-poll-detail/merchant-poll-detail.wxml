@@ -90,39 +90,46 @@
   ========================== -->
 
   <view
-    wx:if="{{sourceMessage}}"
-    class="source-box"
-  >
+  wx:if="{{sourceMessage}}"
+  class="source-box"
+>
 
-    <view class="source-label">
-      来源建议
-    </view>
-
-    <view class="source-text">
-      {{
-        sourceMessage.text ||
-        sourceMessage.content
-      }}
-    </view>
-
-    <view class="source-user">
-      食客：
-      {{
-        sourceMessage.name ||
-        sourceMessage.userName ||
-        '食客'
-      }}
-    </view>
-
-    <view
-      wx:if="{{sourceMessage.statusName}}"
-      class="source-status"
-    >
-      留言状态：
-      {{sourceMessage.statusName}}
-    </view>
-
+  <view class="source-label">
+    来源建议
   </view>
+
+  <view class="source-text">
+    {{
+      sourceMessage.text ||
+      sourceMessage.content
+    }}
+  </view>
+
+  <view class="source-user">
+    食客：
+    {{
+      sourceMessage.name ||
+      sourceMessage.userName ||
+      '食客'
+    }}
+  </view>
+
+  <view
+    wx:if="{{sourceMessage.statusName}}"
+    class="source-status"
+  >
+    留言状态：
+    {{sourceMessage.statusName}}
+  </view>
+
+  <view
+    class="source-link"
+    bindtap="openSourceMessage"
+  >
+    查看原留言 →
+  </view>
+
+</view>
 
 
   <!-- =========================
@@ -208,11 +215,11 @@
           </text>
 
           <text
-            wx:if="{{option.isWinner}}"
-            class="winner-tag"
-          >
-            🏆最高票
-          </text>
+  wx:if="{{option.resultLabel}}"
+  class="winner-tag"
+>
+  {{option.resultLabel}}
+</text>
 
         </view>
 
@@ -252,29 +259,36 @@
 
   <view class="winner-box">
 
-    <view class="winner-label">
-      结果
-    </view>
+<view class="winner-label">
+  结果
+</view>
 
-    <view class="winner-name">
-      {{winnerNames}}
-    </view>
+<view class="winner-name">
+  {{winnerNames}}
+</view>
 
-    <view
-      wx:if="{{isTie}}"
-      class="winner-subtitle"
-    >
-      并列第一
-    </view>
+<view
+  wx:if="{{resultState === 'tie'}}"
+  class="winner-subtitle"
+>
+  🤝 并列第一
+</view>
 
-    <view
-      wx:if="{{!isTie && winnerNames !== '暂无结果'}}"
-      class="winner-subtitle"
-    >
-      当前最高票选项
-    </view>
+<view
+  wx:if="{{resultState === 'winner'}}"
+  class="winner-subtitle"
+>
+  🏆 当前最高票选项
+</view>
 
-  </view>
+<view
+  wx:if="{{resultState === 'none'}}"
+  class="winner-subtitle"
+>
+  暂无投票结果
+</view>
+
+</view>
 
 
   <!-- =========================

@@ -276,3 +276,13 @@
   font-weight: 700;
   color: #173C34;
 }
+
+.source-link {
+  margin-top: 18rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #E5EAE7;
+  font-size: 25rpx;
+  font-weight: 700;
+  color: #1F6A57;
+  text-align: right;
+}

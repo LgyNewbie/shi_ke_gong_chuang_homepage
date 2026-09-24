@@ -108,10 +108,12 @@
 
     <!-- 商品图片 -->
     <image
-      class="food-image"
-      src="{{item.image}}"
-      mode="aspectFill"
-    />
+  class="food-image"
+  src="{{item.image}}"
+  mode="aspectFill"
+  data-id="{{item.id}}"
+  bindtap="openFoodDetail"
+/>
 
 
     <!-- 商品信息 -->
@@ -123,7 +125,11 @@
 
           <view class="food-name-row">
 
-<view class="food-name">
+            <view
+  class="food-name"
+  data-id="{{item.id}}"
+  bindtap="openFoodDetail"
+>
   {{item.name}}
 </view>
 

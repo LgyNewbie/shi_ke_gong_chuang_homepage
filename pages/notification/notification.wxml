@@ -37,6 +37,7 @@
     data-id="{{item.id}}"
     data-type="{{item.type}}"
     data-message-id="{{item.messageId}}"
+    data-poll-id="{{item.pollId}}"
     bindtap="openNotification"
   >
 

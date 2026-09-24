@@ -166,29 +166,34 @@ Page({
 
 
     const winners =
-      maxVotes > 0
-        ? options.filter(
-            option =>
-              Number(
-                option.votes || 0
-              ) === maxVotes
-          )
-        : []
+  maxVotes > 0
+    ? options.filter(
+        option =>
+          Number(
+            option.votes || 0
+          ) === maxVotes
+      )
+    : []
 
+const resultState =
+  maxVotes === 0
+    ? 'none'
+    : winners.length > 1
+      ? 'tie'
+      : 'winner'
 
-    const winnerNames =
-      winners.length > 0
-        ? winners
-            .map(
-              item =>
-                item.name
-            )
-            .join('、')
-        : '暂无结果'
+const winnerNames =
+  resultState === 'none'
+    ? '暂无结果'
+    : winners
+        .map(
+          item =>
+            item.name
+        )
+        .join('、')
 
-
-    const isTie =
-      winners.length > 1
+const isTie =
+  resultState === 'tie'
 
 
     // =========================
@@ -196,51 +201,80 @@ Page({
     // =========================
 
     const detailOptions =
-      options.map(option => {
+  options.map(option => {
 
-        const percent =
-          Number(
-            option.percent || 0
-          )
+    const percent =
+      Number(
+        option.percent || 0
+      )
+
+    const votes =
+      Number(
+        option.votes || 0
+      )
+
+    let resultLabel = ''
+
+    if (
+      resultState === 'winner' &&
+      votes === maxVotes
+    ) {
+
+      resultLabel = '🏆最高票'
+
+    }
+
+    if (
+      resultState === 'tie' &&
+      votes === maxVotes
+    ) {
+
+      resultLabel = '🤝平票'
+
+    }
+
+    return {
+
+      ...option,
+
+      votes,
+
+      percent,
+
+      isWinner:
+        votes === maxVotes &&
+        maxVotes > 0,
+
+      resultLabel,
+
+      percentStyle:
+        `width: ${percent}%;`
+
+    }
+
+  })
 
 
-        return {
+  this.setData({
 
-          ...option,
-
-          votes:
-            Number(
-              option.votes || 0
-            ),
-
-          percent,
-
-          percentStyle:
-            `width: ${percent}%;`
-
-        }
-
-      })
-
-
-    this.setData({
-
-      poll: {
-
-        ...poll,
-
-        options:
-          detailOptions
-
-      },
-
-      sourceMessage,
-
-      winnerNames,
-
-      isTie
-
-    })
+    poll: {
+  
+      ...poll,
+  
+      options:
+        detailOptions
+  
+    },
+  
+    sourceMessage,
+  
+    winnerNames,
+  
+    isTie,
+  
+    resultState
+  
+  })
 
   },
 
@@ -251,8 +285,70 @@ Page({
 
   goBack() {
 
-    wx.navigateBack()
+    const pages =
+      getCurrentPages()
+  
+    if (
+      pages &&
+      pages.length > 1
+    ) {
+  
+      wx.navigateBack({
+  
+        delta: 1
+  
+      })
+  
+      return
+  
+    }
+  
+    wx.redirectTo({
+  
+      url:
+        '/pages/merchant-poll/merchant-poll'
+  
+    })
+  
+  },
+
+  // =========================
+// 查看原留言
+// =========================
+
+openSourceMessage() {
+
+  const sourceMessage =
+    this.data.sourceMessage
+
+  if (
+    !sourceMessage ||
+    !sourceMessage.id
+  ) {
+
+    wx.showToast({
+
+      title:
+        '原留言不存在',
+
+      icon:
+        'none'
+
+    })
+
+    return
 
   }
+
+  wx.navigateTo({
+
+    url:
+      `/pages/message-detail/message-detail?id=${encodeURIComponent(
+        sourceMessage.id
+      )}`
+
+  })
+
+}
 
 })

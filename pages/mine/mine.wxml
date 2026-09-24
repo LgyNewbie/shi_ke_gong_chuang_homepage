@@ -492,6 +492,38 @@
 
     </view>
 
+    <!-- 商家商品 -->
+<view
+  class="function-item"
+  bindtap="openMerchantFood"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      🍱
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        商品管理
+      </view>
+
+      <view class="function-desc">
+        上架、下架和编辑餐厅菜品
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
   </view>
 
 </view>

@@ -156,13 +156,15 @@ Page({
 
 
   onLoad() {
-
     const savedFoods = wx.getStorageSync('allFoods')
   
     if (savedFoods && savedFoods.length > 0) {
   
       this.setData({
         foods: savedFoods
+      }, () => {
+        this.updateCart()
+        this.filterFoods()
       })
   
     } else {
@@ -172,10 +174,9 @@ Page({
         this.data.foods
       )
   
+      this.updateCart()
+      this.filterFoods()
     }
-  
-    this.filterFoods()
-  
   },
 
   onShow() {
@@ -184,10 +185,17 @@ Page({
     if (allFoods) {
       this.setData({
         foods: allFoods
-      })
-    }
+      }, () => {
+        // 重新计算购物车数量和金额
+        this.updateCart()
   
-    this.loadFavorites()
+        // 重新加载收藏状态
+        this.loadFavorites()
+      })
+    } else {
+      this.updateCart()
+      this.loadFavorites()
+    }
   },
 
   // 搜索
@@ -243,45 +251,74 @@ Page({
   // 商品过滤
   filterFoods() {
 
-    const search = this.data.searchText.trim()
-
-    const category = this.data.currentCategory
-
-    const foods = this.data.foods.filter(food => {
-
-      // 分类
-      let categoryMatch = true
-
-      if (category === 'hot') {
-        categoryMatch = food.hot === true
-      } else if (category !== 'all') {
-        categoryMatch = food.category === category
-      }
-
-
-      // 搜索
-      let searchMatch = true
-
-      if (search) {
-
-        searchMatch =
-          food.name.includes(search) ||
-          food.desc.includes(search)
-
-      }
-
-
-      return categoryMatch && searchMatch
-
-    })
-
-
+    const search =
+      this.data.searchText.trim()
+  
+    const category =
+      this.data.currentCategory
+  
+    const foods =
+      this.data.foods.filter(food => {
+  
+        // =========================
+        // 只显示已上架商品
+        // 旧商品没有 isOnSale 时，
+        // 默认视为已上架
+        // =========================
+  
+        const saleMatch =
+          food.isOnSale !== false
+  
+        if (!saleMatch) {
+          return false
+        }
+  
+  
+        // =========================
+        // 分类
+        // =========================
+  
+        let categoryMatch = true
+  
+        if (category === 'hot') {
+  
+          categoryMatch =
+            food.hot === true
+  
+        } else if (category !== 'all') {
+  
+          categoryMatch =
+            food.category === category
+  
+        }
+  
+  
+        // =========================
+        // 搜索
+        // =========================
+  
+        let searchMatch = true
+  
+        if (search) {
+  
+          searchMatch =
+            food.name.includes(search) ||
+            food.desc.includes(search)
+  
+        }
+  
+  
+        return (
+          categoryMatch &&
+          searchMatch
+        )
+  
+      })
+  
+  
     this.setData({
-
       filteredFoods: foods
-
     })
-
   },
 
 
@@ -446,6 +483,18 @@ Page({
   
   },
 
+  openFoodDetail(e) {
+    const id = e.currentTarget.dataset.id
+  
+    if (!id) {
+      return
+    }
+  
+    wx.navigateTo({
+      url: `/pages/food-detail/food-detail?id=${encodeURIComponent(id)}`
+    })
+  },
+
   loadFavorites() {
     const favorites =
       wx.getStorageSync('favorites') || []
@@ -461,8 +510,13 @@ Page({
     this.setData({
       foods,
       favorites
+    }, () => {
+      this.filterFoods()
     })
   },
+
+  // 打开商品详情
+
 
   toggleFavorite(e) {
     const id = e.currentTarget.dataset.id

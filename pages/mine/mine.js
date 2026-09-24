@@ -232,6 +232,17 @@ Page({
 
   },
 
+  // =========================
+// 商家商品
+// =========================
+
+openMerchantFood() {
+  wx.navigateTo({
+    url:
+      '/pages/merchant-food/merchant-food'
+  })
+},
+
 
   // =========================
   // 关于
