@@ -54,6 +54,35 @@
 </view>
 
 
+<!-- 排序按钮 -->
+<view class="sort-bar">
+
+  <view
+    wx:if="{{!sortMode}}"
+    class="sort-button"
+    bindtap="startSortMode"
+  >
+    ☷ 调整商品排序
+  </view>
+
+  <view
+    wx:if="{{sortMode}}"
+    class="sort-tip"
+  >
+    长按商品并上下拖动调整顺序
+  </view>
+
+  <view
+    wx:if="{{sortMode}}"
+    class="sort-done"
+    bindtap="finishSort"
+  >
+    完成排序
+  </view>
+
+</view>
+
+
 <!-- 商品列表 -->
 <view class="food-list">
 
@@ -63,7 +92,22 @@
     wx:if="{{currentTab === 'all' || (currentTab === 'on' && item.isOnSale !== false) || (currentTab === 'off' && item.isOnSale === false)}}"
   >
 
-    <view class="food-card">
+    <view
+      class="food-card {{sortMode && currentTab === 'all' ? 'sort-card' : ''}} {{draggingId === item.id ? 'dragging' : ''}}"
+      data-id="{{item.id}}"
+      bindlongpress="startDrag"
+      bindtouchmove="onDragMove"
+      bindtouchend="endDrag"
+    >
+
+      <!-- 排序模式下的拖拽提示 -->
+      <view
+        wx:if="{{sortMode && currentTab === 'all'}}"
+        class="drag-handle"
+      >
+        ☰
+      </view>
+
 
       <!-- 商品图片 -->
       <image
@@ -109,8 +153,11 @@
         </view>
 
 
-        <!-- 操作 -->
-        <view class="actions">
+        <!-- 正常模式操作 -->
+        <view
+          wx:if="{{!sortMode}}"
+          class="actions"
+        >
 
           <button
             class="edit-button"
@@ -130,6 +177,15 @@
             {{item.isOnSale === false ? '重新上架' : '下架'}}
           </button>
 
+        </view>
+
+
+        <!-- 排序模式 -->
+        <view
+          wx:if="{{sortMode && currentTab === 'all'}}"
+          class="sort-hint"
+        >
+          长按拖动调整位置
         </view>
 
       </view>
@@ -152,6 +208,7 @@
 
 <!-- 新增商品 -->
 <view
+  wx:if="{{!sortMode}}"
   class="bottom-add"
   bindtap="addFood"
 >
