@@ -547,3 +547,8 @@ button::after {
   color: #405B51;
   font-weight: 500;
 }
+.reviewed-text {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #999999;
+}

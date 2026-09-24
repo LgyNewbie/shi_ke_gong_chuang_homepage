@@ -346,3 +346,100 @@ page {
 
   font-weight: bold;
 }
+/* ==================== */
+/* 用户评价 */
+/* ==================== */
+
+.review-card {
+  margin: 24rpx 24rpx 160rpx;
+  padding: 28rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-sizing: border-box;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-summary {
+  display: flex;
+  align-items: center;
+}
+
+.review-score {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #ff7a00;
+}
+
+.review-star {
+  margin-left: 6rpx;
+  font-size: 30rpx;
+  color: #ffb300;
+}
+
+.review-count {
+  margin-left: 12rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.empty-review {
+  padding: 50rpx 20rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.review-list {
+  margin-top: 20rpx;
+}
+
+.review-item {
+  padding: 24rpx 0;
+  border-top: 1rpx solid #eeeeee;
+}
+
+.review-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-user {
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.review-stars {
+  display: flex;
+  align-items: center;
+}
+
+.review-stars text {
+  margin-left: 3rpx;
+  font-size: 25rpx;
+  color: #dddddd;
+}
+
+.review-stars text.active {
+  color: #ffb300;
+}
+
+.review-content {
+  margin-top: 16rpx;
+  font-size: 28rpx;
+  color: #444444;
+  line-height: 1.7;
+  word-break: break-all;
+}
+
+.review-time {
+  margin-top: 12rpx;
+  font-size: 23rpx;
+  color: #aaaaaa;
+}

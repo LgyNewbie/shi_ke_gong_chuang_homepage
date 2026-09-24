@@ -5,17 +5,11 @@ const {
 Page({
 
   data: {
-
     orderId: '',
-
     order: {},
-
     statusIcon: '◷',
-
     statusDescription: '订单已经提交，等待处理',
-
     timeline: []
-
   },
 
   
@@ -115,119 +109,93 @@ Page({
     }
   
   
-    this.setData({
-  
-      order
-  
-    },()=>{
-  
-      this.updateStatus()
-      this.buildTimeline()
-  
+    const reviews = wx.getStorageSync('foodReviews') || []
+
+const orderItems = Array.isArray(order.items)
+  ? order.items.map(item => {
+
+      const isReviewed =
+        Array.isArray(reviews) &&
+        reviews.some(review =>
+          String(review.orderId) === String(order.id) &&
+          Number(review.foodId) === Number(item.id)
+        )
+
+      return {
+        ...item,
+        isReviewed
+      }
     })
+  : []
+
+order.items = orderItems
+
+this.setData({
+
+  order
+
+},()=>{
+
+  this.updateStatus()
+  this.buildTimeline()
+
+})
   
   },
 
 
   // 更新状态显示
   updateStatus(){
-
     const status = this.data.order.status
     const paymentStatus = this.data.order.paymentStatus
   
     let icon = '◷'
     let description = '订单已经提交，等待处理'
   
-    // =========================
-    // 待付款
-    // =========================
-  
-    if(
-      status === 'pending' &&
-      paymentStatus !== 'paid'
-    ){
-  
+    if(status === 'pending' && paymentStatus !== 'paid'){
       icon = '◷'
       description = '订单已经提交，等待付款'
-  
     }
   
-    // =========================
-    // 已付款，等待商家接单
-    // =========================
-  
-    if(
-      status === 'pending' &&
-      paymentStatus === 'paid'
-    ){
-  
+    if(status === 'pending' && paymentStatus === 'paid'){
       icon = '◷'
       description = '支付成功，等待商家接单'
-  
     }
-  
-    // =========================
-    // 已接单
-    // =========================
   
     if(status === 'accepted'){
-  
       icon = '✓'
       description = '商家已经接单，正在安排制作'
-  
     }
-  
-    // =========================
-    // 制作中
-    // =========================
   
     if(status === 'cooking'){
-  
       icon = '🍳'
       description = '餐厅正在为你制作'
-  
     }
-  
-    // =========================
-    // 配送中
-    // =========================
   
     if(status === 'delivery'){
-  
       icon = '🚚'
       description = '订单正在配送中'
-  
     }
   
-    // =========================
-    // 已完成
-    // =========================
+    if(status === 'ready'){
+      icon = '✓'
+      description = '餐品已经制作完成，请到店取餐'
+    }
   
     if(status === 'completed'){
-  
       icon = '✓'
       description = '订单已经完成，感谢你的支持'
-  
     }
   
-    // =========================
-    // 已取消
-    // =========================
-  
     if(status === 'cancelled'){
-  
       icon = '×'
       description = '这个订单已经取消'
-  
     }
   
     this.setData({
-  
       statusIcon: icon,
       statusDescription: description
-  
     })
-  
   },
 
 
@@ -253,33 +221,27 @@ Page({
 
 
     const stages = [
-
-      {
-        id: 'pending',
-        name: '已下单'
-      },
-
-      {
-        id: 'accepted',
-        name: '商家已接单'
-      },
-
-      {
-        id: 'cooking',
-        name: '制作中'
-      },
-
-      {
-        id: 'delivery',
-        name: '配送中'
-      },
-
-      {
-        id: 'completed',
-        name: '已完成'
-      }
-
+      {id:'pending',name:'已下单'},
+      {id:'accepted',name:'商家已接单'},
+      {id:'cooking',name:'制作中'}
     ]
+    
+    if (order.deliveryType === 'pickup') {
+      stages.push({
+        id:'ready',
+        name:'待取餐'
+      })
+    } else {
+      stages.push({
+        id:'delivery',
+        name:'配送中'
+      })
+    }
+    
+    stages.push({
+      id:'completed',
+      name:'已完成'
+    })
 
 
     const orderIndex =
@@ -346,39 +308,95 @@ Page({
 
 
   // 付款
-  payOrder() {
-    if (!this.data.order) {
-      return
-    }
-  
-    const orderId =
-      this.data.order.id
-  
-    const updatedOrder =
-      updateOrderStatus(
-        orderId,
-        'accepted',
-        '已接单'
-      )
-  
-    if (!updatedOrder) {
-      wx.showToast({
-        title: '订单更新失败',
-        icon: 'none'
-      })
-  
-      return
-    }
-  
-    this.setData({
-      order: updatedOrder
-    })
-  
+payOrder() {
+
+  const order = this.data.order
+
+  if (!order || !order.id) {
+    return
+  }
+
+  // 已经付款，不能重复付款
+  if (order.paymentStatus === 'paid') {
+
     wx.showToast({
-      title: '订单已接单',
-      icon: 'success'
+      title: '该订单已经付款',
+      icon: 'none'
     })
-  },
+
+    return
+  }
+
+  wx.showModal({
+
+    title: '确认付款',
+
+    content:
+      `确认支付 ¥${order.finalTotal || order.total || 0} 吗？`,
+
+    confirmText: '确认支付',
+
+    cancelText: '取消',
+
+    success: (res) => {
+
+      if (!res.confirm) {
+        return
+      }
+
+      const orders =
+        wx.getStorageSync('orders') || []
+
+      const index =
+        orders.findIndex(item => {
+          return String(item.id) ===
+            String(order.id)
+        })
+
+      if (index === -1) {
+
+        wx.showToast({
+          title: '订单不存在',
+          icon: 'none'
+        })
+
+        return
+      }
+
+      // =========================
+      // 支付成功
+      // =========================
+
+      orders[index] = {
+        ...orders[index],
+
+        paymentStatus: 'paid',
+
+        paymentTime:
+          new Date().toLocaleString(),
+
+        // 付款后仍然等待商家接单
+        status: 'pending',
+
+        statusName: '待接单'
+      }
+
+      wx.setStorageSync(
+        'orders',
+        orders
+      )
+
+
+      wx.showToast({
+        title: '支付成功',
+        icon: 'success'
+      })
+
+    }
+
+  })
+
+},
 
 
   // 再来一单
@@ -393,6 +411,35 @@ Page({
     })
 
   },
+
+  // 打开商品评价
+openReview(e) {
+
+  const orderId =
+    e.currentTarget.dataset.orderId
+
+  const foodId =
+    e.currentTarget.dataset.foodId
+
+  if (!orderId || !foodId) {
+
+    wx.showToast({
+      title: '商品信息异常',
+      icon: 'none'
+    })
+
+    return
+  }
+
+  wx.navigateTo({
+
+    url:
+      `/pages/food-review/food-review?orderId=${orderId}&foodId=${foodId}`
+
+  })
+
+},
+
 
 
   // 联系餐厅

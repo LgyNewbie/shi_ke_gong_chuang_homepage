@@ -26,6 +26,10 @@ Page({
         name: '配送中'
       },
       {
+        id: 'ready',
+        name: '待取餐'
+      },
+      {
         id: 'completed',
         name: '已完成'
       },
@@ -44,7 +48,8 @@ Page({
     pendingCount: 0,
     acceptedCount: 0,
     cookingCount: 0,
-    deliveryCount: 0
+    deliveryCount: 0,
+    readyCount: 0
   },
 
 
@@ -86,22 +91,27 @@ Page({
         orders.filter(
           item => item.status === 'pending'
         ).length,
-
+    
       acceptedCount:
         orders.filter(
           item => item.status === 'accepted'
         ).length,
-
+    
       cookingCount:
         orders.filter(
           item => item.status === 'cooking'
         ).length,
-
+    
       deliveryCount:
         orders.filter(
           item => item.status === 'delivery'
+        ).length,
+    
+      readyCount:
+        orders.filter(
+          item => item.status === 'ready'
         ).length
-
+    
     })
   },
 
@@ -182,6 +192,14 @@ Page({
     if (status === 'delivery') {
       statusName = '配送中'
     }
+
+    // =========================
+    // 到店自取：制作完成，等待取餐
+    // =========================
+
+    if (status === 'ready') {
+      statusName = '待取餐'
+    }
   
     // =========================
     // 完成订单
@@ -194,6 +212,8 @@ Page({
     if (!statusName) {
       return
     }
+
+    
   
     // =========================
     // 找到订单
@@ -210,6 +230,36 @@ Page({
         title: '订单不存在',
         icon: 'none'
       })
+
+    // =========================
+// 根据配送方式限制流程
+// =========================
+
+if (
+  status === 'delivery' &&
+  order.deliveryType === 'pickup'
+) {
+
+  wx.showToast({
+    title: '到店自取订单无需配送',
+    icon: 'none'
+  })
+
+  return
+}
+
+if (
+  status === 'ready' &&
+  order.deliveryType !== 'pickup'
+) {
+
+  wx.showToast({
+    title: '外卖订单无需等待取餐',
+    icon: 'none'
+  })
+
+  return
+}
   
       return
     }

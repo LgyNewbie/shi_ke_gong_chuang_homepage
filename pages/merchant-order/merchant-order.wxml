@@ -227,16 +227,27 @@
       </view>
 
 
-      <!-- 制作中 -->
-      <view
-        wx:if="{{item.status === 'cooking'}}"
-        class="action-btn"
-        data-id="{{item.id}}"
-        data-status="delivery"
-        bindtap="changeStatus"
-      >
-        开始配送
-      </view>
+      <!-- 制作中：外卖配送 -->
+<view
+  wx:if="{{item.status === 'cooking' && item.deliveryType === 'delivery'}}"
+  class="action-btn"
+  data-id="{{item.id}}"
+  data-status="delivery"
+  bindtap="changeStatus"
+>
+  开始配送
+</view>
+
+<!-- 制作中：到店自取 -->
+<view
+  wx:if="{{item.status === 'cooking' && item.deliveryType === 'pickup'}}"
+  class="action-btn"
+  data-id="{{item.id}}"
+  data-status="ready"
+  bindtap="changeStatus"
+>
+  制作完成
+</view>
 
 
       <!-- 配送中 -->
@@ -249,6 +260,17 @@
       >
         完成订单
       </view>
+
+<!-- 待取餐 -->
+<view
+  wx:if="{{item.status === 'ready'}}"
+  class="action-btn"
+  data-id="{{item.id}}"
+  data-status="completed"
+  bindtap="changeStatus"
+>
+  顾客已取餐
+</view>
 
 
       <!-- 已完成 -->

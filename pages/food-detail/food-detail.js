@@ -2,7 +2,10 @@ Page({
 
   data: {
     food: null,
-    isFavorite: false
+    isFavorite: false,
+    reviews: [],
+    reviewCount: 0,
+    averageRating: 0
   },
 
   onLoad(options) {
@@ -27,8 +30,9 @@ Page({
 
     if (this.foodId) {
       this.loadFavoriteState()
+      this.loadReviews()
     }
-
+  
   },
 
   // 加载商品
@@ -53,9 +57,10 @@ Page({
     this.setData({
       food
     }, () => {
-
+    
       this.loadFavoriteState()
-
+      this.loadReviews()
+    
     })
 
   },
@@ -74,6 +79,42 @@ Page({
     })
 
   },
+
+  // 加载商品评价
+loadReviews() {
+
+  const reviews =
+    wx.getStorageSync('foodReviews') || []
+
+  const foodReviews =
+    Array.isArray(reviews)
+      ? reviews.filter(item => {
+          return Number(item.foodId) ===
+            Number(this.foodId)
+        })
+      : []
+
+  let averageRating = 0
+
+  if (foodReviews.length > 0) {
+
+    const total =
+      foodReviews.reduce((sum, item) => {
+        return sum + Number(item.rating || 0)
+      }, 0)
+
+    averageRating =
+      (total / foodReviews.length).toFixed(1)
+
+  }
+
+  this.setData({
+    reviews: foodReviews,
+    reviewCount: foodReviews.length,
+    averageRating
+  })
+
+},
 
   // 收藏 / 取消收藏
   toggleFavorite() {
