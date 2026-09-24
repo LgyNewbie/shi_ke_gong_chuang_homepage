@@ -37,69 +37,197 @@ Page({
   // 加载全部投票
   // =========================
 
-  loadPolls() {
+  // =========================
+// 加载全部投票
+// =========================
 
-    const polls = getPolls()
+loadPolls() {
+
+  const polls =
+    getPolls()
 
 
-    const displayPolls =
-      polls.map(poll => {
+  const displayPolls =
+    polls.map(poll => {
 
-        let sourceMessage = null
+      let sourceMessage = null
 
 
-        if (poll.sourceMessageId) {
+      if (poll.sourceMessageId) {
 
-          sourceMessage =
-            getMessageById(
-              poll.sourceMessageId
+        sourceMessage =
+          getMessageById(
+            poll.sourceMessageId
+          )
+
+      }
+
+
+      // =========================
+      // 计算投票结果
+      // =========================
+
+      const totalVotes =
+        Number(
+          poll.totalVotes || 0
+        )
+
+
+      const originalOptions =
+        Array.isArray(poll.options)
+          ? poll.options
+          : []
+
+
+      // 最高票数
+      const maxVotes =
+        originalOptions.reduce(
+          (max, option) => {
+
+            return Math.max(
+              max,
+              Number(option.votes || 0)
             )
 
+          },
+          0
+        )
+
+
+      // 最高票选项数量
+      const winnerCount =
+        maxVotes > 0
+          ? originalOptions.filter(
+              option =>
+                Number(option.votes || 0) ===
+                maxVotes
+            ).length
+          : 0
+
+
+      // =========================
+      // 结果状态
+      // none   没有投票
+      // winner 唯一最高票
+      // tie    平票
+      // =========================
+
+      let resultState =
+        'none'
+
+
+      if (totalVotes > 0) {
+
+        if (winnerCount > 1) {
+
+          resultState =
+            'tie'
+
+        } else {
+
+          resultState =
+            'winner'
+
         }
 
-
-        // 重新给每个选项计算样式
-        const options =
-          (poll.options || []).map(option => {
-
-            const percent =
-              Number(option.percent || 0)
+      }
 
 
-            return {
+      // =========================
+      // 重新给每个选项计算显示字段
+      // =========================
 
-              ...option,
+      const options =
+        originalOptions.map(option => {
 
-              // 直接生成完整 CSS
-              percentStyle:
-                `width: ${percent}%;`
-
-            }
-
-          })
-
-
-        return {
-
-          ...poll,
-
-          options,
-
-          sourceMessage
-
-        }
-
-      })
+          const votes =
+            Number(
+              option.votes || 0
+            )
 
 
-    this.setData({
+          const percent =
+            Number(
+              option.percent || 0
+            )
 
-      polls:
-        displayPolls
+
+          const isWinner =
+            maxVotes > 0 &&
+            votes === maxVotes
+
+
+          let resultLabel = ''
+
+
+          if (
+            resultState === 'winner' &&
+            isWinner
+          ) {
+
+            resultLabel =
+              '🏆最高票'
+
+          }
+
+
+          if (
+            resultState === 'tie' &&
+            isWinner
+          ) {
+
+            resultLabel =
+              '🤝平票'
+
+          }
+
+
+          return {
+
+            ...option,
+
+            votes,
+
+            percent,
+
+            isWinner,
+
+            resultLabel,
+
+            // 直接生成完整 CSS
+            percentStyle:
+              `width: ${percent}%;`
+
+          }
+
+        })
+
+
+      return {
+
+        ...poll,
+
+        options,
+
+        sourceMessage,
+
+        resultState,
+
+        winnerCount
+
+      }
 
     })
 
-  },
+
+  this.setData({
+
+    polls:
+      displayPolls
+
+  })
+
+},
 
 
   // =========================

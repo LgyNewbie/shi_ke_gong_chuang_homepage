@@ -208,6 +208,13 @@
 
     </view>
 
+    <view
+  wx:if="{{item.resultState === 'none'}}"
+  class="no-result"
+>
+  暂无投票结果
+</view>
+
 
     <view class="result-list">
 
@@ -227,11 +234,24 @@
   {{option.name}}
 </text>
 
+
+<!-- 我的选择 -->
+
 <text
-  wx:if="{{option.isWinner}}"
+  wx:if="{{option.isMyChoice}}"
+  class="my-choice-tag"
+>
+  我的选择
+</text>
+
+
+<!-- 最高票 / 平票 -->
+
+<text
+  wx:if="{{option.resultLabel}}"
   class="winner-tag"
 >
-  🏆最高票
+  {{option.resultLabel}}
 </text>
 
 </view>

@@ -50,50 +50,203 @@ Page({
   // 加载全部投票
   // =========================
 
-  loadPolls() {
+  // =========================
+// 加载全部投票
+// =========================
 
-    const polls =
-      getPolls()
+loadPolls() {
 
-
-    const displayPolls =
-      polls.map(poll => {
-
-        const voted =
-          hasVoted(
-            poll.id
-          )
+  const polls =
+    getPolls()
 
 
-        const choiceId =
-          getMyChoice(
-            poll.id
-          )
+  const displayPolls =
+    polls.map(poll => {
+
+      const voted =
+        hasVoted(
+          poll.id
+        )
 
 
-        return {
+      const choiceId =
+        getMyChoice(
+          poll.id
+        )
 
-          ...poll,
 
-          hasVoted:
-            voted,
+      // =========================
+      // 计算投票结果状态
+      // =========================
 
-          selectedId:
-            choiceId
+      const totalVotes =
+        Number(
+          poll.totalVotes || 0
+        )
+
+
+      const options =
+        Array.isArray(poll.options)
+          ? poll.options.map(option => ({
+              ...option,
+              isMyChoice:
+                String(option.id) ===
+                String(choiceId)
+            }))
+          : []
+
+
+      // 找出最高票数
+      const maxVotes =
+        options.reduce(
+          (max, option) => {
+
+            return Math.max(
+              max,
+              Number(option.votes || 0)
+            )
+
+          },
+          0
+        )
+
+
+      // 最高票选项数量
+      const winnerCount =
+        maxVotes > 0
+          ? options.filter(
+              option =>
+                Number(option.votes || 0) ===
+                maxVotes
+            ).length
+          : 0
+
+
+      // =========================
+      // 判断结果类型
+      // =========================
+
+      let resultState =
+        'none'
+
+
+      if (totalVotes > 0) {
+
+        if (winnerCount > 1) {
+
+          resultState =
+            'tie'
+
+        } else {
+
+          resultState =
+            'winner'
 
         }
 
-      })
+      }
 
 
-    this.setData({
+      // =========================
+      // 给每个选项增加显示字段
+      // =========================
 
-      polls:
-        displayPolls
+      const resultOptions =
+        options.map(option => {
+
+          const votes =
+            Number(
+              option.votes || 0
+            )
+
+
+          const isWinner =
+            maxVotes > 0 &&
+            votes === maxVotes
+
+
+          let resultLabel = ''
+
+
+          if (
+            resultState === 'winner' &&
+            isWinner
+          ) {
+
+            resultLabel =
+              '🏆最高票'
+
+          }
+
+
+          if (
+            resultState === 'tie' &&
+            isWinner
+          ) {
+
+            resultLabel =
+              '🤝平票'
+
+          }
+
+
+          if (
+            totalVotes === 0
+          ) {
+
+            resultLabel =
+              ''
+
+          }
+
+
+          return {
+
+            ...option,
+
+            isWinner,
+
+            resultLabel,
+
+            isMyChoice:
+              String(option.id) ===
+              String(choiceId)
+
+          }
+
+        })
+
+
+      return {
+
+        ...poll,
+
+        hasVoted:
+          voted,
+
+        selectedId:
+          choiceId,
+
+        options:
+          resultOptions,
+
+        resultState,
+
+        winnerCount
+
+      }
 
     })
 
-  },
+
+  this.setData({
+
+    polls:
+      displayPolls
+
+  })
+
+},
 
 
   // =========================
