@@ -3,32 +3,42 @@
     
     "pages/index/index",
     "pages/community/community",
-    "pages/message-create/message-create",
-    "pages/merchant-message/merchant-message",
-    "pages/message-detail/message-detail",
-    "pages/order-detail/order-detail",
+    "pages/menu/menu",
     "pages/order/order",
-    "pages/checkout/checkout",
-    "pages/cart/cart",
     "pages/mine/mine",
-    "pages/my-poll/my-poll",
-    "pages/poll/poll",
-    "pages/address/address",
-    "pages/address-edit/address-edit",
-    "pages/notice/notice",
+
+    "pages/food-detail/food-detail",
+    "pages/cart/cart",
+    "pages/checkout/checkout",
+    "pages/order-detail/order-detail",
+
+    "pages/message-create/message-create",
+    "pages/message-detail/message-detail",
     "pages/my-message/my-message",
     "pages/my-favorite/my-favorite",
-    "pages/notification/notification",
-    "pages/merchant-order/merchant-order",
-    "pages/merchant-message-list/merchant-message-list",
+
+    "pages/poll/poll",
+    "pages/my-poll/my-poll",
+
+    "pages/notice/notice",
     "pages/notice-detail/notice-detail",
+    "pages/notification/notification",
+
+    "pages/address/address",
+    "pages/address-edit/address-edit",
+
+    "pages/merchant-order/merchant-order",
+    "pages/merchant-message/merchant-message",
+    "pages/merchant-message-list/merchant-message-list",
+
     "pages/merchant-poll-create/merchant-poll-create",
     "pages/merchant-poll/merchant-poll",
     "pages/merchant-poll-detail/merchant-poll-detail",
-    "pages/food-detail/food-detail",
+
     "pages/merchant-food/merchant-food",
-    "pages/merchant-notice/merchant-notice",
-    "pages/menu/menu"
+    "pages/merchant-food/merchant-food-edit",
+
+    "pages/merchant-notice/merchant-notice"
     
     
     

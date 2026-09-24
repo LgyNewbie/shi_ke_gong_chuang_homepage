@@ -1,0 +1,269 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view
+    class="back"
+    bindtap="goBack"
+  >
+    ‹
+  </view>
+
+  <view class="title">
+    {{isEdit ? '编辑商品' : '新增商品'}}
+  </view>
+
+  <view class="header-placeholder"></view>
+
+</view>
+
+
+<!-- 商品图片 -->
+<view class="section">
+
+  <view class="section-title">
+    商品图片
+  </view>
+
+  <view class="image-box">
+
+    <image
+      class="food-image"
+      src="{{image}}"
+      mode="aspectFill"
+    />
+
+    <view
+      class="change-image"
+      bindtap="chooseImage"
+    >
+      更换图片
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 基本信息 -->
+<view class="section">
+
+  <view class="section-title">
+    基本信息
+  </view>
+
+
+  <!-- 商品名称 -->
+  <view class="form-item">
+
+    <view class="label">
+      商品名称
+    </view>
+
+    <input
+      class="input"
+      placeholder="请输入商品名称"
+      value="{{name}}"
+      bindinput="inputName"
+    />
+
+  </view>
+
+
+  <!-- 商品价格 -->
+  <view class="form-item">
+
+    <view class="label">
+      商品价格
+    </view>
+
+    <view class="price-input">
+
+      <text>¥</text>
+
+      <input
+        class="input price-field"
+        type="digit"
+        placeholder="请输入价格"
+        value="{{price}}"
+        bindinput="inputPrice"
+      />
+
+    </view>
+
+  </view>
+
+
+  <!-- 分类 -->
+  <view class="form-item column">
+
+    <view class="label">
+      商品分类
+    </view>
+
+    <view class="category-list">
+
+      <view
+        class="category-item {{category === 'rice' ? 'active' : ''}}"
+        data-category="rice"
+        bindtap="selectCategory"
+      >
+        饭类
+      </view>
+
+      <view
+        class="category-item {{category === 'noodle' ? 'active' : ''}}"
+        data-category="noodle"
+        bindtap="selectCategory"
+      >
+        面类
+      </view>
+
+      <view
+        class="category-item {{category === 'snack' ? 'active' : ''}}"
+        data-category="snack"
+        bindtap="selectCategory"
+      >
+        小吃
+      </view>
+
+      <view
+        class="category-item {{category === 'drink' ? 'active' : ''}}"
+        data-category="drink"
+        bindtap="selectCategory"
+      >
+        饮料
+      </view>
+
+    </view>
+
+  </view>
+
+
+  <!-- 热销 -->
+  <view class="form-item">
+
+    <view class="label">
+      热销商品
+    </view>
+
+    <switch
+      checked="{{hot}}"
+      bindchange="toggleHot"
+    />
+
+  </view>
+
+</view>
+
+
+<!-- 商品介绍 -->
+<view class="section">
+
+  <view class="section-title">
+    商品介绍
+  </view>
+
+
+  <!-- 描述 -->
+  <view class="form-item column">
+
+    <view class="label">
+      商品描述
+    </view>
+
+    <textarea
+      class="textarea"
+      maxlength="200"
+      placeholder="请输入商品描述"
+      value="{{desc}}"
+      bindinput="inputDesc"
+    />
+
+  </view>
+
+
+  <!-- 配料 -->
+  <view class="form-item">
+
+    <view class="label">
+      配料
+    </view>
+
+    <input
+      class="input"
+      placeholder="例如：鸡肉、青椒、花生"
+      value="{{ingredients}}"
+      bindinput="inputIngredients"
+    />
+
+  </view>
+
+
+  <!-- 口味 -->
+  <view class="form-item">
+
+    <view class="label">
+      口味
+    </view>
+
+    <input
+      class="input"
+      placeholder="例如：咸香微辣"
+      value="{{taste}}"
+      bindinput="inputTaste"
+    />
+
+  </view>
+
+
+  <!-- 重量 -->
+  <view class="form-item">
+
+    <view class="label">
+      重量
+    </view>
+
+    <input
+      class="input"
+      placeholder="例如：约 450g"
+      value="{{weight}}"
+      bindinput="inputWeight"
+    />
+
+  </view>
+
+
+  <!-- 过敏原 -->
+  <view class="form-item">
+
+    <view class="label">
+      过敏原
+    </view>
+
+    <input
+      class="input"
+      placeholder="例如：含花生、含小麦"
+      value="{{allergen}}"
+      bindinput="inputAllergen"
+    />
+
+  </view>
+
+</view>
+
+
+<!-- 保存 -->
+<view class="bottom">
+
+  <button
+    class="save-button"
+    bindtap="saveFood"
+  >
+    {{isEdit ? '保存修改' : '立即上架'}}
+  </button>
+
+</view>
+
+</view>
