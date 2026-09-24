@@ -89,86 +89,104 @@ Page({
 
 
   // 更新状态显示
-  updateStatus() {
+  updateStatus(){
 
-    const status =
-      this.data.order.status
-
-
+    const status = this.data.order.status
+    const paymentStatus = this.data.order.paymentStatus
+  
     let icon = '◷'
-
-    let description =
-      '订单已经提交，等待处理'
-
-
-    if (status === 'pending') {
-
+    let description = '订单已经提交，等待处理'
+  
+    // =========================
+    // 待付款
+    // =========================
+  
+    if(
+      status === 'pending' &&
+      paymentStatus !== 'paid'
+    ){
+  
       icon = '◷'
-
-      description =
-        '订单已经提交，等待付款'
-
+      description = '订单已经提交，等待付款'
+  
     }
-
-
-    if (status === 'accepted') {
-
+  
+    // =========================
+    // 已付款，等待商家接单
+    // =========================
+  
+    if(
+      status === 'pending' &&
+      paymentStatus === 'paid'
+    ){
+  
+      icon = '◷'
+      description = '支付成功，等待商家接单'
+  
+    }
+  
+    // =========================
+    // 已接单
+    // =========================
+  
+    if(status === 'accepted'){
+  
       icon = '✓'
-
-      description =
-        '商家已经接单，正在安排制作'
-
+      description = '商家已经接单，正在安排制作'
+  
     }
-
-
-    if (status === 'cooking') {
-
+  
+    // =========================
+    // 制作中
+    // =========================
+  
+    if(status === 'cooking'){
+  
       icon = '🍳'
-
-      description =
-        '餐厅正在为你制作'
-
+      description = '餐厅正在为你制作'
+  
     }
-
-
-    if (status === 'delivery') {
-
+  
+    // =========================
+    // 配送中
+    // =========================
+  
+    if(status === 'delivery'){
+  
       icon = '🚚'
-
-      description =
-        '订单正在配送中'
-
+      description = '订单正在配送中'
+  
     }
-
-
-    if (status === 'completed') {
-
+  
+    // =========================
+    // 已完成
+    // =========================
+  
+    if(status === 'completed'){
+  
       icon = '✓'
-
-      description =
-        '订单已经完成，感谢你的支持'
-
+      description = '订单已经完成，感谢你的支持'
+  
     }
-
-
-    if (status === 'cancelled') {
-
+  
+    // =========================
+    // 已取消
+    // =========================
+  
+    if(status === 'cancelled'){
+  
       icon = '×'
-
-      description =
-        '这个订单已经取消'
-
+      description = '这个订单已经取消'
+  
     }
-
-
+  
     this.setData({
-
+  
       statusIcon: icon,
-
       statusDescription: description
-
+  
     })
-
+  
   },
 
 

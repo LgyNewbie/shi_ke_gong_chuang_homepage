@@ -15,8 +15,12 @@ Page({
         name: '全部'
       },
       {
-        id: 'pending',
+        id: 'unpaid',
         name: '待付款'
+      },
+      {
+        id: 'pending',
+        name: '待接单'
       },
       {
         id: 'accepted',
@@ -151,30 +155,53 @@ Page({
 
 
   // 筛选
-  filterOrders() {
+  filterOrders(){
 
     const tab = this.data.currentTab
-
+  
     let result = this.data.orders
-
-
-    if (tab !== 'all') {
-
-      result = this.data.orders.filter(order => {
-
-        return order.status === tab
-
-      })
-
+  
+    // 全部
+    if(tab === 'all'){
+  
+      result = this.data.orders
+  
     }
-
-
+  
+    // 待付款
+    else if(tab === 'unpaid'){
+  
+      result = this.data.orders.filter(
+        order =>
+          order.status === 'pending' &&
+          order.paymentStatus !== 'paid'
+      )
+  
+    }
+  
+    // 待接单
+    else if(tab === 'pending'){
+  
+      result = this.data.orders.filter(
+        order =>
+          order.status === 'pending' &&
+          order.paymentStatus === 'paid'
+      )
+  
+    }
+  
+    // 其他订单状态
+    else{
+  
+      result = this.data.orders.filter(
+        order => order.status === tab
+      )
+  
+    }
+  
     this.setData({
-
       filteredOrders: result
-
     })
-
   },
 
 
