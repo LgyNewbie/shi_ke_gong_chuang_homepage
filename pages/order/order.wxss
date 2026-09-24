@@ -341,3 +341,64 @@ button::after {
   background: #F1F2F1;
   color: #8B9490;
 }
+
+/* =========================
+   订单费用明细
+========================= */
+
+.order-price-detail {
+  margin-top: 16rpx;
+
+  padding: 16rpx 18rpx;
+
+  border-radius: 16rpx;
+
+  background: #F7F8F7;
+}
+
+.price-detail-row {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 6rpx 0;
+
+  color: #89958F;
+
+  font-size: 18rpx;
+}
+
+.price-detail-row.discount {
+  color: #DF6A43;
+}
+
+.payment-method {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 8rpx;
+
+  padding-top: 10rpx;
+
+  border-top: 1rpx solid #E9ECEA;
+
+  color: #718079;
+
+  font-size: 19rpx;
+}
+
+.payment-method-value {
+  color: #405B51;
+
+  font-weight: 500;
+}
+/* 已付款等待商家接单 */
+
+.waiting-btn {
+  color: #718079;
+  background: #F1F3F2;
+  border: 1rpx solid #E1E6E3;
+}

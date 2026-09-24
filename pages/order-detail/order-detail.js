@@ -18,75 +18,7 @@ Page({
 
   },
 
-  // =========================
-// 模拟推进订单状态
-// =========================
-advanceStatus() {
-
-  if (!this.data.order) {
-    return
-  }
-
-  const currentStatus =
-    this.data.order.status
-
-  let nextStatus = ''
-  let nextStatusName = ''
-
-  if (currentStatus === 'accepted') {
-    nextStatus = 'cooking'
-    nextStatusName = '制作中'
-  }
-
-  else if (currentStatus === 'cooking') {
-    nextStatus = 'delivery'
-    nextStatusName = '配送中'
-  }
-
-  else if (currentStatus === 'delivery') {
-    nextStatus = 'completed'
-    nextStatusName = '已完成'
-  }
-
-  else {
-    wx.showToast({
-      title: '当前订单不能继续推进',
-      icon: 'none'
-    })
-
-    return
-  }
-
-
-  const updatedOrder =
-    updateOrderStatus(
-      this.data.order.id,
-      nextStatus,
-      nextStatusName
-    )
-
-
-  if (!updatedOrder) {
-    wx.showToast({
-      title: '订单更新失败',
-      icon: 'none'
-    })
-
-    return
-  }
-
-
-  this.setData({
-    order: updatedOrder
-  })
-
-
-  wx.showToast({
-    title: nextStatusName,
-    icon: 'success'
-  })
-},
-
+  
 
   onLoad(options) {
 

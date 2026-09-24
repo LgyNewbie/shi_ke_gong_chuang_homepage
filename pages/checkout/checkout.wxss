@@ -429,3 +429,109 @@ page {
 button::after {
   border: none;
 }
+
+/* =========================
+   金额优惠
+========================= */
+
+.discount-price {
+  color: #DF6A43;
+}
+
+.no-coupon {
+  color: #A0ACA7;
+}
+
+
+/* =========================
+   支付方式
+========================= */
+
+.payment-card {
+  padding-bottom: 20rpx;
+}
+
+.payment-options {
+  margin-top: 20rpx;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+
+  padding: 20rpx;
+
+  margin-bottom: 14rpx;
+
+  border-radius: 18rpx;
+
+  background: #F5F7F6;
+
+  border: 2rpx solid transparent;
+}
+
+.payment-option:last-child {
+  margin-bottom: 0;
+}
+
+.payment-option.active {
+  background: #EAF3EE;
+
+  border-color: #1F6A57;
+}
+
+.payment-icon {
+  width: 64rpx;
+  height: 64rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #FFFFFF;
+
+  font-size: 30rpx;
+}
+
+.payment-info {
+  flex: 1;
+
+  margin-left: 16rpx;
+}
+
+.payment-name {
+  color: #2D4940;
+
+  font-size: 24rpx;
+
+  font-weight: bold;
+}
+
+.payment-desc {
+  margin-top: 5rpx;
+
+  color: #8C9994;
+
+  font-size: 19rpx;
+}
+
+.payment-check {
+  width: 42rpx;
+  height: 42rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #1F6A57;
+
+  color: #FFFFFF;
+
+  font-size: 24rpx;
+
+  font-weight: bold;
+}

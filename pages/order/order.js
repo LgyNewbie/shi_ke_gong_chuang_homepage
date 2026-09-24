@@ -64,44 +64,89 @@ Page({
 
 
   // 加载订单
-  loadOrders() {
+  loadOrders(){
 
     const orders =
       wx.getStorageSync('orders') || []
-
-
-    // 给每一个订单计算商品总数量
+  
     const newOrders = orders.map(order => {
-
+  
       let itemCount = 0
-
-      order.items.forEach(item => {
-
-        itemCount += item.count
-
-      })
-
-      return {
-
-        ...order,
-
-        itemCount: itemCount
-
+  
+      if (Array.isArray(order.items)) {
+  
+        order.items.forEach(item => {
+  
+          itemCount +=
+            Number(item.count || 0)
+  
+        })
+  
       }
-
+  
+      // 兼容旧订单
+      const cartTotal =
+        Number(
+          order.cartTotal !== undefined
+            ? order.cartTotal
+            : order.total || 0
+        )
+  
+      const productDiscount =
+        Number(order.productDiscount || 0)
+  
+      const couponDiscount =
+        Number(order.couponDiscount || 0)
+  
+      const packingFee =
+        Number(order.packingFee || 0)
+  
+      const deliveryFee =
+        Number(order.deliveryFee || 0)
+  
+      const finalTotal =
+        Number(
+          order.finalTotal !== undefined
+            ? order.finalTotal
+            : order.total || 0
+        )
+  
+      const paymentMethod =
+        order.paymentMethod || '微信支付'
+  
+      return {
+  
+        ...order,
+  
+        itemCount,
+  
+        cartTotal,
+  
+        productDiscount,
+  
+        couponDiscount,
+  
+        packingFee,
+  
+        deliveryFee,
+  
+        finalTotal,
+  
+        paymentMethod
+  
+      }
+  
     })
-
-
+  
     this.setData({
-
+  
       orders: newOrders
-
+  
     }, () => {
-
+  
       this.filterOrders()
-
+  
     })
-
   },
 
 
@@ -165,49 +210,93 @@ Page({
 
 
   // 去付款
-  payOrder(e) {
+  payOrder(e){
+
     const id = e.currentTarget.dataset.id
   
     const orders =
       wx.getStorageSync('orders') || []
   
-    const order =
-      orders.find(item =>
-        String(item.id) === String(id)
-      )
+    const order = orders.find(
+      item => String(item.id) === String(id)
+    )
   
-    if (!order) {
+    if(!order){
       wx.showToast({
-        title: '订单不存在',
-        icon: 'none'
+        title:'订单不存在',
+        icon:'none'
       })
-  
       return
     }
   
-    // 模拟付款成功 + 餐厅接单
-    const updatedOrder =
-      updateOrderStatus(
-        id,
-        'accepted',
-        '已接单'
-      )
-  
-    if (!updatedOrder) {
+    // 已经支付过
+    if(order.paymentStatus === 'paid'){
       wx.showToast({
-        title: '订单更新失败',
-        icon: 'none'
+        title:'该订单已经支付',
+        icon:'none'
       })
-  
       return
     }
   
-    // 刷新订单列表
-    this.loadOrders()
+    wx.showModal({
   
-    wx.showToast({
-      title: '订单已接单',
-      icon: 'success'
+      title:'确认支付',
+  
+      content:
+        `支付金额：¥${Number(
+          order.finalTotal !== undefined
+            ? order.finalTotal
+            : order.total || 0
+        ).toFixed(2)}`,
+  
+      confirmText:'确认支付',
+  
+      cancelText:'暂不支付',
+  
+      success:(res)=>{
+  
+        if(!res.confirm) return
+  
+        const currentOrders =
+          wx.getStorageSync('orders') || []
+  
+        const updatedOrders =
+          currentOrders.map(item => {
+  
+            if(String(item.id) !== String(id)){
+              return item
+            }
+  
+            return {
+              ...item,
+  
+              // 支付成功
+              paymentStatus:'paid',
+  
+              // 支付完成后仍然等待商家接单
+              status:'pending',
+              statusName:'待接单',
+  
+              paymentTime:
+                new Date().toLocaleString()
+            }
+  
+          })
+  
+        wx.setStorageSync(
+          'orders',
+          updatedOrders
+        )
+  
+        this.loadOrders()
+  
+        wx.showToast({
+          title:'支付成功',
+          icon:'success'
+        })
+  
+      }
+  
     })
   },
 

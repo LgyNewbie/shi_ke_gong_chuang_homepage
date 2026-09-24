@@ -184,52 +184,189 @@
 
 
 <!-- 价格 -->
+<!-- 价格 -->
 <view class="card price-card">
 
-  <view class="price-row">
+<view class="price-row">
 
-    <text>
-      商品小计
-    </text>
+  <text>
+    商品小计
+  </text>
 
-    <text>
-      ¥{{cartTotal}}
-    </text>
+  <text>
+    ¥{{cartTotal}}
+  </text>
+
+</view>
+
+
+<!-- 商品优惠 -->
+<view
+  class="price-row"
+  wx:if="{{productDiscount > 0}}"
+>
+
+  <text>
+    商品优惠
+  </text>
+
+  <text class="discount-price">
+    -¥{{productDiscount}}
+  </text>
+
+</view>
+
+
+<!-- 优惠券 -->
+<view class="price-row">
+
+  <text>
+    优惠券
+  </text>
+
+  <text
+    wx:if="{{couponDiscount > 0}}"
+    class="discount-price"
+  >
+    -¥{{couponDiscount}}
+  </text>
+
+  <text
+    wx:if="{{couponDiscount === 0}}"
+    class="no-coupon"
+  >
+    暂无优惠
+  </text>
+
+</view>
+
+
+<!-- 打包费 -->
+<view class="price-row">
+
+  <text>
+    打包费
+  </text>
+
+  <text>
+    ¥{{packingFee}}
+  </text>
+
+</view>
+
+
+<!-- 配送费 -->
+<view class="price-row">
+
+  <text>
+    配送费
+  </text>
+
+  <text wx:if="{{deliveryFee === 0}}">
+    免配送费
+  </text>
+
+  <text
+    wx:if="{{deliveryFee > 0}}"
+  >
+    ¥{{deliveryFee}}
+  </text>
+
+</view>
+
+
+<view class="price-line"></view>
+
+
+<!-- 实付金额 -->
+<view class="price-row final-row">
+
+  <text>
+    实付金额
+  </text>
+
+  <text class="final-price">
+    ¥{{finalTotal}}
+  </text>
+
+</view>
+
+</view>
+
+
+<!-- 支付方式 -->
+<view class="card payment-card">
+
+<view class="card-title">
+  支付方式
+</view>
+
+<view class="payment-options">
+
+  <view
+    class="payment-option {{paymentMethod === '微信支付' ? 'active' : ''}}"
+    data-method="微信支付"
+    bindtap="selectPaymentMethod"
+  >
+
+    <view class="payment-icon">
+      💳
+    </view>
+
+    <view class="payment-info">
+
+      <view class="payment-name">
+        微信支付
+      </view>
+
+      <view class="payment-desc">
+        模拟支付
+      </view>
+
+    </view>
+
+    <view
+      class="payment-check"
+      wx:if="{{paymentMethod === '微信支付'}}"
+    >
+      ✓
+    </view>
 
   </view>
 
 
-  <view class="price-row">
+  <view
+    class="payment-option {{paymentMethod === '到店付款' ? 'active' : ''}}"
+    data-method="到店付款"
+    bindtap="selectPaymentMethod"
+  >
 
-    <text>
-      配送费
-    </text>
+    <view class="payment-icon">
+      🏪
+    </view>
 
-    <text wx:if="{{deliveryFee === 0}}">
-      免配送费
-    </text>
+    <view class="payment-info">
 
-    <text wx:if="{{deliveryFee > 0}}">
-      ¥{{deliveryFee}}
-    </text>
+      <view class="payment-name">
+        到店付款
+      </view>
+
+      <view class="payment-desc">
+        到店后支付
+      </view>
+
+    </view>
+
+    <view
+      class="payment-check"
+      wx:if="{{paymentMethod === '到店付款'}}"
+    >
+      ✓
+    </view>
 
   </view>
 
-
-  <view class="price-line"></view>
-
-
-  <view class="price-row final-row">
-
-    <text>
-      合计
-    </text>
-
-    <text class="final-price">
-      ¥{{finalTotal}}
-    </text>
-
-  </view>
+</view>
 
 </view>
 
@@ -253,7 +390,7 @@
     class="submit-btn"
     bindtap="submitOrder"
   >
-    提交订单
+    提交订单 · ¥{{finalTotal}}
   </button>
 
 </view>

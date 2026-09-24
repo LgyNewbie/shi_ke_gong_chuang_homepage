@@ -516,3 +516,8 @@ button::after {
   font-size: 28rpx;
   font-weight: 600;
 }
+.waiting-btn {
+  color: #718079;
+  background: #F1F3F2;
+  border: 1rpx solid #E1E6E3;
+}
