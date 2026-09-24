@@ -2,6 +2,10 @@ const {
   updateMessage
 } = require('./message.js')
 
+const {
+  addNotification
+} = require('./notification.js')
+
 // ================================
 // 食客共创 - 多投票统一数据工具
 // ================================
@@ -282,58 +286,112 @@ const today =
     if (
       poll.endDate < today
     ) {
-
+    
       const endedPoll = {
-
+    
         ...poll,
-
+    
         status:
           'ended',
-
+    
         statusName:
           '已结束',
-
+    
         endTime:
           poll.endTime ||
-          `${poll.endDate} 23:59:59`
-
+          `${poll.endDate} 23:59:59`,
+    
+        // 自动结束通知只发送一次
+        autoEndNotified:
+          poll.autoEndNotified === true
+    
       }
-
-
+    
+    
       // =========================
       // 同步来源留言
       // =========================
-
+    
       if (
         poll.sourceMessageId
       ) {
-
+    
         updateMessage(
-
+    
           poll.sourceMessageId,
-
+    
           oldMessage => ({
-
+    
             ...oldMessage,
-
+    
             status:
               'ended',
-
+    
             statusName:
               '投票已结束',
-
+    
             pollId:
               poll.id
-
+    
           })
-
+    
         )
-
+    
       }
-
-
+    
+    
+      // =========================
+      // 自动结束通知
+      // 只发送一次
+      // =========================
+    
+      if (
+        poll.autoEndNotified !== true
+      ) {
+    
+        addNotification({
+    
+          id:
+            `poll_auto_end_${poll.id}`,
+    
+          type:
+            'poll',
+    
+          icon:
+            '🗳️',
+    
+          iconClass:
+            'poll-icon',
+    
+          title:
+            '投票已经结束',
+    
+          content:
+            `“${poll.title}”投票已到截止日期，现在可以查看最终结果。`,
+    
+          time:
+            '刚刚',
+    
+          read:
+            false,
+    
+          messageId:
+            poll.sourceMessageId || '',
+    
+          pollId:
+            poll.id
+    
+        })
+    
+    
+        endedPoll.autoEndNotified =
+          true
+    
+      }
+    
+    
       return endedPoll
-
+    
     }
 
 

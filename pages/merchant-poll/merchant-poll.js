@@ -273,31 +273,35 @@ Page({
 
           id:
             `poll_end_${poll.id}_${Date.now()}`,
-
+        
           type:
             'poll',
-
+        
           icon:
             '🗳️',
-
+        
           iconClass:
             'poll-icon',
-
+        
           title:
             '投票已经结束',
-
+        
           content:
             `“${poll.title}”投票已经结束，可以查看最终结果。`,
-
+        
           time:
             '刚刚',
-
+        
           read:
             false,
-
+        
           messageId:
-            poll.sourceMessageId || ''
-
+            poll.sourceMessageId || '',
+        
+          // 记录具体投票ID
+          pollId:
+            poll.id
+        
         })
 
 
@@ -510,35 +514,39 @@ Page({
 
           id:
             `poll_result_${poll.id}_${Date.now()}`,
-
+        
           type:
             'poll',
-
+        
           icon:
             '🗳️',
-
+        
           iconClass:
             'poll-icon',
-
+        
           title:
             result === 'accepted'
               ? '你参与的建议已被采纳'
               : '投票结果已更新',
-
+        
           content:
             result === 'accepted'
               ? `“${poll.title}”对应的食客建议已被采纳。`
               : `“${poll.title}”对应的建议暂不采纳。`,
-
+        
           time:
             '刚刚',
-
+        
           read:
             false,
-
+        
           messageId:
-            poll.sourceMessageId || ''
-
+            poll.sourceMessageId || '',
+        
+          // 记录具体投票ID
+          pollId:
+            poll.id
+        
         })
 
 

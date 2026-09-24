@@ -4,6 +4,10 @@ const {
 } = require('../../utils/message.js')
 
 const {
+  getPolls
+} = require('../../utils/poll.js')
+
+const {
   addNotification
 } = require('../../utils/notification.js')
 
@@ -703,6 +707,10 @@ saveStatus() {
 // 将当前留言转为投票
 // =========================
 
+// =========================
+// 将当前留言转为投票
+// =========================
+
 createPoll() {
 
   const messageId =
@@ -722,7 +730,6 @@ createPoll() {
     })
 
     return
-
   }
 
 
@@ -745,30 +752,124 @@ createPoll() {
     })
 
     return
-
   }
 
 
-  // 已经转成投票
-  if (
-    message.status === 'poll' &&
-    message.pollId
-  ) {
+  // ==================================
+  // 第一重检查
+  // 只要 pollId 存在
+  // 就不能再次创建
+  // 不再要求 status === poll
+  // ==================================
 
-    wx.showToast({
+  if (message.pollId) {
+
+    wx.showModal({
 
       title:
-        '这条留言已经转为投票',
+        '已经创建过投票',
 
-      icon:
-        'none'
+      content:
+        '这条留言已经对应一场投票，不能重复创建。',
+
+      showCancel:
+        false,
+
+      confirmText:
+        '查看投票',
+
+      success: () => {
+
+        wx.navigateTo({
+
+          url:
+            `/pages/poll/poll?pollId=${encodeURIComponent(message.pollId)}`
+
+        })
+
+      }
 
     })
 
     return
-
   }
 
+
+  // ==================================
+  // 第二重检查
+  // 检查 polls 中有没有对应留言
+  // ==================================
+
+  const polls =
+    getPolls()
+
+
+  const existingPoll =
+    polls.find(item =>
+      String(item.sourceMessageId) ===
+      String(messageId)
+    )
+
+
+  if (existingPoll) {
+
+    // 自动修复留言关联
+    updateMessage(
+
+      messageId,
+
+      oldMessage => ({
+
+        ...oldMessage,
+
+        status:
+          'poll',
+
+        statusName:
+          '已转为投票',
+
+        pollId:
+          existingPoll.id
+
+      })
+
+    )
+
+
+    wx.showModal({
+
+      title:
+        '已经创建过投票',
+
+      content:
+        '检测到这条留言已经存在投票，已自动恢复关联，不能重复创建。',
+
+      showCancel:
+        false,
+
+      confirmText:
+        '查看投票',
+
+      success: () => {
+
+        wx.navigateTo({
+
+          url:
+            `/pages/poll/poll?pollId=${encodeURIComponent(existingPoll.id)}`
+
+        })
+
+      }
+
+    })
+
+    return
+  }
+
+
+  // ==================================
+  // 没有投票，才允许进入创建页面
+  // ==================================
 
   wx.navigateTo({
 
