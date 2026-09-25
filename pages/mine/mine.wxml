@@ -4,7 +4,10 @@
      用户信息
 ========================== -->
 
-<view class="user-card">
+<view
+  class="user-card"
+  bindtap="openSettings"
+>
 
   <view class="user-avatar">
     食
@@ -17,8 +20,8 @@
     </view>
 
     <view class="user-level">
-      食客会员
-    </view>
+  {{isLogin ? '微信账号已登录' : '未登录'}}
+</view>
 
   </view>
 

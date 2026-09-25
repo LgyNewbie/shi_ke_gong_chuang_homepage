@@ -324,19 +324,44 @@ Page({
     // 创建留言
     // =========================
 
-    const newMessage = {
+    // =========================
+// 当前登录用户
+// =========================
 
-      id:
-        `msg_${Date.now()}`,
+const loginUser =
+wx.getStorageSync('loginUser') || null
 
-      userName:
-        '食客',
+const currentUserName =
+loginUser &&
+loginUser.isLogin &&
+loginUser.userName
+  ? loginUser.userName
+  : '食客'
 
-      name:
-        '食客',
 
-      avatar:
-        '',
+// =========================
+// 创建留言
+// =========================
+
+const newMessage = {
+
+id:
+  `msg_${Date.now()}`,
+
+userName:
+  currentUserName,
+
+name:
+  currentUserName,
+
+userId:
+  loginUser &&
+  loginUser.isLogin
+    ? loginUser.loginTime
+    : 'guest',
+
+avatar:
+  '',
 
       level:
         1,

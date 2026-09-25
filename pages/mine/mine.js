@@ -13,7 +13,7 @@ Page({
   data: {
 
     userName: '食客',
-
+    isLogin: false,
     messageCount: 0,
     voteCount: 0,
     favoriteCount: 0
@@ -36,6 +36,9 @@ Page({
 
 
   loadData() {
+
+    const loginUser =
+  wx.getStorageSync('loginUser') || null
 
     const myMessages =
       getMyMessages()
@@ -69,6 +72,18 @@ Page({
   
   
     this.setData({
+
+      isLogin:
+  !!(
+    loginUser &&
+    loginUser.isLogin
+  ),
+
+userName:
+  loginUser &&
+  loginUser.userName
+    ? loginUser.userName
+    : '食客',
   
       messageCount:
         myMessages.length,
@@ -92,13 +107,13 @@ Page({
 
   openMyMessage() {
 
+    if (!this.checkLogin()) {
+      return
+    }
+  
     wx.navigateTo({
-
-      url:
-        '/pages/my-message/my-message'
-
+      url: '/pages/my-message/my-message'
     })
-
   },
 
 
@@ -108,13 +123,13 @@ Page({
 
   openPoll() {
 
+    if (!this.checkLogin()) {
+      return
+    }
+  
     wx.navigateTo({
-
-      url:
-        '/pages/my-poll/my-poll'
-
+      url: '/pages/my-poll/my-poll'
     })
-
   },
 
 
@@ -124,16 +139,21 @@ Page({
 
   openOrders() {
 
+    if (!this.checkLogin()) {
+      return
+    }
+  
     wx.switchTab({
-
-      url:
-        '/pages/order/order'
-
+      url: '/pages/order/order'
     })
-
   },
 
   openMyCoupon() {
+
+    if (!this.checkLogin()) {
+      return
+    }
+  
     wx.navigateTo({
       url: '/pages/my-coupon/my-coupon'
     })
@@ -146,33 +166,25 @@ Page({
 
   manageAddress() {
 
+    if (!this.checkLogin()) {
+      return
+    }
+  
     wx.navigateTo({
-
-      url:
-        '/pages/address/address'
-
+      url: '/pages/address/address'
     })
-
   },
 
 
   // =========================
-  // 设置
-  // =========================
+// 设置
+// =========================
 
-  openSettings() {
-
-    wx.showToast({
-
-      title:
-        '设置功能正在完善',
-
-      icon:
-        'none'
-
-    })
-
-  },
+openSettings() {
+  wx.navigateTo({
+    url: '/pages/settings/settings'
+  })
+},
 
 
   // =========================
@@ -282,15 +294,55 @@ openMerchantCoupon() {
   // 我的收藏
   // =========================
 
+  checkLogin() {
+
+    const loginUser =
+      wx.getStorageSync('loginUser') || null
+  
+    if (
+      loginUser &&
+      loginUser.isLogin
+    ) {
+      return true
+    }
+  
+    wx.showModal({
+  
+      title: '需要登录',
+  
+      content:
+        '登录后才能使用该功能，是否现在去登录？',
+  
+      confirmText: '去登录',
+  
+      cancelText: '取消',
+  
+      success: (res) => {
+  
+        if (res.confirm) {
+  
+          wx.navigateTo({
+            url: '/pages/settings/settings'
+          })
+  
+        }
+  
+      }
+  
+    })
+  
+    return false
+  },
+
   openFavorites() {
 
+    if (!this.checkLogin()) {
+      return
+    }
+  
     wx.navigateTo({
-
-      url:
-        '/pages/my-favorite/my-favorite'
-
+      url: '/pages/my-favorite/my-favorite'
     })
-
   }
 
 })

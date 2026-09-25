@@ -1,0 +1,440 @@
+<view class="page">
+
+<!-- =========================
+     账号与登录
+========================== -->
+
+<view class="section">
+
+  <view class="section-title">
+    账号与登录
+  </view>
+
+  <view class="function-card">
+
+    <!-- 微信账号 -->
+
+    <view
+      class="account-item"
+      bindtap="{{isLogin ? '' : 'login'}}"
+    >
+
+      <view class="account-left">
+
+        <view class="account-avatar">
+          食
+        </view>
+
+        <view class="account-info">
+
+          <view class="account-name">
+            {{userName}}
+          </view>
+
+          <view class="account-status">
+            {{isLogin ? '微信账号已登录' : '点击登录微信账号'}}
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+    <!-- 退出登录 -->
+
+    <view
+      wx:if="{{isLogin}}"
+      class="function-item logout-item"
+      bindtap="logout"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon logout-icon">
+          ↪
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            退出登录
+          </view>
+
+          <view class="function-desc">
+            退出当前微信账号
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- =========================
+     通知设置
+========================== -->
+
+<view class="section">
+
+  <view class="section-title">
+    通知设置
+  </view>
+
+  <view class="function-card">
+
+    <!-- 订单通知 -->
+
+    <view class="switch-item">
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          📦
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            订单通知
+          </view>
+
+          <view class="function-desc">
+            接收订单状态变化提醒
+          </view>
+
+        </view>
+
+      </view>
+
+      <switch
+        checked="{{orderNotice}}"
+        bindchange="changeOrderNotice"
+        color="#1F6A57"
+      />
+
+    </view>
+
+
+    <!-- 留言回复 -->
+
+    <view class="switch-item">
+
+      <view class="function-left">
+
+        <view class="function-icon message-icon">
+          💬
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            留言回复通知
+          </view>
+
+          <view class="function-desc">
+            接收商家回复提醒
+          </view>
+
+        </view>
+
+      </view>
+
+      <switch
+        checked="{{messageNotice}}"
+        bindchange="changeMessageNotice"
+        color="#1F6A57"
+      />
+
+    </view>
+
+
+    <!-- 投票通知 -->
+
+    <view class="switch-item">
+
+      <view class="function-left">
+
+        <view class="function-icon poll-icon">
+          🗳️
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            投票通知
+          </view>
+
+          <view class="function-desc">
+            接收共创投票相关提醒
+          </view>
+
+        </view>
+
+      </view>
+
+      <switch
+        checked="{{pollNotice}}"
+        bindchange="changePollNotice"
+        color="#1F6A57"
+      />
+
+    </view>
+
+
+    <!-- 优惠券通知 -->
+
+    <view class="switch-item">
+
+      <view class="function-left">
+
+        <view class="function-icon coupon-icon">
+          🎫
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            优惠券通知
+          </view>
+
+          <view class="function-desc">
+            接收优惠券相关提醒
+          </view>
+
+        </view>
+
+      </view>
+
+      <switch
+        checked="{{couponNotice}}"
+        bindchange="changeCouponNotice"
+        color="#1F6A57"
+      />
+
+    </view>
+
+
+    <!-- 公告通知 -->
+
+    <view class="switch-item">
+
+      <view class="function-left">
+
+        <view class="function-icon notice-icon">
+          📢
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            公告通知
+          </view>
+
+          <view class="function-desc">
+            接收餐厅公告提醒
+          </view>
+
+        </view>
+
+      </view>
+
+      <switch
+        checked="{{noticeNotice}}"
+        bindchange="changeNoticeNotice"
+        color="#1F6A57"
+      />
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- =========================
+     通用设置
+========================== -->
+
+<view class="section">
+
+  <view class="section-title">
+    通用设置
+  </view>
+
+  <view class="function-card">
+
+    <view
+      class="function-item"
+      bindtap="clearCache"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          🧹
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            清除临时数据
+          </view>
+
+          <view class="function-desc">
+            清除购物车等临时数据
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- =========================
+     隐私与安全
+========================== -->
+
+<view class="section">
+
+  <view class="section-title">
+    隐私与安全
+  </view>
+
+  <view class="function-card">
+
+    <view
+      class="function-item"
+      bindtap="openAgreement"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          📄
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            用户协议
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <view
+      class="function-item"
+      bindtap="openPrivacy"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon">
+          🔒
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            隐私政策
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- =========================
+     关于
+========================== -->
+
+<view class="section">
+
+  <view class="section-title">
+    关于
+  </view>
+
+  <view class="function-card">
+
+    <view
+      class="function-item"
+      bindtap="aboutUs"
+    >
+
+      <view class="function-left">
+
+        <view class="function-icon about-icon">
+          ℹ️
+        </view>
+
+        <view class="function-text">
+
+          <view class="function-title">
+            关于食客共创
+          </view>
+
+          <view class="function-desc">
+            当前版本 1.0.0
+          </view>
+
+        </view>
+
+      </view>
+
+      <view class="function-arrow">
+        ›
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<view class="footer">
+  食客共创 · 让食客参与餐厅共创
+</view>
+
+</view>

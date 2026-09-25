@@ -1,0 +1,211 @@
+page {
+  background: #F7F5EF;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 30rpx 28rpx 160rpx;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   区块
+========================= */
+
+.section {
+  margin-top: 28rpx;
+}
+
+.section:first-child {
+  margin-top: 0;
+}
+
+.section-title {
+  margin: 0 6rpx 16rpx;
+  font-size: 29rpx;
+  font-weight: 700;
+  color: #173C34;
+}
+
+
+/* =========================
+   卡片
+========================= */
+
+.function-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  overflow: hidden;
+}
+
+
+/* =========================
+   账号
+========================= */
+
+.account-item {
+  min-height: 124rpx;
+  padding: 0 26rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+}
+
+.account-left {
+  display: flex;
+  align-items: center;
+}
+
+.account-avatar {
+  width: 82rpx;
+  height: 82rpx;
+
+  border-radius: 50%;
+
+  background: #E7F1ED;
+  color: #1F6A57;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.account-info {
+  margin-left: 20rpx;
+}
+
+.account-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #173C34;
+}
+
+.account-status {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #98A29D;
+}
+
+
+/* =========================
+   普通功能
+========================= */
+
+.function-item,
+.switch-item {
+  min-height: 108rpx;
+
+  padding: 0 26rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+
+  border-bottom: 1rpx solid #F0F2F0;
+}
+
+.function-item:last-child,
+.switch-item:last-child {
+  border-bottom: none;
+}
+
+.function-left {
+  display: flex;
+  align-items: center;
+}
+
+.function-icon {
+  width: 68rpx;
+  height: 68rpx;
+
+  border-radius: 18rpx;
+
+  background: #F3F7F5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 31rpx;
+}
+
+.message-icon {
+  background: #EAF5F0;
+}
+
+.poll-icon {
+  background: #F2EDFB;
+}
+
+.coupon-icon {
+  background: #FFF3E8;
+}
+
+.notice-icon {
+  background: #FFF6DD;
+}
+
+.about-icon {
+  background: #EAF2F8;
+}
+
+.logout-icon {
+  background: #FFF0EE;
+}
+
+.function-text {
+  margin-left: 18rpx;
+}
+
+.function-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #173C34;
+}
+
+.function-desc {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #98A29D;
+}
+
+.function-arrow {
+  font-size: 36rpx;
+  color: #A0AAA5;
+}
+
+.logout-item .function-title {
+  color: #C75A4A;
+}
+
+
+/* =========================
+   开关
+========================= */
+
+.switch-item switch {
+  transform: scale(0.9);
+}
+
+
+/* =========================
+   底部
+========================= */
+
+.footer {
+  margin-top: 48rpx;
+
+  text-align: center;
+
+  font-size: 21rpx;
+  color: #A0AAA5;
+}
