@@ -1,0 +1,321 @@
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+  <view>
+    <view class="title">优惠券管理</view>
+    <view class="subtitle">创建、发放与回收优惠券</view>
+  </view>
+
+  <button class="add-btn" bindtap="openAdd">
+    + 新建
+  </button>
+</view>
+
+
+<!-- 优惠券列表 -->
+<view wx:if="{{coupons.length > 0}}" class="coupon-list">
+
+  <view
+    wx:for="{{coupons}}"
+    wx:key="id"
+    class="coupon-card"
+  >
+
+    <!-- 优惠券主体 -->
+    <view class="coupon-main">
+
+      <view class="coupon-left">
+        <view class="coupon-amount">
+          <text class="amount-symbol">¥</text>
+          <text class="amount">{{item.amount}}</text>
+        </view>
+
+        <view class="coupon-condition">
+          满 {{item.threshold}} 元可用
+        </view>
+      </view>
+
+      <view class="coupon-info">
+        <view class="coupon-name">
+          {{item.name}}
+        </view>
+
+        <view
+          wx:if="{{item.promotionName}}"
+          class="promotion-name"
+        >
+          {{item.promotionName}}
+        </view>
+
+        <view class="coupon-time">
+          {{item.startTime || '立即生效'}}
+          至
+          {{item.endTime || '长期有效'}}
+        </view>
+
+        <view class="coupon-count">
+          已发放 {{item.issuedCount || 0}}
+          <text wx:if="{{item.totalCount > 0}}">
+            / {{item.totalCount}}
+          </text>
+
+          <text class="used-count">
+            已使用 {{item.usedCount || 0}}
+          </text>
+        </view>
+      </view>
+
+      <!-- 状态 -->
+      <view
+        class="issue-status"
+        wx:if="{{item.issueStatus === 'issuing'}}"
+      >
+        发放中
+      </view>
+
+      <view
+        class="issue-status stopped"
+        wx:if="{{item.issueStatus === 'stopped'}}"
+      >
+        已停止
+      </view>
+
+      <view
+        class="issue-status finished"
+        wx:if="{{item.issueStatus === 'finished'}}"
+      >
+        已发放完
+      </view>
+
+    </view>
+
+
+    <!-- 操作区域 -->
+    <view class="coupon-actions">
+
+      <button
+        class="action-btn"
+        bindtap="editCoupon"
+        data-id="{{item.id}}"
+      >
+        编辑
+      </button>
+
+      <button
+        wx:if="{{item.issueStatus !== 'issuing'}}"
+        class="action-btn primary"
+        bindtap="startIssue"
+        data-id="{{item.id}}"
+      >
+        开始发放
+      </button>
+
+      <button
+        wx:if="{{item.issueStatus === 'issuing'}}"
+        class="action-btn warning"
+        bindtap="stopIssue"
+        data-id="{{item.id}}"
+      >
+        停止发放
+      </button>
+
+      <button
+        class="action-btn danger"
+        bindtap="revokeCoupon"
+        data-id="{{item.id}}"
+      >
+        回收
+      </button>
+
+      <button
+        class="action-btn delete-btn"
+        bindtap="removeCoupon"
+        data-id="{{item.id}}"
+      >
+        删除
+      </button>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 空状态 -->
+<view
+  wx:else
+  class="empty"
+>
+  <view class="empty-icon">🎫</view>
+  <view class="empty-title">还没有优惠券</view>
+  <view class="empty-text">
+    创建优惠券后，可以在这里管理发放和回收
+  </view>
+
+  <button
+    class="empty-btn"
+    bindtap="openAdd"
+  >
+    新建优惠券
+  </button>
+</view>
+
+
+<!-- 新建 / 编辑弹窗 -->
+<view
+  wx:if="{{showForm}}"
+  class="mask"
+>
+
+  <view class="form-panel">
+
+    <view class="form-header">
+      <view class="form-title">
+        {{editId ? '编辑优惠券' : '新建优惠券'}}
+      </view>
+
+      <view
+        class="close"
+        bindtap="closeForm"
+      >
+        ×
+      </view>
+    </view>
+
+
+    <!-- 名称 -->
+    <view class="form-item">
+      <view class="label">优惠券名称</view>
+
+      <input
+        class="input"
+        placeholder="例如：满30减5"
+        value="{{name}}"
+        bindinput="inputName"
+      />
+    </view>
+
+
+    <!-- 使用门槛 -->
+    <view class="form-item">
+      <view class="label">使用门槛</view>
+
+      <view class="input-row">
+        <input
+          class="input number-input"
+          type="digit"
+          placeholder="30"
+          value="{{threshold}}"
+          bindinput="inputThreshold"
+        />
+
+        <text class="unit">元</text>
+      </view>
+    </view>
+
+
+    <!-- 优惠金额 -->
+    <view class="form-item">
+      <view class="label">优惠金额</view>
+
+      <view class="input-row">
+        <input
+          class="input number-input"
+          type="digit"
+          placeholder="5"
+          value="{{amount}}"
+          bindinput="inputAmount"
+        />
+
+        <text class="unit">元</text>
+      </view>
+    </view>
+
+
+    <!-- 发放数量 -->
+    <view class="form-item">
+      <view class="label">发放数量</view>
+
+      <view class="input-row">
+        <input
+          class="input number-input"
+          type="number"
+          placeholder="0 表示不限量"
+          value="{{totalCount}}"
+          bindinput="inputTotalCount"
+        />
+
+        <text class="unit">张</text>
+      </view>
+
+      <view class="tip">
+        填 0 表示不限发放数量
+      </view>
+    </view>
+
+
+    <!-- 开始时间 -->
+    <view class="form-item">
+      <view class="label">开始时间</view>
+
+      <input
+        class="input"
+        type="datetime-local"
+        value="{{startTime}}"
+        bindinput="inputStartTime"
+      />
+    </view>
+
+
+    <!-- 结束时间 -->
+    <view class="form-item">
+      <view class="label">结束时间</view>
+
+      <input
+        class="input"
+        type="datetime-local"
+        value="{{endTime}}"
+        bindinput="inputEndTime"
+      />
+    </view>
+
+
+    <!-- 促销名称 -->
+    <view class="form-item">
+      <view class="label">促销说明</view>
+
+      <input
+        class="input"
+        placeholder="例如：新客专享、周末优惠"
+        value="{{promotionName}}"
+        bindinput="inputPromotionName"
+      />
+    </view>
+
+
+    <!-- 底部按钮 -->
+    <view class="form-buttons">
+
+      <button
+        class="cancel-btn"
+        bindtap="closeForm"
+      >
+        取消
+      </button>
+
+      <button
+        class="save-btn"
+        bindtap="saveCoupon"
+      >
+        保存
+      </button>
+
+    </view>
+
+  </view>
+
+</view>
+
+</view>

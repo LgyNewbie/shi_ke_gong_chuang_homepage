@@ -279,6 +279,39 @@
 
     </view>
 
+    <!-- 我的优惠券 -->
+
+<view
+  class="function-item"
+  bindtap="openMyCoupon"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      🎫
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        我的优惠券
+      </view>
+
+      <view class="function-desc">
+        查看和领取优惠券
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
 
     <!-- 设置 -->
 
@@ -512,6 +545,38 @@
 
       <view class="function-desc">
         上架、下架和编辑餐厅菜品
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
+<!-- 商家优惠券 -->
+<view
+  class="function-item"
+  bindtap="openMerchantCoupon"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      🎫
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        优惠券管理
+      </view>
+
+      <view class="function-desc">
+        创建、发放和回收优惠券
       </view>
 
     </view>

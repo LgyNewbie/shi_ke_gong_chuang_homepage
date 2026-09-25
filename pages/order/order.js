@@ -2,6 +2,11 @@ const {
   addOrderNotification,
   updateOrderStatus
 } = require('../../utils/notification.js')
+
+const {
+  useCoupon
+} = require('../../utils/coupon.js')
+
 Page({
 
   data: {
@@ -66,12 +71,122 @@ Page({
 
   },
 
+  // =========================
+// 检查待付款订单是否超过30分钟
+// 超时后自动取消并释放优惠券
+// =========================
+checkOrderTimeout(order) {
+
+  if (!order || !order.id) {
+    return order
+  }
+
+  // 已支付订单不处理
+  if (order.paymentStatus === 'paid') {
+    return order
+  }
+
+  // 不是待付款订单不处理
+  if (order.paymentStatus !== 'unpaid') {
+    return order
+  }
+
+  // 已经取消的订单不处理
+  if (order.status === 'cancelled') {
+    return order
+  }
+
+  // 没有创建时间无法判断
+  if (!order.createTime) {
+    return order
+  }
+
+  const createTime =
+    new Date(order.createTime).getTime()
+
+  if (isNaN(createTime)) {
+    return order
+  }
+
+  const now = Date.now()
+
+  const timeout =
+    30 * 60 * 1000
+
+  // 未超过30分钟
+  if (now - createTime < timeout) {
+    return order
+  }
+
+  // =========================
+  // 超过30分钟
+  // =========================
+
+  const newOrder = {
+    ...order,
+
+    status: 'cancelled',
+    statusName: '订单超时取消',
+
+    cancelTime:
+      new Date().toLocaleString(),
+
+    selectedCouponId: '',
+    coupon: null,
+    couponDiscount: 0
+  }
+
+  // 重新计算订单金额
+  const finalTotal = Math.max(
+    0,
+    Number(newOrder.cartTotal || 0)
+    - Number(newOrder.productDiscount || 0)
+    + Number(newOrder.packingFee || 0)
+    + Number(newOrder.deliveryFee || 0)
+  )
+
+  newOrder.finalTotal =
+    Number(finalTotal.toFixed(2))
+
+  newOrder.total =
+    Number(finalTotal.toFixed(2))
+
+  return newOrder
+},
+
 
   // 加载订单
   loadOrders(){
 
-    const orders =
+    let orders =
       wx.getStorageSync('orders') || []
+  
+    // =========================
+    // 自动检查待付款订单
+    // =========================
+  
+    let hasTimeoutOrder = false
+  
+    orders = orders.map(order => {
+  
+      const checkedOrder =
+        this.checkOrderTimeout(order)
+  
+      if (checkedOrder !== order) {
+        hasTimeoutOrder = true
+      }
+  
+      return checkedOrder
+    })
+  
+    if (hasTimeoutOrder) {
+  
+      wx.setStorageSync(
+        'orders',
+        orders
+      )
+  
+    }
   
     const newOrders = orders.map(order => {
   
@@ -310,17 +425,38 @@ Page({
   
           })
   
-        wx.setStorageSync(
-          'orders',
-          updatedOrders
-        )
-  
-        this.loadOrders()
-  
-        wx.showToast({
-          title:'支付成功',
-          icon:'success'
-        })
+          wx.setStorageSync(
+            'orders',
+            updatedOrders
+          )
+          
+          // =========================
+          // 支付成功后核销优惠券
+          // =========================
+          
+          const paidOrder =
+            updatedOrders.find(
+              item => String(item.id) === String(id)
+            )
+          
+          if (
+            paidOrder &&
+            paidOrder.selectedCouponId
+          ) {
+          
+            useCoupon(
+              paidOrder.selectedCouponId,
+              paidOrder.id
+            )
+          
+          }
+          
+          this.loadOrders()
+          
+          wx.showToast({
+            title:'支付成功',
+            icon:'success'
+          })
   
       }
   
@@ -362,13 +498,18 @@ cancelOrder(e) {
 
             cancelledOrder = {
               ...order,
-
+            
               status: 'cancelled',
-
+            
               statusName: '已取消',
-
+            
               cancelTime:
-                new Date().toLocaleString()
+                new Date().toLocaleString(),
+            
+              // 取消订单后释放优惠券
+              selectedCouponId: '',
+              coupon: null,
+              couponDiscount: 0
             }
 
             return cancelledOrder

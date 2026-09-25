@@ -218,25 +218,36 @@
 
 
 <!-- 优惠券 -->
-<view class="price-row">
+<view
+  class="price-row coupon-row"
+  bindtap="chooseCoupon"
+>
 
   <text>
     优惠券
   </text>
 
-  <text
-    wx:if="{{couponDiscount > 0}}"
-    class="discount-price"
-  >
-    -¥{{couponDiscount}}
-  </text>
+  <view class="coupon-select">
 
-  <text
-    wx:if="{{couponDiscount === 0}}"
-    class="no-coupon"
-  >
-    暂无优惠
-  </text>
+    <text
+      wx:if="{{selectedCoupon}}"
+      class="selected-coupon"
+    >
+      {{selectedCoupon.name}} -¥{{couponDiscount}}
+    </text>
+
+    <text
+      wx:else
+      class="no-coupon"
+    >
+      选择优惠券
+    </text>
+
+    <text class="coupon-arrow">
+      ›
+    </text>
+
+  </view>
 
 </view>
 

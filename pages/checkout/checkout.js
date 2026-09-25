@@ -1,3 +1,7 @@
+const {
+  getAvailableUserCoupons,
+  calculateCouponDiscount
+} = require('../../utils/coupon.js')
 Page({
 
   data: {
@@ -14,6 +18,8 @@ Page({
 
     // 购物车商品
     cartItems: [],
+
+    availableCoupons:[],
 
     // 商品金额
     cartTotal: 0,
@@ -82,82 +88,117 @@ Page({
     const defaultAddress =
       addresses.find(item => item.isDefault)
 
-    this.setData({
-
-      cartItems: cartItems,
-
-      address: defaultAddress
-        ? defaultAddress
-        : {
-            name: '',
-            phone: '',
-            detail: ''
-          }
-
-    }, () => {
-
-      this.calculateTotal()
-
-    })
+      this.setData({
+        cartItems,
+        address:defaultAddress
+          ? defaultAddress
+          : {name:'',phone:'',detail:''}
+      }, () => {
+        this.calculateTotal()
+      })
   },
 
   // =========================
   // 计算金额
   // =========================
-  calculateTotal() {
+  calculateTotal(){
     let total = 0
     let productDiscount = 0
   
-    // =========================
-    // 计算商品原价和商品优惠
-    // =========================
-  
     this.data.cartItems.forEach(item => {
+      const price = Number(item.price || 0)
+      const count = Number(item.count || 0)
   
-      const price =
-        Number(item.price || 0)
-  
-      const count =
-        Number(item.count || 0)
-  
-      // 商品原价小计
       total += price * count
   
-      // 商品参加折扣活动
       if (
         item.discountEnabled === true &&
         Number(item.discount) > 0 &&
         Number(item.discount) < 10
       ) {
-  
         const discountPrice =
-          price *
-          Number(item.discount) /
-          10
+          price * Number(item.discount) / 10
   
         productDiscount +=
           (price - discountPrice) * count
       }
-  
     })
   
+    // 商品优惠后的金额
+    const afterProductDiscount =
+      Math.max(0, total - productDiscount)
   
-    // =========================
-    // 优惠券
-    // =========================
+    // ====================
+    // 获取当前订单可用优惠券
+    // ====================
   
-    const couponDiscount =
-      Number(this.data.couponDiscount || 0)
+    // ====================
+// 获取当前订单可用优惠券
+// ====================
+
+let availableCoupons =
+getAvailableUserCoupons(afterProductDiscount)
+
+// ====================
+// 排除已经被其他待付款订单占用的优惠券
+// ====================
+
+const orders =
+wx.getStorageSync('orders') || []
+
+const lockedCouponIds = orders
+.filter(order =>
+  order &&
+  order.paymentStatus === 'unpaid' &&
+  order.selectedCouponId
+)
+.map(order => order.selectedCouponId)
+
+// 当前页面自己已经选择的优惠券不能被自己排除
+const currentSelectedCouponId =
+this.data.selectedCoupon
+  ? this.data.selectedCoupon.id
+  : ''
+
+availableCoupons = availableCoupons.filter(item => {
+return (
+  !lockedCouponIds.includes(item.id) ||
+  item.id === currentSelectedCouponId
+)
+})
+
+let selectedCoupon = this.data.selectedCoupon
+
+// 如果之前选择的优惠券已经不能使用，则自动取消
+if (
+selectedCoupon &&
+!availableCoupons.some(
+  item => item.id === selectedCoupon.id
+)
+) {
+selectedCoupon = null
+}
   
+    // ====================
+    // 计算优惠券优惠金额
+    // ====================
   
-    // =========================
+    let couponDiscount = 0
+  
+    if (selectedCoupon) {
+      couponDiscount = calculateCouponDiscount(
+        selectedCoupon,
+        afterProductDiscount
+      )
+    }
+  
+    // ====================
     // 打包费
-    // =========================
+    // ====================
   
     let packingFee = 0
   
     this.data.cartItems.forEach(item => {
-  
       const itemPackingFee =
         Number(item.packingFee || 0)
   
@@ -166,20 +207,16 @@ Page({
   
       packingFee +=
         itemPackingFee * count
-  
     })
   
-  
-    // =========================
+    // ====================
     // 配送费
-    // =========================
+    // ====================
   
     let deliveryFee = 0
   
     if (this.data.deliveryType === 'delivery') {
-  
       this.data.cartItems.forEach(item => {
-  
         const itemDeliveryFee =
           Number(item.deliveryFee || 0)
   
@@ -188,47 +225,62 @@ Page({
   
         deliveryFee +=
           itemDeliveryFee * count
-  
       })
-  
     }
   
+    // ====================
+    // 最终金额
+    // ====================
   
-    // =========================
-    // 最终实付
-    // =========================
-  
-    const finalTotal =
-      Math.max(
-        0,
-        total -
-        productDiscount -
-        couponDiscount +
-        packingFee +
-        deliveryFee
-      )
-  
+    const finalTotal = Math.max(
+      0,
+      total
+        - productDiscount
+        - couponDiscount
+        + packingFee
+        + deliveryFee
+    )
   
     this.setData({
+      availableCoupons,
+      selectedCoupon,
+      cartTotal:Number(total.toFixed(2)),
+      productDiscount:Number(productDiscount.toFixed(2)),
+      couponDiscount:Number(couponDiscount.toFixed(2)),
+      packingFee:Number(packingFee.toFixed(2)),
+      deliveryFee:Number(deliveryFee.toFixed(2)),
+      finalTotal:Number(finalTotal.toFixed(2))
+    })
+  },
+
+  chooseCoupon() {
+    const coupons = this.data.availableCoupons || []
   
-      cartTotal:
-        Number(total.toFixed(2)),
+    if (coupons.length === 0) {
+      wx.showToast({
+        title:'暂无可用优惠券',
+        icon:'none'
+      })
+      return
+    }
   
-      productDiscount:
-        Number(productDiscount.toFixed(2)),
+    const itemList = coupons.map(item => {
+      return `${item.name} -¥${item.amount}`
+    })
   
-      couponDiscount:
-        Number(couponDiscount.toFixed(2)),
+    wx.showActionSheet({
+      itemList,
+      success: res => {
+        const selectedCoupon = coupons[res.tapIndex]
   
-      packingFee:
-        Number(packingFee.toFixed(2)),
+        if (!selectedCoupon) return
   
-      deliveryFee:
-        Number(deliveryFee.toFixed(2)),
-  
-      finalTotal:
-        Number(finalTotal.toFixed(2))
-  
+        this.setData({
+          selectedCoupon
+        }, () => {
+          this.calculateTotal()
+        })
+      }
     })
   },
 
@@ -389,12 +441,18 @@ Page({
         this.data.productDiscount,
 
       // 优惠券
-      couponDiscount:
-        this.data.couponDiscount,
+couponDiscount:
+this.data.couponDiscount,
 
-      // 优惠券信息
-      coupon:
-        this.data.selectedCoupon,
+// 优惠券信息
+coupon:
+this.data.selectedCoupon,
+
+// 优惠券ID
+selectedCouponId:
+this.data.selectedCoupon
+  ? this.data.selectedCoupon.id
+  : '',
 
       // 打包费
       packingFee:
@@ -411,9 +469,6 @@ Page({
       finalTotal:
         this.data.finalTotal,
 
-      // 支付方式
-      paymentMethod:
-        this.data.paymentMethod,
 
       // 备注
       remark:
@@ -437,6 +492,8 @@ Page({
       'orders',
       orders
     )
+
+    
 
     // =========================
     // 清空购物车

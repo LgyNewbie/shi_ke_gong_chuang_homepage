@@ -2,6 +2,10 @@ const {
   updateOrderStatus
 } = require('../../utils/notification.js')
 
+const {
+  useCoupon
+} = require('../../utils/coupon.js')
+
 Page({
 
   data: {
@@ -36,29 +40,124 @@ Page({
   },
 
 
+  // =========================
+// 检查待付款订单是否超时
+// 超过30分钟自动释放优惠券
+// =========================
+checkOrderTimeout(order) {
+
+  if (!order || !order.id) {
+    return order
+  }
+
+  // 已经付款，不处理
+  if (order.paymentStatus === 'paid') {
+    return order
+  }
+
+  // 不是待付款订单，不处理
+  if (order.paymentStatus !== 'unpaid') {
+    return order
+  }
+
+  // 没有优惠券，不需要释放
+  if (!order.selectedCouponId) {
+    return order
+  }
+
+  const createTime =
+    new Date(order.createTime).getTime()
+
+  if (isNaN(createTime)) {
+    return order
+  }
+
+  const now = Date.now()
+
+  const timeout =
+    30 * 60 * 1000
+
+  // 未超过30分钟
+  if (now - createTime < timeout) {
+    return order
+  }
+
+  // =========================
+  // 已超过30分钟
+  // =========================
+
+  order.selectedCouponId = ''
+  order.coupon = null
+  order.couponDiscount = 0
+
+  const finalTotal = Math.max(
+    0,
+    Number(order.cartTotal || 0)
+    - Number(order.productDiscount || 0)
+    + Number(order.packingFee || 0)
+    + Number(order.deliveryFee || 0)
+  )
+
+  order.finalTotal =
+    Number(finalTotal.toFixed(2))
+
+  order.total =
+    Number(finalTotal.toFixed(2))
+
+  order.status = 'cancelled'
+  order.statusName = '订单超时取消'
+
+  return order
+},
+
+
   // 读取订单
   loadOrder(){
 
     const orders =
-      wx.getStorageSync('orders') || []
+  wx.getStorageSync('orders') || []
+
+const orderIndex =
+  orders.findIndex(
+    item =>
+      String(item.id) ===
+      String(this.data.orderId)
+  )
+
+if (orderIndex === -1) {
+
+  wx.showToast({
+    title:'订单不存在',
+    icon:'none'
+  })
+
+  return
+}
+
+let oldOrder =
+  orders[orderIndex]
+
+// =========================
+// 检查订单是否超过30分钟
+// =========================
+
+const checkedOrder =
+  this.checkOrderTimeout(oldOrder)
+
+// 如果订单发生超时变化，保存
+if (checkedOrder !== oldOrder) {
+
+  orders[orderIndex] = checkedOrder
+
+  wx.setStorageSync(
+    'orders',
+    orders
+  )
+}
+
+oldOrder = checkedOrder
   
-    const oldOrder =
-      orders.find(
-        item =>
-          String(item.id) ===
-          String(this.data.orderId)
-      )
-  
-    if(!oldOrder){
-  
-      wx.showToast({
-        title:'订单不存在',
-        icon:'none'
-      })
-  
-      return
-    }
-  
+    
   
     // =========================
     // 兼容旧订单
@@ -341,6 +440,60 @@ payOrder() {
     success: (res) => {
 
       if (!res.confirm) {
+
+        const orders =
+          wx.getStorageSync('orders') || []
+      
+        const index =
+          orders.findIndex(item => {
+            return String(item.id) ===
+              String(order.id)
+          })
+      
+        if (index !== -1) {
+      
+          // 取消付款，释放优惠券占用
+          orders[index] = {
+            ...orders[index],
+      
+            selectedCouponId: '',
+            coupon: null,
+            couponDiscount: 0
+          }
+      
+          // 重新计算订单最终金额
+          const finalTotal = Math.max(
+            0,
+            Number(orders[index].cartTotal || 0)
+            - Number(orders[index].productDiscount || 0)
+            + Number(orders[index].packingFee || 0)
+            + Number(orders[index].deliveryFee || 0)
+          )
+      
+          orders[index].finalTotal =
+            Number(finalTotal.toFixed(2))
+      
+          orders[index].total =
+            Number(finalTotal.toFixed(2))
+      
+          wx.setStorageSync(
+            'orders',
+            orders
+          )
+      
+          this.setData({
+            order: orders[index]
+          })
+      
+          this.updateStatus()
+          this.buildTimeline()
+        }
+      
+        wx.showToast({
+          title: '已取消付款，优惠券已释放',
+          icon: 'none'
+        })
+      
         return
       }
 
@@ -385,8 +538,20 @@ payOrder() {
         'orders',
         orders
       )
-
-
+      
+      // =========================
+      // 支付成功后使用优惠券
+      // =========================
+      
+      if (orders[index].selectedCouponId) {
+      
+        useCoupon(
+          orders[index].selectedCouponId,
+          orders[index].id
+        )
+      
+      }
+      
       wx.showToast({
         title: '支付成功',
         icon: 'success'

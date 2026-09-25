@@ -133,6 +133,12 @@ Page({
 
   },
 
+  openMyCoupon() {
+    wx.navigateTo({
+      url: '/pages/my-coupon/my-coupon'
+    })
+  },
+
 
   // =========================
   // 地址管理
@@ -240,6 +246,12 @@ openMerchantFood() {
   wx.navigateTo({
     url:
       '/pages/merchant-food/merchant-food'
+  })
+},
+
+openMerchantCoupon() {
+  wx.navigateTo({
+    url: '/pages/merchant-coupon/merchant-coupon'
   })
 },
 

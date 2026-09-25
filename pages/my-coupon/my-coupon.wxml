@@ -1,0 +1,193 @@
+<view class="page">
+
+<!-- =========================
+     可领取优惠券
+========================== -->
+
+<view class="section">
+
+  <view class="section-title">
+    <text>可领取优惠券</text>
+  </view>
+
+  <view wx:if="{{coupons.length > 0}}" class="coupon-list">
+
+    <view
+      wx:for="{{coupons}}"
+      wx:key="id"
+      class="coupon-card"
+    >
+
+      <!-- 左侧金额 -->
+      <view class="coupon-left">
+
+        <view class="coupon-amount">
+          <text class="symbol">¥</text>
+          <text class="amount">{{item.amount}}</text>
+        </view>
+
+        <view class="condition">
+          满 {{item.threshold}} 元可用
+        </view>
+
+      </view>
+
+      <!-- 中间信息 -->
+      <view class="coupon-info">
+
+        <view class="coupon-name">
+          {{item.name}}
+        </view>
+
+        <view
+          wx:if="{{item.promotionName}}"
+          class="promotion"
+        >
+          {{item.promotionName}}
+        </view>
+
+        <view class="coupon-time">
+          {{item.startTime || '立即生效'}}
+          至
+          {{item.endTime || '长期有效'}}
+        </view>
+
+        <view class="coupon-count">
+
+          <text wx:if="{{item.totalCount > 0}}">
+            剩余 {{item.remainingCount}} 张
+          </text>
+
+          <text wx:else>
+            不限量
+          </text>
+
+        </view>
+
+      </view>
+
+      <!-- 领取按钮 -->
+      <view class="coupon-action">
+
+        <button
+          class="claim-btn"
+          bindtap="claimCoupon"
+          data-id="{{item.id}}"
+        >
+          立即领取
+        </button>
+
+      </view>
+
+    </view>
+
+  </view>
+
+  <view wx:else class="empty">
+
+    <view class="empty-icon">
+      🎫
+    </view>
+
+    <view class="empty-title">
+      暂无可领取优惠券
+    </view>
+
+    <view class="empty-text">
+      商家发放优惠券后，会显示在这里
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- =========================
+     我的优惠券
+========================== -->
+
+<view class="section my-section">
+
+  <view class="section-title">
+    <text>我的优惠券</text>
+  </view>
+
+  <view wx:if="{{myCoupons.length > 0}}" class="coupon-list">
+
+    <view
+      wx:for="{{myCoupons}}"
+      wx:key="id"
+      class="coupon-card my-coupon-card"
+    >
+
+      <!-- 左侧金额 -->
+      <view class="coupon-left">
+
+        <view class="coupon-amount">
+          <text class="symbol">¥</text>
+          <text class="amount">{{item.amount}}</text>
+        </view>
+
+        <view class="condition">
+          满 {{item.threshold}} 元可用
+        </view>
+
+      </view>
+
+      <!-- 中间信息 -->
+      <view class="coupon-info">
+
+        <view class="coupon-name">
+          {{item.name}}
+        </view>
+
+        <view class="coupon-time">
+          领取时间：{{item.claimedAt}}
+        </view>
+
+        <view
+          wx:if="{{item.usedAt}}"
+          class="coupon-time"
+        >
+          使用时间：{{item.usedAt}}
+        </view>
+
+        <view
+          wx:if="{{item.revokeReason}}"
+          class="coupon-time"
+        >
+          回收原因：{{item.revokeReason}}
+        </view>
+
+      </view>
+
+      <!-- 状态 -->
+      <view
+        class="status-tag {{item.statusClass}}"
+      >
+        {{item.statusText}}
+      </view>
+
+    </view>
+
+  </view>
+
+  <view wx:else class="empty">
+
+    <view class="empty-icon">
+      🎟️
+    </view>
+
+    <view class="empty-title">
+      还没有优惠券
+    </view>
+
+    <view class="empty-text">
+      领取优惠券后，会显示在这里
+    </view>
+
+  </view>
+
+</view>
+
+</view> 
