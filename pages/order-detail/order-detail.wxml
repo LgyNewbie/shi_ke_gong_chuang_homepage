@@ -488,6 +488,7 @@
 <view class="bottom-bar">
 
 <!-- 待付款 -->
+<!-- 待付款 -->
 <button
   wx:if="{{order.status === 'pending' && order.paymentStatus !== 'paid'}}"
   class="bottom-btn primary"

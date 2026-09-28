@@ -2,6 +2,11 @@ const {
   getAvailableUserCoupons,
   calculateCouponDiscount
 } = require('../../utils/coupon.js')
+
+const {
+  request
+} = require('../../utils/api.js')
+
 Page({
 
   data: {
@@ -355,7 +360,14 @@ selectedCoupon = null
   // =========================
   // 提交订单
   // =========================
+    // =========================
+  // 提交订单
+  // =========================
   submitOrder() {
+
+    // =========================
+    // 检查收货地址
+    // =========================
 
     if (
       this.data.deliveryType === 'delivery' &&
@@ -387,6 +399,10 @@ selectedCoupon = null
       return
     }
 
+    // =========================
+    // 检查购物车
+    // =========================
+
     if (!this.data.cartItems.length) {
 
       wx.showToast({
@@ -398,21 +414,28 @@ selectedCoupon = null
     }
 
     // =========================
-    // 创建订单
+    // 创建前端订单
     // =========================
 
     const order = {
-      id:'SK'+Date.now(),
-    
+
+      id:
+        'SK' + Date.now(),
+
+      // 后端订单 ID
+      backendOrderId: '',
+
       // 订单处理状态
-      status:'pending',
-      statusName:'待付款',
-    
+      status: 'pending',
+
+      statusName: '待付款',
+
       // 支付状态
-      paymentStatus:'unpaid',
-    
+      paymentStatus: 'unpaid',
+
       // 支付方式
-      paymentMethod:this.data.paymentMethod,
+      paymentMethod:
+        this.data.paymentMethod,
 
       // 配送方式
       deliveryType:
@@ -432,137 +455,258 @@ selectedCoupon = null
       // 金额信息
       // =========================
 
-      // 商品原价小计
       cartTotal:
         this.data.cartTotal,
 
-      // 商品优惠
       productDiscount:
         this.data.productDiscount,
 
-      // 优惠券
-couponDiscount:
-this.data.couponDiscount,
+      couponDiscount:
+        this.data.couponDiscount,
 
-// 优惠券信息
-coupon:
-this.data.selectedCoupon,
+      coupon:
+        this.data.selectedCoupon,
 
-// 优惠券ID
-selectedCouponId:
-this.data.selectedCoupon
-  ? this.data.selectedCoupon.id
-  : '',
+      selectedCouponId:
+        this.data.selectedCoupon
+          ? this.data.selectedCoupon.id
+          : '',
 
-      // 打包费
       packingFee:
         this.data.packingFee,
 
-      // 配送费
       deliveryFee:
         this.data.deliveryFee,
 
-      // 最终实付金额
       total:
         this.data.finalTotal,
 
       finalTotal:
         this.data.finalTotal,
 
-
+      // =========================
       // 备注
+      // =========================
+
       remark:
         this.data.remark,
 
+      // =========================
       // 创建时间
+      // =========================
+
       createTime:
         new Date().toLocaleString()
     }
 
     // =========================
-    // 保存订单
+    // 检查登录状态
     // =========================
 
-    const orders =
-      wx.getStorageSync('orders') || []
+    const loginUser =
+      wx.getStorageSync('loginUser') || null
 
-    orders.unshift(order)
+    const token =
+      wx.getStorageSync('token') || ''
 
-    wx.setStorageSync(
-      'orders',
-      orders
-    )
+    if (
+      !loginUser ||
+      !loginUser.isLogin ||
+      !token
+    ) {
 
-    
+      wx.showModal({
 
-    // =========================
-    // 清空购物车
-    // =========================
+        title: '需要登录',
 
-    const allFoods =
-      wx.getStorageSync('allFoods') || []
+        content:
+          '提交订单前请先登录账号。',
 
-    const resetFoods =
-      allFoods.map(food => {
+        confirmText: '去登录',
 
-        return {
+        cancelText: '取消',
 
-          ...food,
+        success: (res) => {
 
-          count: 0
+          if (res.confirm) {
+
+            wx.navigateTo({
+              url: '/pages/settings/settings'
+            })
+
+          }
 
         }
 
       })
 
-    wx.setStorageSync(
-      'allFoods',
-      resetFoods
-    )
-
-    wx.setStorageSync(
-      'cartFoods',
-      []
-    )
+      return
+    }
 
     // =========================
-    // 提交成功
+    // 创建后端订单
     // =========================
 
-    wx.showModal({
+    wx.showLoading({
+      title: '提交订单中'
+    })
 
-      title: '订单提交成功',
+    const orderTitle =
+      order.items &&
+      order.items.length > 0
+        ? (
+            order.items[0].name ||
+            order.items[0].text ||
+            '食客订单'
+          )
+        : '食客订单'
 
-      content:
-        '订单号：' + order.id,
+    // 前端金额单位：元
+    // 后端金额单位：分
+    const backendAmount =
+      Math.round(
+        Number(order.finalTotal || 0) * 100
+      )
 
-      confirmText: '查看订单',
+    request(
+      '/api/orders',
+      'POST',
+      {
+        title: orderTitle,
+        amount: backendAmount
+      }
+    )
+      .then((result) => {
 
-      cancelText: '返回首页',
+        // =========================
+        // 后端订单创建成功
+        // =========================
 
-      success: (res) => {
+        const backendOrderId =
+          result &&
+          result.orderId
+            ? result.orderId
+            : ''
 
-        if (res.confirm) {
+        if (!backendOrderId) {
 
-          wx.switchTab({
-
-            url: '/pages/order/order'
-
-          })
-
-        } else {
-
-          wx.switchTab({
-
-            url: '/pages/index/index'
-
-          })
-
+          throw new Error(
+            '后端没有返回订单 ID'
+          )
         }
 
-      }
+        order.backendOrderId =
+          backendOrderId
 
-    })
+        // =========================
+        // 保存本地订单
+        // =========================
+
+        const orders =
+          wx.getStorageSync('orders') || []
+
+        orders.unshift(order)
+
+        wx.setStorageSync(
+          'orders',
+          orders
+        )
+
+        // =========================
+        // 清空购物车
+        // =========================
+
+        const allFoods =
+          wx.getStorageSync('allFoods') || []
+
+        const resetFoods =
+          allFoods.map(food => {
+
+            return {
+
+              ...food,
+
+              count: 0
+
+            }
+
+          })
+
+        wx.setStorageSync(
+          'allFoods',
+          resetFoods
+        )
+
+        wx.setStorageSync(
+          'cartFoods',
+          []
+        )
+
+        wx.hideLoading()
+
+        // =========================
+        // 提交成功
+        // =========================
+
+        wx.showModal({
+
+          title: '订单提交成功',
+
+          content:
+            '订单号：' + order.id,
+
+          confirmText: '查看订单',
+
+          cancelText: '返回首页',
+
+          success: (res) => {
+
+            if (res.confirm) {
+
+              wx.switchTab({
+
+                url: '/pages/order/order'
+
+              })
+
+            } else {
+
+              wx.switchTab({
+
+                url: '/pages/index/index'
+
+              })
+
+            }
+
+          }
+
+        })
+
+      })
+      .catch((error) => {
+
+        wx.hideLoading()
+
+        console.error(
+          '后端订单创建失败：',
+          error
+        )
+
+        wx.showModal({
+
+          title: '订单提交失败',
+
+          content:
+            '后端订单创建失败，本次订单未提交，请检查网络连接后重试。',
+
+          showCancel: false,
+
+          confirmText: '知道了'
+
+        })
+
+      })
   }
 
 })

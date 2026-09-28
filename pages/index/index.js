@@ -1,4 +1,8 @@
 const {
+  request
+} = require('../../utils/api.js')
+
+const {
   getMessages
 } = require('../../utils/message.js')
 
@@ -20,11 +24,44 @@ Page({
     notices: []
   },
 
+    // =========================
+  // 后端 API 测试
+  // =========================
+  testApi() {
 
-  onLoad() {
+    request('/api/health')
+      .then((result) => {
+
+        console.log(
+          'API 测试成功：',
+          result
+        )
+
+        wx.showToast({
+          title: '后端连接成功',
+          icon: 'success'
+        })
+
+      })
+      .catch((error) => {
+
+        console.error(
+          'API 测试失败：',
+          error
+        )
+
+      })
+  },
+
+
+    onLoad() {
+
     this.loadMessages()
     this.loadPoll()
     this.loadNotices()
+
+    // 测试后端 API
+    this.testApi()
   },
 
 

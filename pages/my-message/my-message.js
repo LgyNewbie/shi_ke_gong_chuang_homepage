@@ -63,7 +63,7 @@ Page({
     // 作为本地演示版用户唯一标识
   
     const currentUserId =
-      loginUser.loginTime
+      loginUser.userId
   
   
     // =========================

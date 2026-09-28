@@ -357,7 +357,7 @@ name:
 userId:
   loginUser &&
   loginUser.isLogin
-    ? loginUser.loginTime
+    ? loginUser.userId
     : 'guest',
 
 avatar:

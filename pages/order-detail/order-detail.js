@@ -6,7 +6,114 @@ const {
   useCoupon
 } = require('../../utils/coupon.js')
 
+const {
+  request
+} = require('../../utils/api.js')
+
 Page({
+
+  testPay() {
+    console.log('========== testPay 支付测试 ==========')
+  
+    const order = this.data.order
+  
+    console.log('当前订单：', order)
+    console.log('backendOrderId：', order && order.backendOrderId)
+  
+    if (!order || !order.backendOrderId) {
+      wx.showModal({
+        title: '订单异常',
+        content: '当前订单没有 backendOrderId。',
+        showCancel: false
+      })
+      return
+    }
+  
+    wx.showLoading({
+      title: '支付中'
+    })
+  
+    request(
+      `/api/orders/${order.backendOrderId}/pay`,
+      'POST',
+      {}
+    )
+      .then((result) => {
+  
+        console.log(
+          '========== 后端支付成功 ==========',
+          result
+        )
+  
+        const orders =
+          wx.getStorageSync('orders') || []
+  
+        const index =
+          orders.findIndex(item => {
+            return String(item.id) ===
+              String(order.id)
+          })
+  
+        if (index === -1) {
+          throw new Error('本地订单不存在')
+        }
+  
+        orders[index] = {
+          ...orders[index],
+  
+          paymentStatus: 'paid',
+  
+          paymentTime:
+            new Date().toLocaleString(),
+  
+          status: 'pending',
+  
+          statusName: '待接单'
+        }
+  
+        wx.setStorageSync(
+          'orders',
+          orders
+        )
+  
+        this.setData({
+          order: orders[index]
+        })
+  
+        if (orders[index].selectedCouponId) {
+          useCoupon(
+            orders[index].selectedCouponId,
+            orders[index].id
+          )
+        }
+  
+        this.updateStatus()
+        this.buildTimeline()
+  
+        wx.hideLoading()
+  
+        wx.showToast({
+          title: '支付成功',
+          icon: 'success'
+        })
+      })
+      .catch((error) => {
+  
+        console.error(
+          '========== 后端支付失败 ==========',
+          error
+        )
+  
+        wx.hideLoading()
+  
+        wx.showModal({
+          title: '支付失败',
+          content: '后端支付失败，请查看控制台。',
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      })
+  },
 
   data: {
     orderId: '',
@@ -405,176 +512,237 @@ this.setData({
 
   },
 
+  testPay() {
+    wx.showModal({
+      title: 'TEST-999',
+      content: '如果看到这个，说明当前 testPay 正在运行',
+      showCancel: false
+    })
+  },
+
 
   // 付款
 payOrder() {
+  console.log('========== 订单详情页开始支付 ==========')
 
   const order = this.data.order
 
+  console.log('当前订单：', order)
+  console.log('backendOrderId：', order && order.backendOrderId)
+
+  // 1. 检查订单
   if (!order || !order.id) {
+    wx.showToast({
+      title: '订单数据不存在',
+      icon: 'none'
+    })
     return
   }
 
-  // 已经付款，不能重复付款
+  // 2. 已经支付过
   if (order.paymentStatus === 'paid') {
-
     wx.showToast({
       title: '该订单已经付款',
       icon: 'none'
     })
-
     return
   }
 
+  // 3. 检查后端订单 ID
+  if (!order.backendOrderId) {
+    wx.showModal({
+      title: '订单异常',
+      content: '当前订单没有对应的后端订单 ID。',
+      showCancel: false
+    })
+    return
+  }
+
+  console.log(
+    '========== 准备调用后端支付接口 ==========',
+    order.backendOrderId
+  )
+
+  // 4. 确认支付
   wx.showModal({
-
-    title: '确认付款',
-
-    content:
-      `确认支付 ¥${order.finalTotal || order.total || 0} 吗？`,
-
+    title: '确认支付',
+    content: `支付金额：¥${Number(
+      order.finalTotal !== undefined
+        ? order.finalTotal
+        : order.total || 0
+    ).toFixed(2)}`,
     confirmText: '确认支付',
-
-    cancelText: '取消',
+    cancelText: '暂不支付',
 
     success: (res) => {
 
       if (!res.confirm) {
-
-        const orders =
-          wx.getStorageSync('orders') || []
-      
-        const index =
-          orders.findIndex(item => {
-            return String(item.id) ===
-              String(order.id)
-          })
-      
-        if (index !== -1) {
-      
-          // 取消付款，释放优惠券占用
-          orders[index] = {
-            ...orders[index],
-      
-            selectedCouponId: '',
-            coupon: null,
-            couponDiscount: 0
-          }
-      
-          // 重新计算订单最终金额
-          const finalTotal = Math.max(
-            0,
-            Number(orders[index].cartTotal || 0)
-            - Number(orders[index].productDiscount || 0)
-            + Number(orders[index].packingFee || 0)
-            + Number(orders[index].deliveryFee || 0)
-          )
-      
-          orders[index].finalTotal =
-            Number(finalTotal.toFixed(2))
-      
-          orders[index].total =
-            Number(finalTotal.toFixed(2))
-      
-          wx.setStorageSync(
-            'orders',
-            orders
-          )
-      
-          this.setData({
-            order: orders[index]
-          })
-      
-          this.updateStatus()
-          this.buildTimeline()
-        }
-      
-        wx.showToast({
-          title: '已取消付款，优惠券已释放',
-          icon: 'none'
-        })
-      
+        console.log('用户取消支付')
         return
       }
 
-      const orders =
-        wx.getStorageSync('orders') || []
+      console.log('========== 用户确认支付 ==========')
 
-      const index =
-        orders.findIndex(item => {
-          return String(item.id) ===
-            String(order.id)
-        })
-
-      if (index === -1) {
-
-        wx.showToast({
-          title: '订单不存在',
-          icon: 'none'
-        })
-
-        return
-      }
-
-      // =========================
-      // 支付成功
-      // =========================
-
-      orders[index] = {
-        ...orders[index],
-
-        paymentStatus: 'paid',
-
-        paymentTime:
-          new Date().toLocaleString(),
-
-        // 付款后仍然等待商家接单
-        status: 'pending',
-
-        statusName: '待接单'
-      }
-
-      wx.setStorageSync(
-        'orders',
-        orders
-      )
-      
-      // =========================
-      // 支付成功后使用优惠券
-      // =========================
-      
-      if (orders[index].selectedCouponId) {
-      
-        useCoupon(
-          orders[index].selectedCouponId,
-          orders[index].id
-        )
-      
-      }
-      
-      wx.showToast({
-        title: '支付成功',
-        icon: 'success'
+      wx.showLoading({
+        title: '支付中'
       })
 
+      // 5. 调用后端支付接口
+      request(
+        `/api/orders/${order.backendOrderId}/pay`,
+        'POST',
+        {}
+      )
+      .then((result) => {
+
+        console.log(
+          '========== 订单详情页后端支付成功 ==========',
+          result
+        )
+
+        // 6. 更新本地订单
+        const orders = wx.getStorageSync('orders') || []
+
+        const index = orders.findIndex(item => {
+          return String(item.id) === String(order.id)
+        })
+
+        if (index === -1) {
+          throw new Error('本地订单不存在')
+        }
+
+        orders[index] = {
+          ...orders[index],
+
+          paymentStatus: 'paid',
+
+          paymentTime: new Date().toLocaleString(),
+
+          status: 'pending',
+
+          statusName: '待接单'
+        }
+
+        // 7. 保存本地订单
+        wx.setStorageSync('orders', orders)
+
+        console.log(
+          '========== 本地订单更新完成 ==========',
+          orders[index]
+        )
+
+        // 8. 更新当前页面
+        this.setData({
+          order: orders[index]
+        })
+
+        // 9. 使用优惠券
+        if (orders[index].selectedCouponId) {
+          useCoupon(
+            orders[index].selectedCouponId,
+            orders[index].id
+          )
+        }
+
+        // 10. 更新状态和时间线
+        this.updateStatus()
+        this.buildTimeline()
+
+        wx.hideLoading()
+
+        wx.showToast({
+          title: '支付成功',
+          icon: 'success'
+        })
+
+      })
+      .catch((error) => {
+
+        console.error(
+          '========== 订单详情页后端支付失败 ==========',
+          error
+        )
+
+        wx.hideLoading()
+
+        wx.showModal({
+          title: '支付失败',
+          content: '后端支付接口调用失败，请查看控制台。',
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      })
     }
-
   })
-
 },
 
 
   // 再来一单
   reorder() {
 
-    wx.showToast({
-
-      title: '再来一单下一步完善',
-
-      icon: 'none'
-
+    const order = this.data.order
+  
+    if (!order || !order.items || order.items.length === 0) {
+      wx.showToast({
+        title: '订单商品不存在',
+        icon: 'none'
+      })
+      return
+    }
+  
+    // 读取当前菜单全部商品
+    const allFoods = wx.getStorageSync('allFoods') || []
+  
+    if (allFoods.length === 0) {
+      wx.showToast({
+        title: '商品数据不存在',
+        icon: 'none'
+      })
+      return
+    }
+  
+    // 按原订单商品数量加入购物车
+    const newFoods = allFoods.map(food => {
+  
+      // 找到订单中的对应商品
+      const orderItem = order.items.find(
+        item => Number(item.id) === Number(food.id)
+      )
+  
+      if (!orderItem) {
+        return food
+      }
+  
+      return {
+        ...food,
+        count: Number(food.count || 0) +
+          Number(orderItem.count || 0)
+      }
+  
     })
-
+  
+    // 只保留数量大于 0 的商品作为购物车
+    const cartFoods = newFoods.filter(
+      food => Number(food.count || 0) > 0
+    )
+  
+    // 保存商品数据
+    wx.setStorageSync(
+      'allFoods',
+      newFoods
+    )
+  
+    // 保存购物车
+    wx.setStorageSync(
+      'cartFoods',
+      cartFoods
+    )
+  
+    wx.showToast({
+      title: '已加入购物车',
+      icon: 'success'
+    })
+  
   },
 
   // 打开商品评价

@@ -1,3 +1,7 @@
+const {
+  request
+} = require('../../utils/api.js')
+
 Page({
 
   data: {
@@ -181,60 +185,79 @@ Page({
 
   login() {
 
-    wx.login({
-
-      success: (res) => {
-
-        if (!res.code) {
-
-          wx.showToast({
-            title: '微信登录失败',
-            icon: 'none'
-          })
-
-          return
-        }
-
-        /*
-         * 当前项目暂未接入后端服务器。
-         * 这里先保存本地登录状态。
-         * 后续接入真实微信登录时，
-         * 再将 res.code 发送给后端。
-         */
-
+    wx.showLoading({
+      title: '登录中'
+    })
+  
+    // 当前后端处于开发模式，
+    // 使用 devAccount 模拟微信账号。
+    const devAccount =
+      wx.getStorageSync('devAccount') ||
+      `wx_dev_${Date.now()}`
+  
+    request(
+      '/api/auth/wx-login',
+      'POST',
+      {
+        devAccount: devAccount,
+        nickname: '食客'
+      }
+    )
+      .then((result) => {
+  
+        wx.setStorageSync(
+          'devAccount',
+          devAccount
+        )
+  
+        wx.setStorageSync(
+          'token',
+          result.token
+        )
+  
+        wx.setStorageSync(
+          'userId',
+          result.userId
+        )
+  
         const loginUser = {
           isLogin: true,
-          userName: '食客',
-          loginTime: new Date().toLocaleString()
+          userName:
+            result.nickname || '食客',
+          userId:
+            result.userId,
+          loginTime:
+            new Date().toLocaleString()
         }
-
+  
         wx.setStorageSync(
           'loginUser',
           loginUser
         )
-
+  
         this.setData({
           isLogin: true,
-          userName: '食客'
+          userName:
+            result.nickname || '食客'
         })
-
+  
+        wx.hideLoading()
+  
         wx.showToast({
           title: '登录成功',
           icon: 'success'
         })
-
-      },
-
-      fail: () => {
-
-        wx.showToast({
-          title: '微信登录失败',
-          icon: 'none'
-        })
-
-      }
-
-    })
+      })
+      .catch((error) => {
+  
+        wx.hideLoading()
+  
+        console.error(
+          '后端登录失败：',
+          error
+        )
+  
+      })
   },
 
   // =========================
