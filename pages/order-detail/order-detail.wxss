@@ -552,3 +552,307 @@ button::after {
   font-size: 24rpx;
   color: #999999;
 }
+
+/* =========================
+   已完成订单：底部操作栏
+========================= */
+
+/* 底部操作栏改为从左到右排列 */
+.bottom-bar {
+  justify-content: flex-start;
+  gap: 0;
+  padding: 0 18rpx;
+}
+
+/* 已完成订单底部按钮 */
+.completed-bottom-actions .bottom-btn {
+  min-width: 0;
+
+  width: 172rpx;
+  height: 70rpx;
+
+  margin: 0;
+  padding: 0 18rpx;
+
+  line-height: 70rpx;
+
+  border-radius: 38rpx;
+
+  font-size: 22rpx;
+
+  flex-shrink: 0;
+}
+
+/* 更多：保持在最左边 */
+.completed-bottom-actions .more-btn {
+  width: 82rpx;
+
+  margin-right: 18rpx;
+
+  background: #EEF2F0;
+  color: #50665D;
+}
+
+/* 申请退款 */
+.completed-bottom-actions .refund-bottom-btn {
+  width: 172rpx;
+
+  margin-right: 6rpx;
+
+  background: #EEF2F0;
+  color: #50665D;
+}
+
+/* 评价商品 */
+.completed-bottom-actions .review-bottom-btn {
+  width: 172rpx;
+
+  margin-right: 6rpx;
+
+  background: #EEF2F0;
+  color: #50665D;
+}
+
+/* 再来一单 */
+.completed-bottom-actions .reorder-bottom-btn {
+  width: 172rpx;
+
+  background: #1F6A57;
+  color: #FFFFFF;
+}
+
+
+/* =========================
+   更多操作弹窗
+========================= */
+
+.more-menu-mask {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 110rpx;
+
+  z-index: 100;
+
+  background: rgba(0, 0, 0, .12);
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+/* 更多菜单 */
+.more-menu {
+  width: 300rpx;
+
+  margin-left: 18rpx;
+  margin-bottom: 18rpx;
+
+  padding: 10rpx;
+
+  border-radius: 22rpx;
+
+  background: #FFFFFF;
+
+  box-shadow: 0 8rpx 35rpx rgba(0, 0, 0, .15);
+}
+
+/* 更多菜单里的按钮 */
+.more-menu-item {
+  width: 100%;
+
+  height: 76rpx;
+
+  margin: 0;
+
+  padding: 0;
+
+  line-height: 76rpx;
+
+  background: #FFFFFF;
+
+  color: #405B51;
+
+  font-size: 24rpx;
+
+  text-align: center;
+
+  border-radius: 16rpx;
+}
+
+/* 删除订单：红色 */
+.more-menu-item.danger {
+  color: #D9534F;
+}
+
+.more-menu-item:active {
+  background: #F5F7F6;
+}
+
+/* =========================
+   订单详情底部操作
+========================= */
+
+.bottom-bar {
+  justify-content: flex-start;
+  padding: 0 18rpx;
+}
+
+/* 整个订单操作区域 */
+.order-actions {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+/* 左侧“更多” */
+.order-actions .more-btn {
+  width: 82rpx;
+  min-width: 82rpx;
+
+  height: 70rpx;
+  line-height: 70rpx;
+
+  margin: 0;
+  padding: 0;
+
+  border-radius: 38rpx;
+
+  background: #EEF2F0;
+  color: #50665D;
+
+  font-size: 22rpx;
+
+  flex-shrink: 0;
+}
+
+/* 右侧三个按钮整体 */
+.right-actions {
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6rpx;
+}
+
+/* 申请退款、评价商品、再来一单统一大小 */
+.right-actions .bottom-btn {
+  width: 172rpx;
+  min-width: 172rpx;
+
+  height: 70rpx;
+
+  margin: 0;
+  padding: 0 12rpx;
+
+  line-height: 70rpx;
+
+  border-radius: 38rpx;
+
+  font-size: 22rpx;
+
+  flex-shrink: 0;
+}
+
+/* 申请退款 */
+.right-actions .refund-bottom-btn {
+  background: #EEF2F0;
+  color: #50665D;
+}
+
+/* 评价商品 */
+.right-actions .review-bottom-btn {
+  background: #EEF2F0;
+  color: #50665D;
+}
+
+/* 再来一单 */
+.right-actions .reorder-bottom-btn {
+  background: #1F6A57;
+  color: #FFFFFF;
+}
+
+/* =========================
+   退款申请状态
+   ========================= */
+
+   .refund-info-card {
+    margin: 24rpx;
+    padding: 26rpx;
+    background: #ffffff;
+    border-radius: 20rpx;
+    box-shadow: 0 6rpx 24rpx rgba(31, 70, 60, 0.06);
+  }
+  
+  .refund-info-title {
+    margin-bottom: 20rpx;
+    font-size: 28rpx;
+    font-weight: 600;
+    color: #243B33;
+  }
+  
+  .refund-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56rpx;
+    font-size: 24rpx;
+  }
+  
+  .refund-info-label {
+    color: #718078;
+  }
+  
+  .refund-info-value {
+    color: #243B33;
+    font-weight: 500;
+  }
+  
+  .refund-success-text {
+    color: #1F6A57;
+    font-weight: 600;
+  }
+  
+  .refund-rejected-text {
+    color: #D9534F;
+    font-weight: 600;
+  }
+  
+  .refund-info-tip {
+    margin-top: 16rpx;
+    padding-top: 16rpx;
+    border-top: 1rpx solid #EEF2F0;
+    color: #87938E;
+    font-size: 22rpx;
+    line-height: 1.6;
+  }
+  
+  .refund-reason-box {
+    margin-top: 18rpx;
+    padding: 18rpx;
+    background: #F8F9F8;
+    border-radius: 12rpx;
+  }
+  
+  .refund-reason-title {
+    margin-bottom: 10rpx;
+    color: #50665D;
+    font-size: 22rpx;
+  }
+  
+  .refund-reason-content {
+    color: #243B33;
+    font-size: 24rpx;
+    line-height: 1.6;
+  }
+  
+  .refund-status-btn {
+    background: #EEF2F0 !important;
+    color: #718078 !important;
+    text-align: center;
+    pointer-events: none;
+  }

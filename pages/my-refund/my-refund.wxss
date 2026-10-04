@@ -1,0 +1,215 @@
+.page {
+  min-height: 100vh;
+  background: #f6f7f6;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   空状态
+========================= */
+
+.empty-box {
+  padding: 160rpx 40rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 76rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.empty-desc {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+}
+
+
+/* =========================
+   退款列表
+========================= */
+
+.refund-list {
+  width: 100%;
+}
+
+
+/* =========================
+   退款卡片
+========================= */
+
+.refund-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 22rpx;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   顶部
+========================= */
+
+.refund-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.refund-title {
+  font-size: 30rpx;
+  color: #222;
+  font-weight: 600;
+}
+
+.refund-status {
+  padding: 8rpx 18rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+}
+
+
+/* =========================
+   状态
+========================= */
+
+.refund-status.pending {
+  color: #996600;
+  background: #fff4d6;
+}
+
+.refund-status.completed {
+  color: #26734d;
+  background: #e5f6ed;
+}
+
+.refund-status.rejected {
+  color: #a33a3a;
+  background: #fdeaea;
+}
+
+
+/* =========================
+   普通信息
+========================= */
+
+.refund-row {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 20rpx;
+}
+
+.refund-label {
+  width: 150rpx;
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.refund-value {
+  flex: 1;
+  font-size: 25rpx;
+  color: #333;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+
+/* =========================
+   退款金额
+========================= */
+
+.refund-amount-box {
+  margin-top: 24rpx;
+  padding: 22rpx;
+  border-radius: 16rpx;
+  background: #f5f8f6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.refund-amount-label {
+  font-size: 25rpx;
+  color: #666;
+}
+
+.refund-amount {
+  font-size: 38rpx;
+  color: #1f6a57;
+  font-weight: 600;
+}
+
+
+/* =========================
+   时间
+========================= */
+
+.refund-time {
+  margin-top: 20rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #eee;
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+
+/* =========================
+   商家处理说明
+========================= */
+
+.review-box {
+  margin-top: 22rpx;
+  padding: 22rpx;
+  border-radius: 14rpx;
+  background: #f5f8f6;
+}
+
+.review-title {
+  font-size: 25rpx;
+  color: #315c4d;
+  font-weight: 600;
+}
+
+.review-content {
+  margin-top: 12rpx;
+  font-size: 25rpx;
+  color: #444;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+
+/* =========================
+   状态提示
+========================= */
+
+.pending-tip,
+.success-tip,
+.rejected-tip {
+  margin-top: 18rpx;
+  font-size: 23rpx;
+  line-height: 1.6;
+}
+
+.pending-tip {
+  color: #996600;
+}
+
+.success-tip {
+  color: #26734d;
+}
+
+.rejected-tip {
+  color: #a33a3a;
+}

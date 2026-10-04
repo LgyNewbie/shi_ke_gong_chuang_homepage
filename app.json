@@ -40,9 +40,12 @@
 
     "pages/merchant-notice/merchant-notice",
     "pages/merchant-coupon/merchant-coupon",
+    "pages/my-complaint/my-complaint",
     "pages/my-coupon/my-coupon",
+    "pages/my-refund/my-refund",
     "pages/settings/settings",
-    "pages/food-review/food-review"
+    "pages/food-review/food-review",
+    "pages/complaint-create/complaint-create"
     
     
     

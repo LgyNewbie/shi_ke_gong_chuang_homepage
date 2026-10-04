@@ -198,18 +198,6 @@
       ¥{{item.price * item.count}}
     </text>
 
-    <!-- 已完成订单才可以评价 -->
-    <button wx:if="{{order.status === 'completed' && !item.isReviewed}}"
-  class="review-btn"
-  size="mini"
-  data-order-id="{{order.id}}"
-  data-food-id="{{item.id}}"
-  bindtap="openReview">评价商品</button>
-
-<view wx:if="{{order.status === 'completed' && item.isReviewed}}"
-  class="reviewed-text">
-  已评价 ✓
-</view>
 
   </view>
 
@@ -303,7 +291,6 @@
 </view>
 
 
-<!-- 金额 -->
 <!-- 金额 -->
 <view class="card price-card">
 
@@ -482,58 +469,303 @@
 
 </view>
 
+<!-- =========================
+     退款申请状态
+     ========================= -->
+     <view
+  wx:if="{{refund}}"
+  class="refund-info-card"
+>
 
+  <view class="refund-info-title">
+    退款申请
+  </view>
+
+  <!-- 审核中 -->
+  <view wx:if="{{refundStatus === 'pending_review'}}">
+    <view class="refund-info-row">
+      <text class="refund-info-label">申请状态</text>
+      <text class="refund-info-value">已申请退款</text>
+    </view>
+
+    <view class="refund-info-row">
+      <text class="refund-info-label">退款金额</text>
+      <text class="refund-info-value">
+        ¥{{refundAmountText}}
+      </text>
+    </view>
+
+    <view class="refund-info-tip">
+      退款申请已经提交，请等待餐厅审核。
+    </view>
+  </view>
+
+  <!-- 审核通过 -->
+  <view wx:if="{{refundStatus === 'completed'}}">
+    <view class="refund-info-row">
+      <text class="refund-info-label">申请状态</text>
+      <text class="refund-success-text">退款成功</text>
+    </view>
+
+    <view class="refund-info-row">
+      <text class="refund-info-label">退款金额</text>
+      <text class="refund-info-value">
+        ¥{{refundAmountText}}
+      </text>
+    </view>
+
+    <view class="refund-info-tip">
+      退款已经审核通过，款项已退回您的账户余额。
+    </view>
+  </view>
+
+  <!-- 审核不通过 -->
+  <view wx:if="{{refundStatus === 'rejected'}}">
+    <view class="refund-info-row">
+      <text class="refund-info-label">申请状态</text>
+      <text class="refund-rejected-text">审核未通过</text>
+    </view>
+
+    <view class="refund-info-row">
+      <text class="refund-info-label">退款金额</text>
+      <text class="refund-info-value">
+        ¥{{refundAmountText}}
+      </text>
+    </view>
+
+    <view class="refund-reason-box">
+      <view class="refund-reason-title">
+        未通过原因
+      </view>
+
+      <view class="refund-reason-content">
+        {{refundReviewRemark || '餐厅未填写具体原因'}}
+      </view>
+    </view>
+
+    <view class="refund-info-tip">
+      该订单已经提交过退款申请，不能再次申请。
+    </view>
+  </view>
+
+</view>
 
 <!-- 底部操作 -->
 <view class="bottom-bar">
 
-<!-- 待付款 -->
-<!-- 待付款 -->
-<button
-  wx:if="{{order.status === 'pending' && order.paymentStatus !== 'paid'}}"
-  class="bottom-btn primary"
-  bindtap="payOrder"
+<!-- =========================
+     已完成订单
+========================== -->
+<view
+  wx:if="{{order.status === 'completed'}}"
+  class="order-actions"
 >
-  去付款
+
+  <!-- 左侧：更多 -->
+  <button
+    class="bottom-btn more-btn"
+    bindtap="showMoreActions"
+  >
+    更多
+  </button>
+
+  <!-- 右侧操作组 -->
+  <view class="right-actions">
+
+    <!-- 申请退款 -->
+    <!-- =========================
+     没有退款记录
+     ========================= -->
+<button
+  wx:if="{{!refund}}"
+  class="bottom-btn refund-bottom-btn"
+  bindtap="applyRefund"
+>
+  申请退款
 </button>
 
-<!-- 已付款，等待商家接单 -->
+
+<!-- =========================
+     退款审核中
+     ========================= -->
 <view
-  wx:if="{{order.status === 'pending' && order.paymentStatus === 'paid'}}"
-  class="bottom-btn waiting-btn"
+  wx:if="{{refundStatus === 'pending_review'}}"
+  class="bottom-btn refund-status-btn"
 >
-  待商家接单
+  已申请退款
 </view>
 
 
-  <!-- 已完成 -->
+<!-- =========================
+     退款成功
+     ========================= -->
+<view
+  wx:if="{{refundStatus === 'completed'}}"
+  class="bottom-btn refund-status-btn"
+>
+  退款成功
+</view>
+
+
+<!-- =========================
+     退款被拒绝
+     ========================= -->
+<view
+  wx:if="{{refundStatus === 'rejected'}}"
+  class="bottom-btn refund-status-btn"
+>
+  已拒绝
+</view>
+
+    <!-- 评价商品 -->
+    <button
+      class="bottom-btn review-bottom-btn"
+      bindtap="openOrderReview"
+    >
+      评价商品
+    </button>
+
+    <!-- 再来一单 -->
+    <button
+      class="bottom-btn primary reorder-bottom-btn"
+      bindtap="reorder"
+    >
+      再来一单
+    </button>
+
+  </view>
+
+</view>
+
+
+<!-- =========================
+     非完成状态
+========================== -->
+<view
+  wx:if="{{order.status !== 'completed' && order.status !== 'cancelled'}}"
+  class="order-actions"
+>
+
+  <!-- 左侧：更多 -->
   <button
-    wx:if="{{order.status === 'completed'}}"
-    class="bottom-btn primary"
-    bindtap="reorder"
+    class="bottom-btn more-btn"
+    bindtap="showMoreActions"
   >
-    再来一单
+    更多
   </button>
 
+  <!-- 右侧：申请退款 -->
+  <view class="right-actions">
 
-  <!-- 联系餐厅 -->
-  <button
-    wx:if="{{order.status !== 'cancelled'}}"
-    class="bottom-btn"
-    bindtap="contactRestaurant"
+<!-- =========================
+     退款状态
+     ========================= -->
+
+<!-- 还没有申请退款 -->
+<button
+  wx:if="{{!refund}}"
+  class="bottom-btn refund-bottom-btn"
+  bindtap="applyRefund"
+>
+  申请退款
+</button>
+
+<!-- 退款审核中 -->
+<view
+  wx:if="{{refundStatus === 'pending_review'}}"
+  class="bottom-btn refund-status-btn"
+>
+  已申请退款
+</view>
+
+<!-- 退款已经通过 -->
+<view
+  wx:if="{{refundStatus === 'completed'}}"
+  class="bottom-btn refund-status-btn"
+>
+  退款成功
+</view>
+
+<!-- 退款申请被拒绝 -->
+<view
+  wx:if="{{refundStatus === 'rejected'}}"
+  class="bottom-btn refund-status-btn"
+>
+  已拒绝
+</view>
+
+    <!-- 待付款 -->
+    <button
+      wx:if="{{order.status === 'pending' && order.paymentStatus !== 'paid'}}"
+      class="bottom-btn primary"
+      bindtap="payOrder"
+    >
+      去付款
+    </button>
+
+    <!-- 已付款，等待商家接单 -->
+    <view
+      wx:if="{{order.status === 'pending' && order.paymentStatus === 'paid'}}"
+      class="bottom-btn waiting-btn"
+    >
+      待商家接单
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- =========================
+     已取消订单
+========================== -->
+<button
+  wx:if="{{order.status === 'cancelled'}}"
+  class="bottom-btn more-btn"
+  bindtap="showMoreActions"
+>
+  更多
+</button>
+
+</view>
+
+<!-- 更多操作弹窗 -->
+<view
+  wx:if="{{showMoreMenu}}"
+  class="more-menu-mask"
+  bindtap="hideMoreActions"
+>
+
+  <view
+    class="more-menu"
+    catchtap="stopMoreMenuTap"
   >
-    联系餐厅
-  </button>
 
+    <!-- 联系餐厅 -->
+    <button
+      class="more-menu-item"
+      bindtap="contactRestaurant"
+    >
+      联系餐厅
+    </button>
 
-  <!-- 已取消 -->
-  <button
-    wx:if="{{order.status === 'cancelled'}}"
-    class="bottom-btn primary"
-    bindtap="goBackToOrders"
-  >
-    返回订单
-  </button>
+    <!-- 投诉 -->
+    <button
+      class="more-menu-item"
+      bindtap="submitComplaint"
+    >
+      投诉
+    </button>
+
+    <!-- 删除订单 -->
+    <button
+      class="more-menu-item danger"
+      bindtap="deleteOrder"
+    >
+      删除订单
+    </button>
+
+  </view>
 
 </view>
 

@@ -1,0 +1,265 @@
+<view class="page">
+
+<!-- 加载中 -->
+
+<view
+  wx:if="{{loading}}"
+  class="empty-box"
+>
+
+  <view class="empty-icon">
+    ⏳
+  </view>
+
+  <view class="empty-text">
+    正在加载投诉记录...
+  </view>
+
+</view>
+
+
+<!-- 没有投诉 -->
+
+<view
+  wx:elif="{{list.length === 0}}"
+  class="empty-box"
+>
+
+  <view class="empty-icon">
+    📢
+  </view>
+
+  <view class="empty-text">
+    暂时没有投诉记录
+  </view>
+
+  <view class="empty-desc">
+    如果订单遇到问题，可以在订单详情中提交投诉
+  </view>
+
+</view>
+
+
+<!-- 投诉列表 -->
+
+<view
+  wx:else
+  class="complaint-list"
+>
+
+  <block
+    wx:for="{{list}}"
+    wx:key="id"
+  >
+
+    <view class="complaint-card">
+
+      <!-- 顶部 -->
+
+      <view class="complaint-header">
+
+        <view class="complaint-type">
+          {{item.type || '其他'}}
+        </view>
+
+        <view
+          class="complaint-status {{item.statusClass}}"
+        >
+          {{item.statusText}}
+        </view>
+
+      </view>
+
+
+      <!-- 订单 -->
+
+      <view
+        wx:if="{{item.order_id}}"
+        class="complaint-order"
+      >
+        投诉订单：#{{item.order_id}}
+      </view>
+
+
+      <!-- 投诉内容 -->
+
+      <view class="complaint-content">
+        {{item.content}}
+      </view>
+
+
+      <!-- 投诉图片 -->
+
+      <view
+        wx:if="{{item.images.length > 0}}"
+        class="image-list"
+      >
+
+        <block
+          wx:for="{{item.images}}"
+          wx:for-item="image"
+          wx:key="*this"
+        >
+
+          <image
+            class="complaint-image"
+            src="{{image}}"
+            mode="aspectFill"
+            data-url="{{image}}"
+            data-urls="{{item.images}}"
+            bindtap="previewImage"
+          />
+
+        </block>
+
+      </view>
+
+
+      <!-- 提交时间 -->
+
+      <view class="complaint-time">
+        提交时间：{{item.createdTime}}
+      </view>
+
+
+      <!-- 商家处理结果 -->
+
+      <view
+        wx:if="{{item.status === 'processing' || item.status === 'resolved' || item.status === 'rejected'}}"
+        class="handle-box"
+      >
+
+        <view class="handle-title">
+          商家处理结果
+        </view>
+
+        <view
+          wx:if="{{item.handleRemark}}"
+          class="handle-remark"
+        >
+          {{item.handleRemark}}
+        </view>
+
+        <view
+          wx:else
+          class="handle-remark empty-remark"
+        >
+          商家暂未填写处理说明
+        </view>
+
+        <view
+          wx:if="{{item.updatedTime}}"
+          class="handle-time"
+        >
+          处理时间：{{item.updatedTime}}
+        </view>
+
+      </view>
+
+      <!-- 查看详情 -->
+
+<view
+  class="detail-action-box"
+>
+
+  <button
+    class="detail-btn"
+    data-index="{{index}}"
+    bindtap="toggleDetail"
+  >
+    {{item.showDetail ? '收起详情' : '查看详情'}}
+  </button>
+
+</view>
+
+<!-- 详细信息 -->
+
+<view
+  wx:if="{{item.showDetail}}"
+  class="detail-box"
+>
+
+  <view class="detail-row">
+    <view class="detail-label">投诉类型</view>
+    <view class="detail-value">
+      {{item.type || '其他'}}
+    </view>
+  </view>
+
+  <view
+    wx:if="{{item.order_id}}"
+    class="detail-row"
+  >
+    <view class="detail-label">投诉订单</view>
+    <view class="detail-value">
+      #{{item.order_id}}
+    </view>
+  </view>
+
+  <view class="detail-row detail-row-block">
+    <view class="detail-label">投诉内容</view>
+    <view class="detail-value detail-content">
+      {{item.content}}
+    </view>
+  </view>
+
+  <view class="detail-row">
+    <view class="detail-label">提交时间</view>
+    <view class="detail-value">
+      {{item.createdTime}}
+    </view>
+  </view>
+
+  <view class="detail-row">
+    <view class="detail-label">当前状态</view>
+    <view class="detail-value">
+      {{item.statusText}}
+    </view>
+  </view>
+
+  <view
+    wx:if="{{item.handleRemark}}"
+    class="detail-row detail-row-block"
+  >
+    <view class="detail-label">商家处理说明</view>
+    <view class="detail-value detail-content">
+      {{item.handleRemark}}
+    </view>
+  </view>
+
+  <view
+    wx:if="{{item.updatedTime && item.status !== 'pending'}}"
+    class="detail-row"
+  >
+    <view class="detail-label">处理时间</view>
+    <view class="detail-value">
+      {{item.updatedTime}}
+    </view>
+  </view>
+
+</view>
+
+      <!-- 已驳回：允许再次投诉 -->
+
+<view
+  wx:if="{{item.status === 'rejected'}}"
+  class="recomplaint-box"
+>
+
+  <button
+    class="recomplaint-btn"
+    data-item="{{item}}"
+    bindtap="reComplaint"
+  >
+    再次投诉
+  </button>
+
+</view>
+
+    </view>
+
+  </block>
+
+</view>
+
+</view>

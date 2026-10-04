@@ -194,194 +194,295 @@ checkOrderTimeout(order) {
       }
   
   
-      // =========================
-      // 从后端同步订单状态
-      // =========================
-      try {
-  
-        const backendOrders =
-          await request(
-            '/api/orders',
-            'GET',
-            {}
-          )
-  
-        console.log(
-          '========== 后端订单同步成功 ==========',
-          backendOrders
-        )
-  
-  
-        if (Array.isArray(backendOrders)) {
-  
-          // 根据后端订单 ID 更新本地订单
-          orders = orders.map(order => {
-  
-            if (!order.backendOrderId) {
-              return order
-            }
-  
-            const backendOrder =
-              backendOrders.find(item =>
-                String(item.id) ===
-                String(order.backendOrderId)
-              )
-  
-            if (!backendOrder) {
-              return order
-            }
-  
-  
-            // =========================
-            // 后端状态 → 小程序状态
-            // =========================
-  
-            let newStatus =
-              order.status
-  
-            let newStatusName =
-              order.statusName
-  
-  
-            // 待付款
-            if (backendOrder.status === 'pending') {
-  
-              if (order.paymentStatus === 'paid') {
-  
-                newStatus = 'pending'
-                newStatusName = '待接单'
-  
-              } else {
-  
-                newStatus = 'pending'
-                newStatusName = '待付款'
-  
-              }
-  
-            }
-  
-  
-            // 商家已接单
-            else if (
-              backendOrder.status === 'accepted'
-            ) {
-  
-              newStatus = 'accepted'
-              newStatusName = '商家已接单'
-  
-            }
-  
-  
-            // 制作中
-            else if (
-              backendOrder.status === 'cooking'
-            ) {
-  
-              newStatus = 'cooking'
-              newStatusName = '制作中'
-  
-            }
-  
-  
-            // 配送中
-            else if (
-              backendOrder.status === 'delivery'
-            ) {
-  
-              newStatus = 'delivery'
-              newStatusName = '配送中'
-  
-            }
-  
-  
-            // 待取餐
-            else if (
-              backendOrder.status === 'ready'
-            ) {
-  
-              newStatus = 'ready'
-              newStatusName = '待取餐'
-  
-            }
-  
-  
-            // 已完成
-            else if (
-              backendOrder.status === 'completed'
-            ) {
-  
-              newStatus = 'completed'
-              newStatusName = '已完成'
-  
-            }
-  
-  
-            // 已取消
-            else if (
-              backendOrder.status === 'cancelled'
-            ) {
-  
-              newStatus = 'cancelled'
-              newStatusName = '已取消'
-  
-            }
-  
-  
-            // 已退款
-            else if (
-              backendOrder.status === 'refunded'
-            ) {
-  
-              newStatus = 'refunded'
-              newStatusName = '已退款'
-  
-            }
-  
-  
-            return {
-  
-              ...order,
-  
-              status: newStatus,
-  
-              statusName: newStatusName,
-  
-              // 后端已经支付，则同步支付状态
-              paymentStatus:
-                backendOrder.status !== 'pending'
-                  ? (
-                      backendOrder.status === 'refunded'
-                        ? 'refunded'
-                        : backendOrder.status === 'cancelled'
-                          ? order.paymentStatus
-                          : 'paid'
-                    )
-                  : order.paymentStatus
-  
-            }
-  
-          })
-  
-  
-          // 保存同步后的订单
-          wx.setStorageSync(
-            'orders',
-            orders
-          )
-  
-        }
-  
-      } catch (error) {
-  
-        console.error(
-          '========== 后端订单同步失败 ==========',
-          error
-        )
-  
-        // 后端同步失败时，
-        // 不影响原来的本地订单显示
-  
+// =========================
+// 从后端同步订单状态
+// =========================
+try {
+
+  const backendOrders =
+    await request(
+      '/api/orders',
+      'GET',
+      {}
+    )
+
+  console.log(
+    '========== 后端订单同步成功 ==========',
+    backendOrders
+  )
+
+  // =========================
+  // 查询当前用户退款记录
+  // =========================
+  let refundRecords = []
+
+  try {
+
+    const refundResult =
+      await request(
+        '/api/refunds/mine',
+        'GET',
+        {}
+      )
+
+    console.log(
+      '========== 后端退款记录同步成功 ==========',
+      refundResult
+    )
+
+    if (Array.isArray(refundResult)) {
+      refundRecords = refundResult
+    } else if (
+      refundResult &&
+      Array.isArray(refundResult.data)
+    ) {
+      refundRecords = refundResult.data
+    }
+
+    console.log(
+      '========== 当前用户退款记录数量 ==========',
+      refundRecords.length
+    )
+
+  } catch (refundError) {
+
+    console.error(
+      '========== 退款记录同步失败 ==========',
+      refundError
+    )
+
+    // 退款查询失败不影响正常订单显示
+    refundRecords = []
+  }
+
+
+  if (Array.isArray(backendOrders)) {
+
+    // 根据后端订单 ID 更新本地订单
+    orders = orders.map(order => {
+
+      if (!order.backendOrderId) {
+        return order
       }
+
+      const backendOrder =
+        backendOrders.find(item =>
+          String(item.id) ===
+          String(order.backendOrderId)
+        )
+
+      if (!backendOrder) {
+        return order
+      }
+
+
+      // =========================
+      // 后端状态 → 小程序状态
+      // =========================
+
+      let newStatus =
+        order.status
+
+      let newStatusName =
+        order.statusName
+
+
+      // 待付款
+      if (backendOrder.status === 'pending') {
+
+        if (order.paymentStatus === 'paid') {
+
+          newStatus = 'pending'
+          newStatusName = '待接单'
+
+        } else {
+
+          newStatus = 'pending'
+          newStatusName = '待付款'
+
+        }
+
+      }
+
+
+      // 商家已接单
+      else if (
+        backendOrder.status === 'accepted'
+      ) {
+
+        newStatus = 'accepted'
+        newStatusName = '商家已接单'
+
+      }
+
+
+      // 制作中
+      else if (
+        backendOrder.status === 'cooking'
+      ) {
+
+        newStatus = 'cooking'
+        newStatusName = '制作中'
+
+      }
+
+
+      // 配送中
+      else if (
+        backendOrder.status === 'delivery'
+      ) {
+
+        newStatus = 'delivery'
+        newStatusName = '配送中'
+
+      }
+
+
+      // 待取餐
+      else if (
+        backendOrder.status === 'ready'
+      ) {
+
+        newStatus = 'ready'
+        newStatusName = '待取餐'
+
+      }
+
+
+      // 已完成
+      else if (
+        backendOrder.status === 'completed'
+      ) {
+
+        newStatus = 'completed'
+        newStatusName = '已完成'
+
+      }
+
+
+      // 已取消
+      else if (
+        backendOrder.status === 'cancelled'
+      ) {
+
+        newStatus = 'cancelled'
+        newStatusName = '已取消'
+
+      }
+
+
+      // 已退款
+      else if (
+        backendOrder.status === 'refunded'
+      ) {
+
+        newStatus = 'refunded'
+        newStatusName = '已退款'
+
+      }
+
+
+      // =========================
+      // 检查当前订单是否有退款记录
+      // =========================
+
+      const refundRecord =
+        refundRecords.find(item => {
+
+          return String(item.order_id) ===
+            String(order.backendOrderId)
+
+        })
+
+
+      // =========================
+      // 退款状态覆盖订单显示状态
+      // =========================
+
+      if (refundRecord) {
+
+        // 退款申请审核中
+        if (
+          refundRecord.status ===
+          'pending_review'
+        ) {
+
+          newStatusName = '已申请退款'
+
+        }
+
+
+        // 退款成功
+        else if (
+          refundRecord.status ===
+          'completed'
+        ) {
+
+          newStatusName = '退款成功'
+
+        }
+
+
+        // 退款失败
+        else if (
+          refundRecord.status ===
+          'rejected'
+        ) {
+
+          newStatusName = '退款失败'
+
+        }
+
+      }
+
+
+      return {
+
+        ...order,
+
+        status: newStatus,
+
+        statusName: newStatusName,
+
+        // 后端已经支付，则同步支付状态
+        paymentStatus:
+          backendOrder.status !== 'pending'
+            ? (
+                backendOrder.status === 'refunded'
+                  ? 'refunded'
+                  : backendOrder.status === 'cancelled'
+                    ? order.paymentStatus
+                    : 'paid'
+              )
+            : order.paymentStatus
+
+      }
+
+    })
+
+
+    // =========================
+    // 保存同步后的订单
+    // =========================
+
+    wx.setStorageSync(
+      'orders',
+      orders
+    )
+
+  }
+
+} catch (error) {
+
+  console.error(
+    '========== 后端订单同步失败 ==========',
+    error
+  )
+
+  // 后端同步失败时，
+  // 不影响原来的本地订单显示
+
+}
   
   
       // =========================
@@ -887,17 +988,100 @@ cancelOrder(e) {
 },
 
   // 再来一单
-  reorder(e) {
+reorder(e) {
 
+  // 获取当前订单 ID
+  const orderId = e.currentTarget.dataset.id
+
+  if (!orderId) {
     wx.showToast({
-
-      title: '已加入购物车',
-
-      icon: 'success'
-
+      title: '订单信息不存在',
+      icon: 'none'
     })
+    return
+  }
 
-  },
+  // 读取本地订单
+  const orders = wx.getStorageSync('orders') || []
+
+  const order = orders.find(
+    item => String(item.id) === String(orderId)
+  )
+
+  if (!order) {
+    wx.showToast({
+      title: '订单不存在',
+      icon: 'none'
+    })
+    return
+  }
+
+  // 检查订单商品
+  if (!Array.isArray(order.items) || order.items.length === 0) {
+    wx.showToast({
+      title: '订单商品不存在',
+      icon: 'none'
+    })
+    return
+  }
+
+  // 读取菜单中的全部商品
+  const allFoods = wx.getStorageSync('allFoods') || []
+
+  if (allFoods.length === 0) {
+    wx.showToast({
+      title: '商品数据不存在',
+      icon: 'none'
+    })
+    return
+  }
+
+  // 将历史订单中的商品加入当前购物车
+  const newFoods = allFoods.map(food => {
+
+    const orderItem = order.items.find(
+      item => String(item.id) === String(food.id)
+    )
+
+    // 当前订单没有这个商品
+    if (!orderItem) {
+      return food
+    }
+
+    return {
+      ...food,
+
+      // 当前购物车数量 + 历史订单数量
+      count:
+        Number(food.count || 0) +
+        Number(orderItem.count || 0)
+    }
+
+  })
+
+  // 重新生成购物车商品
+  const cartFoods = newFoods.filter(
+    food => Number(food.count || 0) > 0
+  )
+
+  // 保存全部商品
+  wx.setStorageSync(
+    'allFoods',
+    newFoods
+  )
+
+  // 保存购物车
+  wx.setStorageSync(
+    'cartFoods',
+    cartFoods
+  )
+
+  wx.showToast({
+    title: '已加入购物车',
+    icon: 'success'
+  })
+
+},
 
 
   // 去点餐

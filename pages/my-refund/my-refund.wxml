@@ -1,0 +1,190 @@
+<view class="page">
+
+<!-- 加载中 -->
+
+<view
+  wx:if="{{loading}}"
+  class="empty-box"
+>
+
+  <view class="empty-icon">
+    ⏳
+  </view>
+
+  <view class="empty-text">
+    正在加载退款记录...
+  </view>
+
+</view>
+
+
+<!-- 没有退款记录 -->
+
+<view
+  wx:elif="{{list.length === 0}}"
+  class="empty-box"
+>
+
+  <view class="empty-icon">
+    💰
+  </view>
+
+  <view class="empty-text">
+    暂时没有退款记录
+  </view>
+
+  <view class="empty-desc">
+    您申请的退款记录会显示在这里
+  </view>
+
+</view>
+
+
+<!-- 退款列表 -->
+
+<view
+  wx:else
+  class="refund-list"
+>
+
+  <block
+    wx:for="{{list}}"
+    wx:key="id"
+  >
+
+    <view class="refund-card">
+
+
+      <!-- 顶部 -->
+
+      <view class="refund-header">
+
+        <view class="refund-title">
+          退款申请
+        </view>
+
+        <view
+          class="refund-status {{item.statusClass}}"
+        >
+          {{item.statusText}}
+        </view>
+
+      </view>
+
+
+      <!-- 订单号 -->
+
+      <view
+        wx:if="{{item.order_id}}"
+        class="refund-row"
+      >
+
+        <view class="refund-label">
+          订单号
+        </view>
+
+        <view class="refund-value">
+          #{{item.order_id}}
+        </view>
+
+      </view>
+
+
+      <!-- 退款金额 -->
+
+      <view class="refund-amount-box">
+
+        <view class="refund-amount-label">
+          退款金额
+        </view>
+
+        <view class="refund-amount">
+          ¥{{item.amountText}}
+        </view>
+
+      </view>
+
+
+      <!-- 退款原因 -->
+
+      <view
+        wx:if="{{item.reason}}"
+        class="refund-row"
+      >
+
+        <view class="refund-label">
+          退款原因
+        </view>
+
+        <view class="refund-value">
+          {{item.reason}}
+        </view>
+
+      </view>
+
+
+      <!-- 申请时间 -->
+
+      <view
+        wx:if="{{item.createdTime}}"
+        class="refund-time"
+      >
+        申请时间：{{item.createdTime}}
+      </view>
+
+
+      <!-- 审核说明 -->
+
+      <view
+        wx:if="{{item.reviewRemark}}"
+        class="review-box"
+      >
+
+        <view class="review-title">
+          商家处理说明
+        </view>
+
+        <view class="review-content">
+          {{item.reviewRemark}}
+        </view>
+
+      </view>
+
+
+      <!-- 审核中的提示 -->
+
+      <view
+        wx:if="{{item.status === 'pending_review'}}"
+        class="pending-tip"
+      >
+        退款申请正在审核中，请耐心等待。
+      </view>
+
+
+      <!-- 退款成功 -->
+
+      <view
+        wx:if="{{item.status === 'completed'}}"
+        class="success-tip"
+      >
+        退款已经处理完成。
+      </view>
+
+
+      <!-- 退款失败 -->
+
+      <view
+        wx:if="{{item.status === 'rejected'}}"
+        class="rejected-tip"
+      >
+        本次退款申请未通过审核。
+      </view>
+
+
+    </view>
+
+  </block>
+
+</view>
+
+</view>

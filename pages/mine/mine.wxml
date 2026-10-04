@@ -316,6 +316,72 @@
 </view>
 
 
+<!-- 我的退款 -->
+
+<view
+  class="function-item"
+  bindtap="openMyRefund"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      💰
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        我的退款
+      </view>
+
+      <view class="function-desc">
+        查看退款申请和处理结果
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
+<!-- 我的投诉 -->
+
+<view
+  class="function-item"
+  bindtap="openMyComplaint"
+>
+
+  <view class="function-left">
+
+    <view class="function-icon">
+      📢
+    </view>
+
+    <view class="function-text">
+
+      <view class="function-title">
+        我的投诉
+      </view>
+
+      <view class="function-desc">
+        查看投诉记录和处理结果
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="function-arrow">
+    ›
+  </view>
+
+</view>
+
     <!-- 设置 -->
 
     <view

@@ -1,0 +1,276 @@
+.page {
+  min-height: 100vh;
+  background: #f6f7f6;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   空状态
+========================= */
+
+.empty-box {
+  padding: 160rpx 40rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 76rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.empty-desc {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+}
+
+
+/* =========================
+   投诉列表
+========================= */
+
+.complaint-list {
+  width: 100%;
+}
+
+
+/* =========================
+   投诉卡片
+========================= */
+
+.complaint-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 22rpx;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   顶部
+========================= */
+
+.complaint-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.complaint-type {
+  font-size: 30rpx;
+  color: #222;
+  font-weight: 600;
+}
+
+.complaint-status {
+  padding: 8rpx 18rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+}
+
+
+/* 状态 */
+
+.complaint-status.pending {
+  color: #996600;
+  background: #fff4d6;
+}
+
+.complaint-status.processing {
+  color: #1769aa;
+  background: #e7f3ff;
+}
+
+.complaint-status.resolved {
+  color: #26734d;
+  background: #e5f6ed;
+}
+
+.complaint-status.rejected {
+  color: #a33a3a;
+  background: #fdeaea;
+}
+
+
+/* =========================
+   订单
+========================= */
+
+.complaint-order {
+  margin-top: 18rpx;
+  font-size: 23rpx;
+  color: #999;
+}
+
+
+/* =========================
+   投诉内容
+========================= */
+
+.complaint-content {
+  margin-top: 20rpx;
+  font-size: 27rpx;
+  color: #333;
+  line-height: 1.7;
+  word-break: break-all;
+}
+
+
+/* =========================
+   图片
+========================= */
+
+.image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.complaint-image {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 12rpx;
+  background: #f2f2f2;
+}
+
+
+/* =========================
+   时间
+========================= */
+
+.complaint-time {
+  margin-top: 20rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #eee;
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+
+/* =========================
+   商家处理结果
+========================= */
+
+.handle-box {
+  margin-top: 22rpx;
+  padding: 22rpx;
+  border-radius: 14rpx;
+  background: #f5f8f6;
+}
+
+.handle-title {
+  font-size: 25rpx;
+  color: #315c4d;
+  font-weight: 600;
+}
+
+.handle-remark {
+  margin-top: 12rpx;
+  font-size: 25rpx;
+  color: #444;
+  line-height: 1.6;
+}
+
+.empty-remark {
+  color: #999;
+}
+
+.handle-time {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #aaa;
+}
+/* =========================
+   再次投诉
+========================= */
+
+.recomplaint-box {
+  margin-top: 18rpx;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.recomplaint-btn {
+  margin: 0;
+  padding: 0 28rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  border-radius: 32rpx;
+  background: #1f6a57;
+  color: #fff;
+  font-size: 24rpx;
+}
+/* =========================
+   查看详情
+========================= */
+
+.detail-action-box {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.detail-btn {
+  margin: 0;
+  padding: 0 26rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  border-radius: 30rpx;
+  background: #f1f4f2;
+  color: #50665d;
+  font-size: 23rpx;
+}
+
+
+/* =========================
+   详情内容
+========================= */
+
+.detail-box {
+  margin-top: 18rpx;
+  padding: 22rpx;
+  border-radius: 14rpx;
+  background: #f8faf9;
+  border: 1rpx solid #edf1ef;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 12rpx 0;
+}
+
+.detail-row-block {
+  display: block;
+}
+
+.detail-label {
+  width: 150rpx;
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: #888;
+}
+
+.detail-value {
+  flex: 1;
+  font-size: 24rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
+.detail-content {
+  margin-top: 8rpx;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

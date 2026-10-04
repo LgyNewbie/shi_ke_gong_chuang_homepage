@@ -147,7 +147,7 @@ userName:
       url: '/pages/order/order'
     })
   },
-
+  //我的优惠券
   openMyCoupon() {
 
     if (!this.checkLogin()) {
@@ -158,6 +158,37 @@ userName:
       url: '/pages/my-coupon/my-coupon'
     })
   },
+
+  // =========================
+// 我的退款
+// =========================
+
+openMyRefund() {
+
+  if (!this.checkLogin()) {
+    return
+  }
+
+  wx.navigateTo({
+    url: '/pages/my-refund/my-refund'
+  })
+},
+
+
+  // =========================
+// 我的投诉
+// =========================
+
+openMyComplaint() {
+
+  if (!this.checkLogin()) {
+    return
+  }
+
+  wx.navigateTo({
+    url: '/pages/my-complaint/my-complaint'
+  })
+},
 
 
   // =========================
