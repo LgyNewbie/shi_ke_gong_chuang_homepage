@@ -131,109 +131,169 @@ if (merchantUpdate) {
   // =========================
   // 加载留言
   // =========================
-  loadMessage(id) {
-    const post = getMessageById(id)
-
-    if (!post) {
+  async loadMessage(id) {
+    try {
+      const res = await new Promise((resolve, reject) => {
+        wx.request({
+          url: `http://192.168.254.145:3000/api/messages/${id}`,
+          method: 'GET',
+  
+          success: (res) => {
+            if (res.data && res.data.code === 0) {
+              resolve(res.data.data)
+            } else {
+              reject(
+                new Error(
+                  res.data?.message || '获取留言详情失败'
+                )
+              )
+            }
+          },
+  
+          fail: reject
+        })
+      })
+  
+      const images = Array.isArray(res.images)
+        ? res.images
+        : []
+  
+      const comments = Array.isArray(res.comments)
+        ? res.comments.map(comment => ({
+            id: comment.id,
+            userId: comment.user_id,
+            name: comment.is_admin
+              ? '🍜 餐厅商家'
+              : (comment.nickname || '食客'),
+            content: comment.content || '',
+            parentId: comment.parent_id,
+            isAdmin: Number(comment.is_admin || 0) === 1,
+            time: comment.created_at || ''
+          }))
+        : []
+  
+      const adminComment = comments.find(
+        comment => comment.isAdmin
+      )
+  
+      const post = {
+        id: res.id,
+        user_id: res.user_id,
+  
+        name: res.nickname || '食客',
+        userName: res.nickname || '食客',
+  
+        text: res.content || '',
+        content: res.content || '',
+  
+        images,
+        image: images[0] || '',
+  
+        likes: Number(res.like_count || 0),
+        comments: Number(res.comment_count || 0),
+        commentsCount: Number(res.comment_count || 0),
+  
+        commentList: comments,
+  
+        avatar: '',
+        level: 1,
+        tag: '食客留言',
+  
+        time: res.created_at || '',
+        createTime: res.created_at || '',
+  
+        status: res.status || 'normal',
+  
+        // 如果数据库中存在餐厅官方回复
+        reply: adminComment
+          ? adminComment.content
+          : '',
+        replyTime: adminComment
+          ? adminComment.time
+          : '',
+        replyType: adminComment
+          ? 'official'
+          : ''
+      }
+  
+      this.setData({
+        post,
+        comments,
+        messageId: id
+      })
+  
+    } catch (error) {
+      console.error('加载留言详情失败：', error)
+  
       wx.showToast({
-        title: '留言不存在',
+        title: '留言加载失败',
         icon: 'none'
       })
-
-      setTimeout(() => {
-        wx.navigateBack({
-          delta: 1
-        })
-      }, 1000)
-
-      return
     }
-
-    const likedMessages =
-      wx.getStorageSync('likedMessages') || []
-
-    const liked =
-      likedMessages.includes(String(id))
-
-    const comments =
-      Array.isArray(post.commentList)
-        ? post.commentList
-        : []
-
-    this.setData({
-      post: {
-        ...post,
-        liked
-      },
-
-      comments
-    })
   },
 
   // =========================
   // 点赞 / 取消点赞
   // =========================
-  toggleLike() {
-    if (!this.data.post) {
+  async toggleLike() {
+    const messageId = Number(this.data.messageId)
+  
+    // 这里先使用当前测试用户 ID 2
+    // 后面接入正式登录用户后再替换
+    const userId = 2
+  
+    if (!messageId) {
+      wx.showToast({
+        title: '留言ID无效',
+        icon: 'none'
+      })
       return
     }
-
-    const id = this.data.post.id
-
-    let likedMessages =
-      wx.getStorageSync('likedMessages') || []
-
-    const index =
-      likedMessages.indexOf(String(id))
-
-    let liked = false
-
-    let likes =
-      Number(this.data.post.likes || 0)
-
-    if (index !== -1) {
-      // 取消点赞
-      likedMessages.splice(index, 1)
-
-      likes = Math.max(
-        0,
-        likes - 1
-      )
-
-      liked = false
-    } else {
-      // 点赞
-      likedMessages.push(String(id))
-
-      likes += 1
-
-      liked = true
-    }
-
-    wx.setStorageSync(
-      'likedMessages',
-      likedMessages
-    )
-
-    const updatedPost =
-      updateMessage(
-        id,
-        oldPost => ({
-          ...oldPost,
-          likes
+  
+    try {
+      const result = await new Promise((resolve, reject) => {
+        wx.request({
+          url: `http://192.168.254.145:3000/api/messages/${messageId}/like`,
+          method: 'POST',
+          header: {
+            'content-type': 'application/json'
+          },
+          data: {
+            user_id: userId
+          },
+  
+          success: (res) => {
+            if (res.data && res.data.code === 0) {
+              resolve(res.data.data)
+            } else {
+              reject(
+                new Error(
+                  res.data?.message || '点赞失败'
+                )
+              )
+            }
+          },
+  
+          fail: reject
         })
-      )
-
-    if (!updatedPost) {
-      return
-    }
-
-    this.setData({
-      post: {
-        ...updatedPost,
+      })
+  
+      const liked = !!result.liked
+      const likeCount = Number(result.like_count || 0)
+  
+      this.setData({
+        'post.likes': likeCount,
         liked
-      }
-    })
+      })
+  
+    } catch (error) {
+      console.error('点赞失败：', error)
+  
+      wx.showToast({
+        title: '点赞失败',
+        icon: 'none'
+      })
+    }
   },
 
   // =========================

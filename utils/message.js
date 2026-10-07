@@ -75,11 +75,19 @@ function normalizeMessage(item = {}) {
     commentList:
       commentList,
 
-    commentsCount:
-      commentList.length,
-
-    comments:
-      commentList.length,
+      commentsCount: Number(
+        item.commentsCount ??
+        item.comment_count ??
+        item.comments ??
+        commentList.length
+      ),
+      
+      comments: Number(
+        item.commentsCount ??
+        item.comment_count ??
+        item.comments ??
+        commentList.length
+      ),
 
     reply:
       item.reply || null,
@@ -529,6 +537,141 @@ function deleteMessage(id) {
 
 
 // ================================
+// 从后端获取留言
+// ================================
+
+function fetchMessagesFromServer(options = {}) {
+
+  return new Promise((resolve, reject) => {
+
+    const {
+      keyword = '',
+      sort = 'hot'
+    } = options
+
+    wx.request({
+
+      url: 'http://192.168.254.145:3000/api/messages',
+
+      method: 'GET',
+
+      data: {
+        keyword,
+        sort
+      },
+
+      success(res) {
+
+        if (
+          res.statusCode !== 200 ||
+          !res.data ||
+          res.data.code !== 0
+        ) {
+
+          reject(
+            new Error(
+              res.data && res.data.message
+                ? res.data.message
+                : '获取留言失败'
+            )
+          )
+
+          return
+
+        }
+
+        const serverMessages =
+          Array.isArray(res.data.data)
+            ? res.data.data
+            : []
+
+
+        const normalized =
+          serverMessages.map(item =>
+            normalizeMessage({
+
+              ...item,
+
+              id: item.id,
+
+              name:
+                item.nickname ||
+                item.name ||
+                '食客',
+
+              userName:
+                item.nickname ||
+                item.userName ||
+                '食客',
+
+              avatar:
+                item.avatar || '',
+
+              text:
+                item.content ||
+                item.text ||
+                '',
+
+              images:
+                item.images || [],
+
+              likes:
+                Number(
+                  item.like_count ||
+                  item.likes ||
+                  0
+                ),
+
+              commentsCount:
+                Number(
+                  item.comment_count ||
+                  item.commentsCount ||
+                  0
+                ),
+
+              comments:
+                Number(
+                  item.comment_count ||
+                  item.comments ||
+                  0
+                ),
+
+              time:
+                item.created_at ||
+                item.time ||
+                '',
+
+              createTime:
+                item.created_at ||
+                item.createTime ||
+                '',
+
+              status:
+                item.status ||
+                'normal'
+
+            })
+          )
+
+
+        resolve(normalized)
+
+      },
+
+      fail(error) {
+
+        reject(error)
+
+      }
+
+    })
+
+  })
+
+}
+
+
+// ================================
 // 导出
 // ================================
 
@@ -548,6 +691,8 @@ module.exports = {
 
   updateMessage,
 
-  deleteMessage
+  deleteMessage,
+
+  fetchMessagesFromServer
 
 }

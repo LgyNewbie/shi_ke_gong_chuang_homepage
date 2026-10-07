@@ -1,7 +1,3 @@
-const {
-  getMessages
-} = require('../../utils/message.js')
-
 
 Page({
 
@@ -77,11 +73,72 @@ Page({
   },
 
   onShow() {
-    const messages = getMessages()
+    this.loadMessages()
+  },
   
-    this.setData({
-      messages
-    })
+  async loadMessages() {
+    try {
+      const sortMap = {
+        hot: 'hot',
+        likes: 'likes',
+        comments: 'comments'
+      }
+  
+      const sort = sortMap[this.data.currentTab] || 'hot'
+  
+      const result = await new Promise((resolve, reject) => {
+        wx.request({
+          url: 'http://192.168.254.145:3000/api/messages',
+          method: 'GET',
+          data: {
+            sort
+          },
+          success: (res) => {
+            if (res.data && res.data.code === 0) {
+              resolve(res.data.data || [])
+            } else {
+              reject(new Error(res.data?.message || '获取留言失败'))
+            }
+          },
+          fail: reject
+        })
+      })
+  
+      const messages = result.map(item => {
+        const images = Array.isArray(item.images)
+          ? item.images
+          : []
+  
+        return {
+          id: item.id,
+          name: item.nickname || '食客',
+          userName: item.nickname || '食客',
+          level: 1,
+          time: item.created_at || '',
+          tag: '食客留言',
+          text: item.content || '',
+          image: images[0] || '',
+          images,
+          likes: Number(item.like_count || 0),
+          comments: Number(item.comment_count || 0),
+          avatar: '',
+          reply: '',
+          replyTime: ''
+        }
+      })
+  
+      this.setData({
+        messages
+      })
+  
+    } catch (error) {
+      console.error('加载留言失败：', error)
+  
+      wx.showToast({
+        title: '留言加载失败',
+        icon: 'none'
+      })
+    }
   },
 
   switchTab(e) {
