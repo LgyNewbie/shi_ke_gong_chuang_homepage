@@ -240,7 +240,17 @@ if (merchantUpdate) {
   
     // 这里先使用当前测试用户 ID 2
     // 后面接入正式登录用户后再替换
-    const userId = 2
+    const currentUser = wx.getStorageSync('currentUser')
+
+if (!currentUser || !currentUser.id) {
+  wx.showToast({
+    title: '请先登录',
+    icon: 'none'
+  })
+  return
+}
+
+const userId = Number(currentUser.id)
   
     if (!messageId) {
       wx.showToast({
@@ -358,7 +368,7 @@ if (merchantUpdate) {
   // =========================
   // 发送评论
   // =========================
-  submitComment() {
+  async submitComment() {
     const text = (this.data.commentText || '').trim()
   
     // 没有输入内容
@@ -380,7 +390,7 @@ if (merchantUpdate) {
     }
   
     // 当前留言 ID
-    const postId = this.data.post.id
+    const postId = Number(this.data.post.id)
   
     if (!postId) {
       wx.showToast({
@@ -390,124 +400,223 @@ if (merchantUpdate) {
       return
     }
   
-    // 创建评论
-    const newComment = {
-      id: `comment_${Date.now()}`,
-    
-      name: '食客',
-      userName: '食客',
-    
-      avatar: '',
-    
-      text: text,
-    
-      time: '刚刚',
-    
-      // 当前这条评论属于哪一条留言
-      messageId: postId,
-    
-      // 回复哪一条评论
-      replyToId: this.data.replyingTo
-        ? this.data.replyingTo.id
-        : '',
-    
-      // 回复谁
-      replyToName: this.data.replyingTo
-        ? (
-            this.data.replyingTo.name ||
-            this.data.replyingTo.userName ||
-            ''
-          )
-        : '',
-    
-      // 兼容旧数据
-      replyTo: this.data.replyingTo
-        ? (
-            this.data.replyingTo.name ||
-            this.data.replyingTo.userName ||
-            ''
-          )
-        : ''
-    }
-  
-    // 更新统一留言数据
-    const updatedPost = updateMessage(
-      postId,
-      oldPost => {
-  
-        const oldComments =
-          Array.isArray(oldPost.commentList)
-            ? oldPost.commentList
-            : []
-  
-        const newComments = [
-          ...oldComments,
-          newComment
-        ]
-  
-        return {
-          ...oldPost,
-  
-          commentList: newComments,
-  
-          commentsCount:
-            newComments.length,
-  
-          comments:
-            newComments.length
-        }
-      }
-    )
-  
-    // 更新失败
-    if (!updatedPost) {
+    // ==================================================
+    // 临时测试用户
+    // 后面接入正式用户登录后，再替换成真实 user_id
+    // ==================================================
+    const currentUser = wx.getStorageSync('currentUser')
+
+    if (!currentUser || !currentUser.id) {
       wx.showToast({
-        title: '评论失败',
+        title: '请先登录',
         icon: 'none'
       })
       return
     }
+    
+    const userId = Number(currentUser.id)
+  
+    // ==================================================
+    // 如果是在回复某一条评论
+    // 就把这条评论的 id 作为 parent_id
+    // ==================================================
+    const replyingTo = this.data.replyingTo
+  
+    const parentId =
+      replyingTo && replyingTo.id
+        ? Number(replyingTo.id)
+        : null
+  
+    try {
+      // ==================================================
+      // 调用后端评论接口
+      // ==================================================
+      const result = await new Promise((resolve, reject) => {
+        wx.request({
+          url: `http://192.168.254.145:3000/api/messages/${postId}/comments`,
+  
+          method: 'POST',
+  
+          header: {
+            'content-type': 'application/json'
+          },
+  
+          data: {
+            user_id: userId,
+            content: text,
+            parent_id: parentId
+          },
+  
+          success: (res) => {
+            if (
+              res.data &&
+              res.data.code === 0
+            ) {
+              resolve(res.data.data)
+            } else {
+              reject(
+                new Error(
+                  res.data?.message ||
+                  '评论失败'
+                )
+              )
+            }
+          },
+  
+          fail: reject
+        })
+      })
+  
+      // ==================================================
+      // 后端返回的真实评论
+      // ==================================================
+      const serverComment = result.comment
+  
+      // ==================================================
+      // 转换成当前详情页使用的评论结构
+      // ==================================================
+      const newComment = {
+        id: serverComment.id,
+  
+        messageId: serverComment.message_id,
+  
+        userId: serverComment.user_id,
+  
+        name: serverComment.is_admin
+          ? '🍜 餐厅商家'
+          : (
+              serverComment.nickname ||
+              '食客'
+            ),
+  
+        userName: serverComment.is_admin
+          ? '🍜 餐厅商家'
+          : (
+              serverComment.nickname ||
+              '食客'
+            ),
+  
+        avatar: '',
+  
+        text: serverComment.content || '',
+  
+        content: serverComment.content || '',
+  
+        time: serverComment.created_at || '刚刚',
+  
+        parentId:
+          serverComment.parent_id,
+  
+        replyToId:
+          serverComment.parent_id || '',
+  
+        replyToName:
+          replyingTo
+            ? (
+                replyingTo.name ||
+                replyingTo.userName ||
+                ''
+              )
+            : '',
+  
+        replyTo:
+          replyingTo
+            ? (
+                replyingTo.name ||
+                replyingTo.userName ||
+                ''
+              )
+            : '',
+  
+        isAdmin:
+          Number(serverComment.is_admin || 0) === 1
+      }
+  
+      // ==================================================
+      // 获取当前已有评论
+      // ==================================================
+      const oldComments =
+        Array.isArray(this.data.comments)
+          ? this.data.comments
+          : []
+  
+      // ==================================================
+      // 添加后端返回的真实评论
+      // ==================================================
+      const newComments = [
+        ...oldComments,
+        newComment
+      ]
 
-    // =========================
-// 如果回复的是其他用户的评论
-// 就生成一条评论回复通知
-// =========================
-
-const replyTarget = this.data.replyingTo
-
-if (
-  replyTarget &&
-  replyTarget.name &&
-  replyTarget.name !== '食客' &&
-  replyTarget.name !== '餐厅'
-) {
-  this.addCommentNotification(
-    replyTarget,
-    postId,
-    text
-  )
-}
+      const replyTarget = this.data.replyingTo
   
-    // 更新页面
-    this.setData({
-      post: updatedPost,
+      // ==================================================
+      // 使用后端返回的真实评论数量
+      // ==================================================
+      const commentCount =
+        Number(
+          result.comment_count ||
+          newComments.length
+        )
   
-      comments:
-        updatedPost.commentList || [],
+      // ==================================================
+      // 更新页面
+      // 注意：这里不再调用 updateMessage()
+      // 评论已经保存到了 SQLite
+      // ==================================================
+      this.setData({
+        'post.commentList': newComments,
+        'post.comments': commentCount,
+        'post.commentsCount': commentCount,
   
-      commentText: '',
+        comments: newComments,
   
-      replyingTo: null,
+        commentText: '',
   
-      replyHint: '',
+        replyingTo: null,
   
-      showEmoji: false
-    })
+        replyHint: '',
   
-    wx.showToast({
-      title: '评论成功',
-      icon: 'success'
-    })
+        showEmoji: false
+      })
+  
+      // ==================================================
+      // 如果回复的是其他用户的评论
+      // 就生成评论回复通知
+      // ==================================================
+      const replyTarget =
+        this.data.replyingTo
+  
+      if (
+        replyTarget &&
+        replyTarget.name &&
+        replyTarget.name !== '食客' &&
+        replyTarget.name !== '餐厅' &&
+        replyTarget.name !== '🍜 餐厅商家'
+      ) {
+        this.addCommentNotification(
+          replyTarget,
+          postId,
+          text
+        )
+      }
+  
+      wx.showToast({
+        title: '评论成功',
+        icon: 'success'
+      })
+  
+    } catch (error) {
+      console.error(
+        '发表评论失败：',
+        error
+      )
+  
+      wx.showToast({
+        title: '评论失败',
+        icon: 'none'
+      })
+    }
   },
 
   // =========================
